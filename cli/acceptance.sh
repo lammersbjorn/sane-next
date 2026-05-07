@@ -19,6 +19,13 @@ cd "$ROOT"
 test -f "$TMP/install/packs/core-workflow/SKILL.md"
 test -f "$TMP/install/pi-plugin/index.ts"
 test -f "$TMP/install/pi-plugin/config-schema.toml"
+test -f "$TMP/install/extensions/sane-next/index.ts"
+test -f "$TMP/install/skills/core-workflow/SKILL.md"
+test -f "$TMP/install/package.json"
+if command -v pi >/dev/null 2>&1; then
+  PI_CODING_AGENT_DIR="$TMP/pi-agent" pi install "$TMP/install"
+  PI_CODING_AGENT_DIR="$TMP/pi-agent" pi list | grep -q "$TMP/install"
+fi
 "$GO_BIN" run . doctor --root "$TMP/install"
 "$GO_BIN" run . export --config "$REPO/pi-plugin/config-schema.toml" --target codex --target-root "$TMP/export-default"
 
@@ -41,6 +48,7 @@ Path("$TMP/user-pack-enabled.toml").write_text(config)
 PY
 
 "$GO_BIN" run . export --config "$TMP/user-pack-enabled.toml" --source-root "$REPO/pi-plugin" --target codex --target-root "$TMP/export-user"
+HOME="$TMP/home" "$ROOT/cli" export --config "$REPO/pi-plugin/config-schema.toml" --target codex
 
 "$PYTHON_BIN" - <<PY
 from pathlib import Path
@@ -49,6 +57,8 @@ expected = ["core-workflow", "rtk-routing", "agent-lanes", "sane-router", "examp
 missing = [name for name in expected if not (root / name / "SKILL.md").exists()]
 if missing:
     raise SystemExit(f"missing user-pack exports: {missing}")
+if not Path("$TMP/home/.codex/skills/core-workflow/SKILL.md").exists():
+    raise SystemExit("default Codex-native export did not write under HOME/.codex/skills")
 PY
 
 "$NODE_BIN" --test "$REPO/pi-plugin/plugin.test.js"
@@ -64,6 +74,7 @@ fi
 "$GO_BIN" run . repair --root "$TMP/install"
 test -d "$TMP/install/exports"
 test -f "$TMP/install/pi-plugin/index.ts"
+test -f "$TMP/install/extensions/sane-next/index.ts"
 "$GO_BIN" run . update --root "$TMP/install"
 test -f "$TMP/install/packs/VERSION"
 
@@ -73,6 +84,9 @@ printf 'user-owned\n' > "$TMP/install/user-packs/custom/SKILL.md"
 test -f "$TMP/install/user-packs/custom/SKILL.md"
 test ! -e "$TMP/install/packs"
 test ! -e "$TMP/install/pi-plugin"
+test ! -e "$TMP/install/extensions"
+test ! -e "$TMP/install/skills"
+test ! -e "$TMP/install/package.json"
 test ! -e "$TMP/install/exports"
 
 "$PYTHON_BIN" - <<PY

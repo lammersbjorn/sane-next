@@ -31,7 +31,7 @@ func runExport(args []string) (commandResult, error) {
 
 	root := *targetRoot
 	if root == "" {
-		root = filepath.Join(defaultRoot(), "exports")
+		root = defaultExportRoot(target.ID)
 	}
 
 	count := 0

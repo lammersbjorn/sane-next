@@ -54,7 +54,7 @@ func runUninstall(args []string) (commandResult, error) {
 	if err := requireOwnedInstall(root); err != nil {
 		return commandResult{}, err
 	}
-	for _, path := range []string{"packs", "pi-plugin", "exports", ".sane-next-owned"} {
+	for _, path := range []string{"packs", "skills", "extensions", "pi-plugin", "exports", "package.json", ".sane-next-owned"} {
 		if err := os.RemoveAll(filepath.Join(root, path)); err != nil {
 			return commandResult{}, fmt.Errorf("remove %s: %w", path, err)
 		}
@@ -94,6 +94,9 @@ func requireHealthyInstall(root string) error {
 		"packs/agent-lanes/SKILL.md",
 		"packs/sane-router/SKILL.md",
 		"packs/VERSION",
+		"skills/core-workflow/SKILL.md",
+		"extensions/sane-next/index.ts",
+		"package.json",
 		"pi-plugin/index.ts",
 		"pi-plugin/manifest.toml",
 		"pi-plugin/config-schema.toml",

@@ -37,4 +37,18 @@ This repo is intentionally small, but it is **not** a single-summary-doc repo. T
 
 The intended product is still the broader remake: Pi-first runtime integration, shared packs, Codex export, extensibility, user-added packs, and the small Sane companion CLI around install/export/update/doctor/repair flows.
 
+## Current source usage
+
+From this repo, build and use the companion CLI:
+
+```bash
+cd cli
+go build -o sane-next .
+./sane-next install --root /tmp/sane-next-overlay --source-root ..
+pi install /tmp/sane-next-overlay
+./sane-next export --target codex --config ../pi-plugin/config-schema.toml
+```
+
+The Codex export writes enabled shared packs to `~/.codex/skills` by default. Use `--target-root PATH` for fixture or preview exports.
+
 Do not add random planning, TODO, memory, or research markdown files outside this structure.

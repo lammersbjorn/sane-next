@@ -27,7 +27,7 @@ func syncOwnedAssets(root, sourceRoot string) error {
 		return err
 	}
 
-	for _, dir := range []string{"packs", "pi-plugin", "exports", "user-packs"} {
+	for _, dir := range []string{"packs", "skills", "extensions", "pi-plugin", "exports", "user-packs"} {
 		if err := os.MkdirAll(filepath.Join(root, dir), 0o755); err != nil {
 			return fmt.Errorf("create %s: %w", dir, err)
 		}
@@ -36,7 +36,13 @@ func syncOwnedAssets(root, sourceRoot string) error {
 	if err := replaceDir(filepath.Join(sourceRoot, "pi-plugin"), filepath.Join(root, "pi-plugin")); err != nil {
 		return err
 	}
+	if err := replaceDir(filepath.Join(sourceRoot, "pi-plugin"), filepath.Join(root, "extensions", "sane-next")); err != nil {
+		return err
+	}
 	if err := os.MkdirAll(filepath.Join(root, "packs"), 0o755); err != nil {
+		return err
+	}
+	if err := os.MkdirAll(filepath.Join(root, "skills"), 0o755); err != nil {
 		return err
 	}
 	for _, p := range cfg.Packs {
@@ -48,6 +54,12 @@ func syncOwnedAssets(root, sourceRoot string) error {
 		if err := replaceDir(src, dst); err != nil {
 			return err
 		}
+		if err := replaceDir(src, filepath.Join(root, "skills", p.ID)); err != nil {
+			return err
+		}
+	}
+	if err := writePackageJSON(root); err != nil {
+		return err
 	}
 	if err := os.WriteFile(filepath.Join(root, "packs", "VERSION"), []byte(version+"\n"), 0o644); err != nil {
 		return fmt.Errorf("write pack version: %w", err)
@@ -59,6 +71,24 @@ func syncOwnedAssets(root, sourceRoot string) error {
 		return fmt.Errorf("write ownership marker: %w", err)
 	}
 	return nil
+}
+
+func writePackageJSON(root string) error {
+	content := fmt.Sprintf(`{
+  "name": "sane-next-overlay",
+  "version": %q,
+  "private": true,
+  "keywords": ["pi-package"],
+  "peerDependencies": {
+    "@mariozechner/pi-coding-agent": "*"
+  },
+  "pi": {
+    "extensions": ["./extensions/sane-next/index.ts"],
+    "skills": ["./skills"]
+  }
+}
+`, version)
+	return os.WriteFile(filepath.Join(root, "package.json"), []byte(content), 0o644)
 }
 
 func writeInstalledConfig(root string, cfg saneConfig) error {

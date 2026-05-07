@@ -96,11 +96,15 @@ func usage(w io.Writer) {
 }
 
 func defaultRoot() string {
-	home, err := os.UserHomeDir()
+	home, err := userHomeDir()
 	if err != nil || home == "" {
 		return "."
 	}
 	return filepath.Join(home, ".sane-next")
+}
+
+func userHomeDir() (string, error) {
+	return os.UserHomeDir()
 }
 
 func stringFlagSet(name string, output io.Writer) *flag.FlagSet {
