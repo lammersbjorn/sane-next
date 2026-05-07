@@ -38,20 +38,20 @@ Stop only when the ROADMAP completion rule is satisfied and the final acceptance
 
 ## Completion rule
 
-- [ ] The full sane-next product can author shared packs, export them to Codex-native paths, load them through Pi integration, enable user-added packs, manage companion CLI lifecycle flows (`install`, `export`, `update`, `doctor`, `repair`, `uninstall`), and verify that only Sane-owned material is changed during install/uninstall.
-- [ ] A single acceptance command exists and passes.
-- [ ] `TRACK.toml` and this roadmap are updated only after matching behavior is implemented and verified.
-- [ ] No checkbox is checked because of docs, placeholder files, scaffolding-only progress, shallow prompt cards, disconnected metadata, or unverifiable intent.
+- [x] The full sane-next product can author shared packs, export them to Codex-native paths, load them through Pi integration, enable user-added packs, manage companion CLI lifecycle flows (`install`, `export`, `update`, `doctor`, `repair`, `uninstall`), and verify that only Sane-owned material is changed during install/uninstall.
+- [x] A single acceptance command exists and passes.
+- [x] `TRACK.toml` and this roadmap are updated only after matching behavior is implemented and verified.
+- [x] No checkbox is checked because of docs, placeholder files, scaffolding-only progress, shallow prompt cards, disconnected metadata, or unverifiable intent.
 
 ## Hard boundaries
 
-- [ ] The old `sane` repo remains reference material only.
-- [ ] No implementation code is copied from old Sane without an explicit evidence-backed reason.
-- [ ] Pi remains the runtime in v1; sane-next does not become a deep Pi fork.
-- [ ] The product remains config-first; no TUI-heavy standalone app is introduced.
-- [ ] Packs and extensibility remain first-class scope, not optional extras.
-- [ ] Generated output is disposable and is not treated as authored source.
-- [ ] Random planning/TODO/research markdown files are not introduced outside the fixed repo structure.
+- [x] The old `sane` repo remains reference material only.
+- [x] No implementation code is copied from old Sane without an explicit evidence-backed reason.
+- [x] Pi remains the runtime in v1; sane-next does not become a deep Pi fork.
+- [x] The product remains config-first; no TUI-heavy standalone app is introduced.
+- [x] Packs and extensibility remain first-class scope, not optional extras.
+- [x] Generated output is disposable and is not treated as authored source.
+- [x] Random planning/TODO/research markdown files are not introduced outside the fixed repo structure.
 
 ---
 

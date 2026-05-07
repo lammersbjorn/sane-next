@@ -1,8 +1,8 @@
 version = 2
 updated = "2026-05-07"
-phase = "phase-5-acceptance"
+phase = "complete"
 goal = "Build the smallest reliable Codex workflow tool that improves long-running coding outcomes without recreating Sane's bloat."
-next_focus = "Add one acceptance command, release discipline checks, and completion audit evidence."
+next_focus = "No active implementation slice remains; use ROADMAP and acceptance if reopening scope."
 
 [tracking]
 schema = "active-window-v1"
@@ -23,11 +23,10 @@ rules = [
 ]
 
 [current]
-summary = "Extensibility and lifecycle commands are implemented and verified. The next active slice is final acceptance: one command must cover install, export, Pi config load, extensibility, uninstall, and recovery behavior."
+summary = "The roadmap implementation is complete for the requested full remake slice. The acceptance command passes and covers shared packs, Codex export, Pi config loading, user-pack enablement, lifecycle commands, recovery, and ownership-preserving uninstall."
 exit_criteria = [
-  "A single acceptance command exists and passes.",
-  "Acceptance covers install/export/load/extensibility/uninstall/recovery behavior.",
-  "Release discipline checks match annotated v0.y.z tags and Linux-only CI while private.",
+  "No active work remains in the current roadmap slice.",
+  "Reopen TRACK with a new bounded slice if future Pi package publishing, notification packs, safety packs, LSP diagnostics, or prompt-template artifacts are added.",
 ]
 refs = [
   "docs/roadmap/ROADMAP.md",
@@ -43,14 +42,13 @@ refs = [
 ]
 
 [[work_items]]
-id = "phase-5-acceptance"
+id = "completion-audit"
 status = "ready"
-title = "Add final acceptance and release discipline"
-why_now = "The implementation now needs one command that proves the whole product surface and protects release discipline."
+title = "Keep completion evidence current"
+why_now = "TRACK requires an active-window item even when the current implementation slice is complete."
 write_scope = [
-  "cli/",
-  "pi-plugin/",
-  ".github/workflows/",
+  "TRACK.toml",
+  "docs/roadmap/ROADMAP.md",
 ]
 inputs = [
   "docs/adr/0004-use-pi-overlay-with-codex-skill-export.md",
@@ -58,6 +56,5 @@ inputs = [
   "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md",
 ]
 done_when = [
-  "One acceptance command covers install/export/load/extensibility/uninstall/recovery behavior.",
-  "Any CI added is Linux-only.",
+  "A future task reopens TRACK with a concrete bounded implementation slice.",
 ]
