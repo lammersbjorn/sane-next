@@ -78,17 +78,17 @@ Stop only when the ROADMAP completion rule is satisfied and the final acceptance
 
 # Phase 1 — Foundations
 
-- [ ] The first shared pack source exists as `.agents/skills/core-workflow/SKILL.md`.
+- [x] The first shared pack source exists as `.agents/skills/core-workflow/SKILL.md`.
   Verify: file exists and matches `docs/standards/INSTRUCTION-SURFACE-STANDARD.md`.
-- [ ] The Pi plugin manifest exists.
+- [x] The Pi plugin manifest exists.
   Verify: `pi-plugin/manifest.toml` parses cleanly.
-- [ ] The Pi config schema exists.
+- [x] The Pi config schema exists.
   Verify: `pi-plugin/config-schema.toml` parses cleanly and covers packs, model/reasoning defaults, and export targets.
-- [ ] The Go CLI module exists.
+- [x] The Go CLI module exists.
   Verify: `cli/go.mod` exists and `go build ./...` succeeds.
-- [ ] The CLI entrypoint exists.
+- [x] The CLI entrypoint exists.
   Verify: `cli/main.go` builds cleanly.
-- [ ] The CLI exposes `install`.
+- [x] The CLI exposes `install`.
   Verify: the install command runs and exits cleanly.
 - [ ] Phase 1 behavior is verified and committed.
   Verify: milestone commit exists and the phase 1 checks above pass.

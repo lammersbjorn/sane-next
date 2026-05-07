@@ -1,0 +1,25 @@
+version = 1
+
+[defaults]
+model = "gpt-5.5"
+reasoning = "low"
+
+[[packs]]
+id = "core-workflow"
+enabled = true
+source = "../.agents/skills/core-workflow"
+targets = ["pi", "codex"]
+
+[[export_targets]]
+id = "pi"
+kind = "pi-skill"
+path = ".pi/skills"
+
+[[export_targets]]
+id = "codex"
+kind = "codex-skill"
+path = ".codex/skills"
+
+[ownership]
+marker_file = ".sane-next-owned"
+preserve_user_config = true

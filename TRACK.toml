@@ -1,8 +1,8 @@
 version = 2
 updated = "2026-05-07"
-phase = "goal-preflight-ready"
+phase = "phase-2-packs-and-export"
 goal = "Build the smallest reliable Codex workflow tool that improves long-running coding outcomes without recreating Sane's bloat."
-next_focus = "Use ROADMAP phase 0 to launch the future /goal build run cleanly, then start phase 1 foundations."
+next_focus = "Wire shared pack export and Pi-side config loading without reaching into Pi internals."
 
 [tracking]
 schema = "active-window-v1"
@@ -23,11 +23,11 @@ rules = [
 ]
 
 [current]
-summary = "Planning is locked. The next run should start with ROADMAP phase 0 for /goal preflight, then continue through the roadmap phases until the full remake is complete and verified. TRACK holds only the next active phase, while ROADMAP owns the full product checklist."
+summary = "Phase 1 foundations are implemented and locally verified. The next active slice is Phase 2: prove that the shared core-workflow pack can export to a Codex-native target and be read through the Pi overlay config layer."
 exit_criteria = [
-  "The /goal launch prerequisites in ROADMAP phase 0 are satisfied.",
-  "The run can begin with the concrete /goal prompt and the repo-local implementation skill.",
-  "The implementation follows the durable repo rules in docs/adr/, docs/standards/, and ROADMAP."
+  "A fixture export writes the enabled core-workflow pack to a Codex-native skill location.",
+  "Pi-side config loading reads Sane config through the repo's overlay-owned parser, not Pi internals.",
+  "Pack enablement changes the exported or loaded behavior.",
 ]
 refs = [
   "docs/roadmap/ROADMAP.md",
@@ -36,57 +36,15 @@ refs = [
   "docs/adr/0007-use-go-for-companion-cli.md",
   "docs/adr/0008-use-small-tooling-policy-and-optional-mcps.md",
   "docs/adr/0009-use-annotated-semver-and-linux-only-ci-while-private.md",
-  "docs/standards/INSTRUCTION-SURFACE-STANDARD.md",
   "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md",
-  ".agents/skills/sane-next-implementation/SKILL.md",
-  "AGENTS.md",
-]
-
-[[work_items]]
-id = "phase-0-goal-preflight"
-status = "ready"
-title = "Prepare and launch the /goal implementation run"
-why_now = "The next run should start cleanly with the right model, reasoning, skill, roadmap, and /goal prompt so the full remake can continue with minimal drift."
-write_scope = [
-  ".agents/skills/",
-  "docs/roadmap/",
-  "TRACK.toml",
-]
-inputs = [
-  "docs/roadmap/ROADMAP.md",
-  ".agents/skills/sane-next-implementation/SKILL.md",
-  "docs/standards/INSTRUCTION-SURFACE-STANDARD.md",
-]
-done_when = [
-  "The roadmap contains the concrete /goal prompt and verified phase checklist.",
-  "The repo-local implementation skill exists and matches the roadmap.",
-  "The next run can start from ROADMAP phase 0 without needing chat history.",
-]
-
-[[work_items]]
-id = "phase-1-foundations"
-status = "queued"
-title = "Create the foundation surfaces for the full remake"
-why_now = "Phase 1 establishes the first shared pack, Pi plugin/config foundation, and CLI foundation without pretending that phase 1 is the whole product."
-write_scope = [
-  ".agents/skills/core-workflow/",
+  "pi-plugin/config-schema.toml",
   "cli/",
-  "pi-plugin/",
-]
-inputs = [
-  "docs/adr/0004-use-pi-overlay-with-codex-skill-export.md",
-  "docs/roadmap/ROADMAP.md",
-  "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md",
-]
-done_when = [
-  "The core-workflow skill exists with the required sections and Pi/Codex compatibility.",
-  "The Pi plugin manifest and config schema exist and parse cleanly.",
-  "The Go CLI install command builds and exits 0.",
+  ".agents/skills/core-workflow/SKILL.md",
 ]
 
 [[work_items]]
 id = "phase-2-packs-and-export"
-status = "queued"
+status = "ready"
 title = "Wire pack export and Pi-side loading"
 why_now = "After the foundations exist, the next step is proving shared pack export and Pi-side config loading without reaching into Pi internals."
 write_scope = [
