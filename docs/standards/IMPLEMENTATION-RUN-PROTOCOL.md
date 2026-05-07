@@ -2,7 +2,9 @@
 
 This is the strict execution standard for the first `sane-next` implementation run.
 
-It is intentionally small: one authoritative surface per concern, one clear first slice, and exact write boundaries for parallel work.
+The **active phase** should be intentionally bounded, but the **product scope** is the broader remake: packs, extensibility, Pi integration, Codex export, and the Sane companion CLI lifecycle.
+
+The repo should not confuse "phase 1" with "the whole product."
 
 ## Surface ownership
 
@@ -10,10 +12,26 @@ It is intentionally small: one authoritative surface per concern, one clear firs
 | --- | --- |
 | Current execution window | `TRACK.toml` |
 | Tracking shape | `docs/standards/TRACK-STRUCTURE-STANDARD.md` |
+| `/goal` implementation-run setup | `docs/standards/GOAL-RUN-STANDARD.md` |
 | Durable decisions | `docs/adr/` |
 | Instruction/skill/agent authoring | `docs/standards/INSTRUCTION-SURFACE-STANDARD.md` |
 | Implementation run shape | `docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md` |
 | Commit hygiene | `.githooks/` + `CONTRIBUTING.md` |
+
+## Full remake scope
+
+The later implementation run is for a **full remake of Sane that is better**, not a tiny end-state MVP.
+
+That remake includes:
+
+- shared pack authoring
+- Codex export of shared pack content
+- Pi plugin/config integration
+- extensibility and user-added packs
+- the small Sane companion CLI for install/export/update/doctor/repair flows
+- explicit verification and recovery
+
+`TRACK.toml` only holds the current phase because the execution window should be bounded. The product scope still includes the larger remake.
 
 ## One-shot prompt contract
 
@@ -71,6 +89,7 @@ cli/
   cmd/export.go
   cmd/update.go
   cmd/doctor.go
+  cmd/repair.go
 
 .github/workflows/
   ci.yml
@@ -100,9 +119,11 @@ Apply ADR 0009:
 - Linux-only CI while private
 - no full release automation yet
 
-## First implementation slice
+## Phase roadmap
 
-The first slice proves the product shape without rebuilding Pi:
+### Phase 1 — foundations
+
+Create the foundation surfaces without pretending phase 1 is the whole product:
 
 1. **Core workflow skill**
    - create `.agents/skills/core-workflow/SKILL.md`
@@ -119,9 +140,29 @@ The first slice proves the product shape without rebuilding Pi:
    - create `cli/go.mod`, `cli/main.go`, and `cli/cmd/install.go`
    - start with `install` only
 
-4. **Export/load follow-up**
-   - after the above exists, wire the first export path and config loading path
-   - do not reach into Pi internals when the extension API is enough
+### Phase 2 — packs and export/load
+
+After the phase 1 foundations exist:
+
+1. wire the first shared-pack export path to Codex-native locations
+2. make the Pi side load Sane config and pack state without reaching into Pi internals
+3. prove the pack model is actually central, not decorative
+
+### Phase 3 — extensibility and CLI lifecycle
+
+After export/load works:
+
+1. add the path for user-added packs and explicit extensibility
+2. extend the companion CLI beyond `install` toward `export`, `update`, `doctor`, and `repair`
+3. keep the config model small while supporting packs and exports cleanly
+
+### Phase 4 — acceptance, recovery, and release discipline
+
+After the main remake surfaces exist:
+
+1. verify install/export/extensibility/recovery behavior end to end
+2. add only the CI needed for the acceptance path
+3. keep release discipline aligned with ADR 0009
 
 ## Lane sequence
 
@@ -130,10 +171,11 @@ The first slice proves the product shape without rebuilding Pi:
 | `skill-pack` | first shared skill | `.agents/skills/core-workflow/` | yes |
 | `pi-plugin` | plugin manifest + config schema | `pi-plugin/` | yes |
 | `cli-install` | Go CLI install scaffold | `cli/` | yes |
-| `export-load` | export path + config loading | `cli/`, `pi-plugin/` | after first three |
-| `acceptance` | end-to-end proof + CI if needed | `cli/`, `pi-plugin/`, `.github/workflows/` | after export/load |
+| `export-load` | shared pack export + Pi-side loading | `.agents/skills/`, `cli/`, `pi-plugin/` | after first three |
+| `extensibility` | user packs + lifecycle commands | `.agents/skills/`, `cli/`, `pi-plugin/` | after export/load |
+| `acceptance` | end-to-end proof + CI if needed | `cli/`, `pi-plugin/`, `.github/workflows/` | after extensibility |
 
-## First-slice acceptance path
+## Acceptance path
 
 Done means all of the following are true:
 
@@ -142,7 +184,8 @@ Done means all of the following are true:
 3. `go build ./...` for the CLI succeeds.
 4. the install command exits cleanly.
 5. the first export/load path is wired without rebuilding Pi internals.
-6. any CI added remains Linux-only while the repo is private.
+6. the repo has a clear path for packs/extensibility beyond the initial pack.
+7. any CI added remains Linux-only while the repo is private.
 
 ## Open risks that remain outside TRACK
 

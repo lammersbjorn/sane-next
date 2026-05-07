@@ -2,7 +2,7 @@ version = 2
 updated = "2026-05-07"
 phase = "implementation-ready"
 goal = "Build the smallest reliable Codex workflow tool that improves long-running coding outcomes without recreating Sane's bloat."
-next_focus = "Run the first implementation slice: core workflow skill, Pi plugin manifest/config schema, and the Go install CLI skeleton."
+next_focus = "Run phase 1 of the full remake: establish the first shared pack, Pi plugin/config foundation, and CLI foundation without narrowing the product to a tiny MVP."
 
 [tracking]
 schema = "active-window-v1"
@@ -22,7 +22,7 @@ rules = [
 ]
 
 [current]
-summary = "Planning is locked. The next run should execute the first small end-to-end implementation slice."
+summary = "Planning is locked. The next run should execute phase 1 of the full remake. TRACK only holds the active phase; the broader product scope remains shared packs, extensibility, Codex export, Pi integration, and the Sane companion CLI lifecycle."
 exit_criteria = [
   "The core-workflow skill exists and follows the instruction standard.",
   "The Pi plugin manifest and config schema exist without rebuilding Pi internals.",
@@ -37,14 +37,16 @@ refs = [
   "docs/adr/0009-use-annotated-semver-and-linux-only-ci-while-private.md",
   "docs/standards/INSTRUCTION-SURFACE-STANDARD.md",
   "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md",
+  "docs/standards/GOAL-RUN-STANDARD.md",
+  ".agents/skills/sane-next-implementation/SKILL.md",
   "AGENTS.md",
 ]
 
 [[work_items]]
-id = "phase-1-scaffold"
+id = "phase-1-foundations"
 status = "ready"
-title = "Create the first code surfaces"
-why_now = "This is the smallest useful implementation slice that proves the product shape without recreating old Sane complexity."
+title = "Create the foundation surfaces for the full remake"
+why_now = "This is phase 1 of the full remake. It establishes the first shared pack, the Pi plugin/config foundation, and the CLI foundation without pretending that phase 1 is the whole product."
 write_scope = [
   ".agents/skills/core-workflow/",
   "pi-plugin/",
@@ -64,11 +66,12 @@ done_when = [
 ]
 
 [[work_items]]
-id = "phase-2-export-and-load"
+id = "phase-2-packs-and-export"
 status = "queued"
-title = "Wire export and config loading"
-why_now = "After the first surfaces exist, the next step is proving shared pack export and Pi-side config loading without reaching into Pi internals."
+title = "Wire pack export and Pi-side loading"
+why_now = "The product is not just a CLI scaffold. After the foundations exist, phase 2 must prove that shared pack content exports to Codex paths and loads through Pi without forking Pi internals."
 write_scope = [
+  ".agents/skills/",
   "cli/",
   "pi-plugin/",
 ]
@@ -82,10 +85,31 @@ done_when = [
 ]
 
 [[work_items]]
-id = "phase-3-acceptance"
+id = "phase-3-extensibility-and-lifecycle"
 status = "queued"
-title = "Prove the first slice end to end"
-why_now = "The first slice only counts if install, export, and plugin/config behavior are verifiable and reversible."
+title = "Add packs, extensibility, and lifecycle commands"
+why_now = "The remake must include packs and extensibility, not just a narrow initial flow. After export/load works, phase 3 should add user-pack discovery/config and the companion CLI lifecycle commands beyond install."
+write_scope = [
+  ".agents/skills/",
+  "cli/",
+  "pi-plugin/",
+]
+inputs = [
+  "docs/reference/OLD-SANE-POSTMORTEM.md",
+  "docs/adr/0004-use-pi-overlay-with-codex-skill-export.md",
+  "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md",
+]
+done_when = [
+  "Shared packs can be enabled through the Sane config model.",
+  "The repo has a clear path for user-added packs/extensibility.",
+  "The CLI has justified progress beyond install toward export/update/doctor flows.",
+]
+
+[[work_items]]
+id = "phase-4-acceptance-and-release"
+status = "queued"
+title = "Prove the remake end to end and lock release discipline"
+why_now = "The remake only counts if install/export/extensibility behavior is verifiable and the repo can ship changes without drifting."
 write_scope = [
   "cli/",
   "pi-plugin/",
@@ -94,8 +118,9 @@ write_scope = [
 inputs = [
   "docs/adr/0009-use-annotated-semver-and-linux-only-ci-while-private.md",
   "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md",
+  "docs/standards/GOAL-RUN-STANDARD.md",
 ]
 done_when = [
-  "The first-slice acceptance path in the implementation protocol passes.",
+  "The implementation protocol acceptance path passes.",
   "Any CI added remains Linux-only while the repo is private.",
 ]

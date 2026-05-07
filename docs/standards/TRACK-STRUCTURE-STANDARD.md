@@ -83,7 +83,7 @@ Allowed `status` values:
 Rules:
 
 1. At most **one** work item may be `in_progress`.
-2. Keep at most **four** work items total.
+2. Keep at most **four** work items total so the active phase stays readable without pretending to hold the whole product backlog.
 3. `write_scope`, `inputs`, and `done_when` must all be non-empty lists.
 4. Each item should be resumable without reading unrelated chat history.
 5. If an item needs more context than these fields can carry, the context belongs in a durable doc it can reference, not in a giant inline note.
@@ -105,7 +105,7 @@ version = 2
 updated = "2026-05-07"
 phase = "implementation-ready"
 goal = "Build the smallest reliable Codex workflow tool that improves long-running coding outcomes without recreating Sane's bloat."
-next_focus = "Run the first implementation slice."
+next_focus = "Run phase 1 of the full remake."
 
 [tracking]
 schema = "active-window-v1"
@@ -119,20 +119,20 @@ rules = [
 ]
 
 [current]
-summary = "Planning is locked. The next run should execute the first small implementation slice."
+summary = "Planning is locked. The next run should execute phase 1 of the full remake."
 exit_criteria = [
-  "The first slice builds and validates cleanly."
+  "The active phase builds and validates cleanly."
 ]
 refs = [
   "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md"
 ]
 
 [[work_items]]
-id = "phase-1-scaffold"
+id = "phase-1-foundations"
 status = "ready"
-title = "Create the first code surfaces"
-why_now = "This is the smallest useful implementation slice."
+title = "Create the first foundation surfaces"
+why_now = "This is phase 1 of the broader remake."
 write_scope = [".agents/skills/", "pi-plugin/", "cli/"]
 inputs = ["docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md"]
-done_when = ["The first slice acceptance path passes."]
+done_when = ["The phase 1 acceptance path passes."]
 ```

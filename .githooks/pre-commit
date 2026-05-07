@@ -71,6 +71,7 @@ allowed_prefixes = (
     "docs/adr/",
     "docs/standards/",
     "docs/reference/",
+    ".agents/skills/",
 )
 
 unexpected = sorted(
@@ -94,7 +95,9 @@ for required in \
   "docs/adr/0009-use-annotated-semver-and-linux-only-ci-while-private.md" \
   "docs/standards/INSTRUCTION-SURFACE-STANDARD.md" \
   "docs/standards/TRACK-STRUCTURE-STANDARD.md" \
-  "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md"; do
+  "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md" \
+  "docs/standards/GOAL-RUN-STANDARD.md" \
+  ".agents/skills/sane-next-implementation/SKILL.md"; do
   if [ ! -f "$required" ]; then
     echo "Missing required repo file: $required" >&2
     exit 1

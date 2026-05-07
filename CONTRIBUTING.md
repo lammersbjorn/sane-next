@@ -8,6 +8,7 @@ This repo is still pre-implementation. Keep process small and strict.
 - Old Sane reference context: `docs/reference/OLD-SANE-POSTMORTEM.md`
 - Durable decisions: `docs/adr/`
 - Tracking/prompt/skill standards: `docs/standards/`
+- Repo-local implementation skill: `.agents/skills/sane-next-implementation/SKILL.md`
 - Agent rules: `AGENTS.md`
 - Copilot repo instructions: `.github/copilot-instructions.md`
 

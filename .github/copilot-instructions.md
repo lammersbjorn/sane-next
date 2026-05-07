@@ -6,5 +6,6 @@ Additional repo-wide notes:
 
 - This repo is still **pre-implementation**.
 - Read `TRACK.toml`, `docs/reference/OLD-SANE-POSTMORTEM.md`, the key files in `docs/adr/`, and the key files in `docs/standards/` before broad work.
+- For the future `/goal` implementation run, load `.agents/skills/sane-next-implementation/SKILL.md`.
 - Do not invent build, test, or run commands before they exist.
 - If you create commits, use the repo hooks in `.githooks/` and the commit convention in `CONTRIBUTING.md`.
