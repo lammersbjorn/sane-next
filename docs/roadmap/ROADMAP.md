@@ -97,13 +97,13 @@ Stop only when the ROADMAP completion rule is satisfied and the final acceptance
 
 # Phase 2 — Shared packs, export, and Pi-side loading
 
-- [ ] Shared pack content can export to a Codex-native location.
+- [x] Shared pack content can export to a Codex-native location.
   Verify: exported skill artifact exists in a fixture export target.
-- [ ] Pi-side config loading works without reaching into Pi internals.
+- [x] Pi-side config loading works without reaching into Pi internals.
   Verify: plugin/config path reads Sane config through the intended integration layer.
-- [ ] The first pack is not decorative: it is actually used by export/load behavior.
+- [x] The first pack is not decorative: it is actually used by export/load behavior.
   Verify: pack enablement changes produced artifacts or runtime behavior.
-- [ ] The CLI exposes a justified export path.
+- [x] The CLI exposes a justified export path.
   Verify: export command or script path works in a fixture target.
 - [ ] Phase 2 behavior is verified and committed.
   Verify: milestone commit exists and the phase 2 checks above pass.

@@ -10,6 +10,24 @@ enabled = true
 source = "../.agents/skills/core-workflow"
 targets = ["pi", "codex"]
 
+[[packs]]
+id = "rtk-routing"
+enabled = true
+source = "../.agents/skills/rtk-routing"
+targets = ["pi", "codex"]
+
+[[packs]]
+id = "agent-lanes"
+enabled = true
+source = "../.agents/skills/agent-lanes"
+targets = ["pi", "codex"]
+
+[[packs]]
+id = "sane-router"
+enabled = true
+source = "../.agents/skills/sane-router"
+targets = ["pi", "codex"]
+
 [[export_targets]]
 id = "pi"
 kind = "pi-skill"
