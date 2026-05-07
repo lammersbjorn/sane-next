@@ -2,7 +2,7 @@ id = "sane-next"
 name = "Sane Next"
 version = "0.1.0"
 description = "Pi-first overlay for Sane shared workflow packs and companion CLI integration."
-entrypoint = "plugin.js"
+entrypoint = "index.ts"
 
 [runtime]
 host = "pi"

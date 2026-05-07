@@ -43,3 +43,26 @@ func TestDoctorRequiresOwnershipMarker(t *testing.T) {
 		t.Fatal("expected doctor to fail without ownership marker")
 	}
 }
+
+func TestInstallCopiesAndRepairRestoresOwnedAssets(t *testing.T) {
+	root := t.TempDir()
+	if _, err := runInstall([]string{"--root", root}); err != nil {
+		t.Fatal(err)
+	}
+	plugin := filepath.Join(root, "pi-plugin", "index.ts")
+	if _, err := os.Stat(plugin); err != nil {
+		t.Fatalf("expected plugin copied: %v", err)
+	}
+	if err := os.Remove(plugin); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runDoctor([]string{"--root", root}); err == nil {
+		t.Fatal("expected doctor to fail with missing plugin")
+	}
+	if _, err := runRepair([]string{"--root", root}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(plugin); err != nil {
+		t.Fatalf("expected repair to restore plugin: %v", err)
+	}
+}

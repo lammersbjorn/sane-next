@@ -16,6 +16,9 @@ cd "$ROOT"
 "$GO_BIN" build ./...
 
 "$GO_BIN" run . install --root "$TMP/install"
+test -f "$TMP/install/packs/core-workflow/SKILL.md"
+test -f "$TMP/install/pi-plugin/index.ts"
+test -f "$TMP/install/pi-plugin/config-schema.toml"
 "$GO_BIN" run . doctor --root "$TMP/install"
 "$GO_BIN" run . export --config "$REPO/pi-plugin/config-schema.toml" --target codex --target-root "$TMP/export-default"
 
@@ -49,10 +52,18 @@ if missing:
 PY
 
 "$NODE_BIN" --test "$REPO/pi-plugin/plugin.test.js"
+grep -q 'resources_discover' "$REPO/pi-plugin/index.ts"
+grep -q 'skillPaths' "$REPO/pi-plugin/index.ts"
 
 rm -rf "$TMP/install/exports"
+rm -f "$TMP/install/pi-plugin/index.ts"
+if "$GO_BIN" run . doctor --root "$TMP/install" >"$TMP/doctor-broken.log" 2>&1; then
+  echo "doctor unexpectedly passed with missing plugin" >&2
+  exit 1
+fi
 "$GO_BIN" run . repair --root "$TMP/install"
 test -d "$TMP/install/exports"
+test -f "$TMP/install/pi-plugin/index.ts"
 "$GO_BIN" run . update --root "$TMP/install"
 test -f "$TMP/install/packs/VERSION"
 
