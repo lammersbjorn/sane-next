@@ -1,8 +1,8 @@
 version = 1
 updated = "2026-05-07"
-phase = "research-complete"
+phase = "architecture-direction-set"
 goal = "Build the smallest reliable Codex workflow tool that improves long-running coding outcomes without recreating Sane's bloat."
-next_focus = "Start the first implementation run with a minimal config-first coordinator, bounded worker lanes, and explicit checkpoint/resume behavior."
+next_focus = "Design the first Pi overlay slice: core plugin, shared skill export, minimal companion CLI, and a small config schema for packs/defaults."
 
 [tracking]
 canonical_current_state = "TRACK.toml"
@@ -31,21 +31,21 @@ refs = [
 id = "sane-postmortem"
 status = "done"
 title = "Extract lessons from current Sane"
-notes = "Preserve the outcome-first vision, minimal always-on guidance, verification discipline, and explicit recovery. Discard TUI-first scope, document sprawl, framework growth, and premature routing complexity."
-refs = ["docs/adr/0003-start-with-a-small-coordinator-not-a-framework.md"]
+notes = "Preserve outcome-first vision, minimal always-on guidance, verification discipline, skill-first extensibility, and explicit recovery. Discard TUI-heavy scope, doc sprawl, framework growth, and premature routing complexity."
+refs = ["docs/adr/0004-use-pi-overlay-with-codex-skill-export.md"]
 
 [[items]]
 id = "architecture-direction"
 status = "done"
 title = "Choose initial product direction"
-notes = "Start with a small coordinator, one strong default model, bounded worker lanes, optional worktrees, and no TUI or plugin framework first."
-refs = ["docs/adr/0003-start-with-a-small-coordinator-not-a-framework.md"]
+notes = "Use Pi as the primary runtime via an overlay/distribution model, keep packs skill-first, add a small companion CLI for install/export/update/doctor, and export the same packs to Codex-native skill paths."
+refs = ["docs/adr/0004-use-pi-overlay-with-codex-skill-export.md"]
 
 [[items]]
 id = "implementation-run"
 status = "next"
 title = "Prepare the first implementation slice"
-notes = "Define the smallest config schema, coordinator loop, checkpoint contract, verifier boundary, and first end-to-end acceptance path."
+notes = "Define the first Pi overlay slice: core plugin manifest, companion CLI surface, shared skill pack export to Pi and Codex, and the first end-to-end acceptance path."
 depends_on = ["tracking-system", "sane-postmortem", "architecture-direction"]
 
 [[hypotheses]]
@@ -58,7 +58,7 @@ status = "confirmed"
 
 [[hypotheses]]
 id = "small-config-over-tui"
-status = "likely"
+status = "confirmed"
 
 [[hypotheses]]
 id = "gpt55-low-enough-often"
@@ -66,15 +66,15 @@ status = "likely"
 
 [[hypotheses]]
 id = "gpt55-low-reduces-cost"
-status = "plausible"
-
-[[hypotheses]]
-id = "one-strong-default-over-heavy-routing"
 status = "likely"
 
 [[hypotheses]]
+id = "one-strong-default-over-heavy-routing"
+status = "confirmed"
+
+[[hypotheses]]
 id = "pi-style-architecture-efficient"
-status = "plausible"
+status = "confirmed"
 
 [[hypotheses]]
 id = "workflow-discipline-over-code-complexity"
@@ -82,4 +82,12 @@ status = "confirmed"
 
 [[hypotheses]]
 id = "tracking-system-makes-or-breaks-project"
+status = "confirmed"
+
+[[hypotheses]]
+id = "pi-overlay-better-than-fork"
+status = "confirmed"
+
+[[hypotheses]]
+id = "shared-skill-packs-should-export-to-codex-too"
 status = "confirmed"
