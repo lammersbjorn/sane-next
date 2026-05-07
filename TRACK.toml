@@ -1,0 +1,85 @@
+version = 1
+updated = "2026-05-07"
+phase = "research-complete"
+goal = "Build the smallest reliable Codex workflow tool that improves long-running coding outcomes without recreating Sane's bloat."
+next_focus = "Start the first implementation run with a minimal config-first coordinator, bounded worker lanes, and explicit checkpoint/resume behavior."
+
+[tracking]
+canonical_current_state = "TRACK.toml"
+canonical_decision_history = "docs/adr/"
+external_mirror = "optional"
+external_mirror_authority = "non-authoritative"
+
+rules = [
+  "Keep only active and near-term state here.",
+  "Record decisions in ADRs, not in TRACK.toml notes.",
+  "Use commits and pull requests as progress evidence.",
+  "Do not create parallel TODO, plan, memory, or research-dump files."
+]
+
+[[items]]
+id = "tracking-system"
+status = "done"
+title = "Choose canonical tracking system"
+notes = "Use TRACK.toml plus ADRs. External mirrors are optional and non-authoritative."
+refs = [
+  "docs/adr/0001-use-github-issues-plus-adrs-for-tracking.md",
+  "docs/adr/0002-use-track-toml-plus-adrs-for-tracking.md",
+]
+
+[[items]]
+id = "sane-postmortem"
+status = "done"
+title = "Extract lessons from current Sane"
+notes = "Preserve the outcome-first vision, minimal always-on guidance, verification discipline, and explicit recovery. Discard TUI-first scope, document sprawl, framework growth, and premature routing complexity."
+refs = ["docs/adr/0003-start-with-a-small-coordinator-not-a-framework.md"]
+
+[[items]]
+id = "architecture-direction"
+status = "done"
+title = "Choose initial product direction"
+notes = "Start with a small coordinator, one strong default model, bounded worker lanes, optional worktrees, and no TUI or plugin framework first."
+refs = ["docs/adr/0003-start-with-a-small-coordinator-not-a-framework.md"]
+
+[[items]]
+id = "implementation-run"
+status = "next"
+title = "Prepare the first implementation slice"
+notes = "Define the smallest config schema, coordinator loop, checkpoint contract, verifier boundary, and first end-to-end acceptance path."
+depends_on = ["tracking-system", "sane-postmortem", "architecture-direction"]
+
+[[hypotheses]]
+id = "sane-vision-good-current-bloated"
+status = "confirmed"
+
+[[hypotheses]]
+id = "smaller-and-more-focused"
+status = "confirmed"
+
+[[hypotheses]]
+id = "small-config-over-tui"
+status = "likely"
+
+[[hypotheses]]
+id = "gpt55-low-enough-often"
+status = "likely"
+
+[[hypotheses]]
+id = "gpt55-low-reduces-cost"
+status = "plausible"
+
+[[hypotheses]]
+id = "one-strong-default-over-heavy-routing"
+status = "likely"
+
+[[hypotheses]]
+id = "pi-style-architecture-efficient"
+status = "plausible"
+
+[[hypotheses]]
+id = "workflow-discipline-over-code-complexity"
+status = "confirmed"
+
+[[hypotheses]]
+id = "tracking-system-makes-or-breaks-project"
+status = "confirmed"

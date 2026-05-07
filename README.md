@@ -6,8 +6,8 @@ This repo starts intentionally small. It does not inherit the current Sane codeb
 
 ## Tracking
 
-- **Active work:** GitHub Issues
+- **Active work:** `TRACK.toml`
 - **Significant decisions:** `docs/adr/`
-- **Progress evidence:** commits and pull requests linked to issues
+- **Progress evidence:** commits and pull requests
 
-GitHub Projects is optional later if issue volume or parallel work makes it clearly useful. It is not the default.
+External mirrors are optional later, but they are not authoritative.
