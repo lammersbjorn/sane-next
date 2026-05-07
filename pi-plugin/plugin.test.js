@@ -6,6 +6,7 @@ const { loadSaneConfig, parseSaneToml, validateSaneConfig } = require("./plugin"
 const loaded = validateSaneConfig({
   defaults: { model: "gpt-5.5", reasoning: "low" },
   packs: [{ id: "core-workflow", enabled: true, targets: ["pi", "codex"] }],
+  userPacks: [],
   exportTargets: [{ id: "codex", kind: "codex-skill", path: ".codex/skills" }],
 });
 
@@ -24,6 +25,11 @@ id = "agent-lanes"
 enabled = true
 targets = ["pi", "codex"]
 
+[[user_packs]]
+id = "custom-review"
+enabled = true
+targets = ["codex"]
+
 [[export_targets]]
 id = "codex"
 kind = "codex-skill"
@@ -31,6 +37,7 @@ path = ".codex/skills"
 `);
 
 assert.equal(parsed.packs[0].id, "agent-lanes");
+assert.equal(parsed.userPacks[0].id, "custom-review");
 assert.equal(parsed.packs[0].targets[1], "codex");
 
 const loadedFromToml = loadSaneConfig("config-schema.toml", {

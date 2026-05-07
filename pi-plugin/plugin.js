@@ -9,7 +9,7 @@ function loadSaneConfig(configPath, io = fs) {
 }
 
 function parseSaneToml(raw) {
-  const config = { defaults: {}, packs: [], exportTargets: [] };
+  const config = { defaults: {}, packs: [], userPacks: [], exportTargets: [] };
   let current = null;
 
   for (const originalLine of raw.split(/\r?\n/)) {
@@ -27,6 +27,11 @@ function parseSaneToml(raw) {
     if (line === "[[packs]]") {
       current = {};
       config.packs.push(current);
+      continue;
+    }
+    if (line === "[[user_packs]]") {
+      current = {};
+      config.userPacks.push(current);
       continue;
     }
     if (line === "[[export_targets]]") {
@@ -84,6 +89,7 @@ function validateSaneConfig(config) {
       reasoning: config.defaults.reasoning,
     },
     packs: config.packs.map(validatePack),
+    userPacks: config.userPacks.map(validatePack),
     exportTargets: config.exportTargets.map(validateExportTarget),
   };
 }

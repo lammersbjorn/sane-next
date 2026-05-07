@@ -1,6 +1,6 @@
 ---
 name: agent-lanes
-description: Use this skill when broad coding work can be split into independent subagent lanes for faster research, implementation, review, or verification.
+description: "Use this skill when broad coding work can be split into independent subagent lanes for faster research, implementation, review, or verification."
 license: MIT
 compatibility: Pi, Codex
 ---

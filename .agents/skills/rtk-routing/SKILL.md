@@ -1,6 +1,6 @@
 ---
 name: rtk-routing
-description: Use this skill when a repo requires RTK or shell, search, test, diff, and log work should be routed through compact RTK commands.
+description: "Use this skill when a repo requires RTK or shell, search, test, diff, and log work should be routed through compact RTK commands."
 license: MIT
 compatibility: Pi, Codex
 ---

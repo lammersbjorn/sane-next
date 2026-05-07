@@ -37,7 +37,7 @@ func runExport(args []string) (commandResult, error) {
 
 	count := 0
 	configDir := filepath.Dir(*configPath)
-	for _, p := range cfg.Packs {
+	for _, p := range cfg.allPacks() {
 		if !p.Enabled || !supportsTarget(p, *targetID) {
 			continue
 		}

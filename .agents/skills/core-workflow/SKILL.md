@@ -1,6 +1,6 @@
 ---
 name: core-workflow
-description: Use this skill when a coding task needs Sane's compact long-run workflow discipline: repo truth first, bounded execution, concrete verification, and recoverable handoff.
+description: "Use this skill when a coding task needs Sane's compact long-run workflow discipline: repo truth first, bounded execution, concrete verification, and recoverable handoff."
 license: MIT
 compatibility: Pi, Codex
 ---

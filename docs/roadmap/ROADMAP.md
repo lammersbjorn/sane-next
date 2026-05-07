@@ -112,13 +112,13 @@ Stop only when the ROADMAP completion rule is satisfied and the final acceptance
 
 # Phase 3 — Packs and extensibility
 
-- [ ] Multiple built-in packs can exist without overlapping ownership or behavior drift.
+- [x] Multiple built-in packs can exist without overlapping ownership or behavior drift.
   Verify: at least two packs can coexist and render/load correctly.
-- [ ] User-added packs have a supported discovery path.
+- [x] User-added packs have a supported discovery path.
   Verify: a fixture custom pack can be discovered and loaded.
-- [ ] Packs can be enabled/disabled through the Sane config model.
+- [x] Packs can be enabled/disabled through the Sane config model.
   Verify: config changes alter exported or loaded pack behavior.
-- [ ] Shared pack format stays compatible with both Pi and Codex export targets.
+- [x] Shared pack format stays compatible with both Pi and Codex export targets.
   Verify: the same authored pack source can drive both targets.
 - [ ] Extensibility is verified and committed.
   Verify: milestone commit exists and the phase 3 checks above pass.
@@ -127,17 +127,17 @@ Stop only when the ROADMAP completion rule is satisfied and the final acceptance
 
 # Phase 4 — Companion CLI lifecycle
 
-- [ ] CLI `install` is stable.
+- [x] CLI `install` is stable.
   Verify: fixture install succeeds and writes only Sane-owned material.
-- [ ] CLI `export` is implemented.
+- [x] CLI `export` is implemented.
   Verify: fixture export succeeds and outputs expected artifacts.
-- [ ] CLI `update` is implemented.
+- [x] CLI `update` is implemented.
   Verify: update changes Sane-owned material while preserving user-owned config.
-- [ ] CLI `doctor` is implemented.
+- [x] CLI `doctor` is implemented.
   Verify: doctor reports missing/broken install state meaningfully.
-- [ ] CLI `repair` is implemented.
+- [x] CLI `repair` is implemented.
   Verify: repair restores a broken fixture install.
-- [ ] CLI `uninstall` is implemented.
+- [x] CLI `uninstall` is implemented.
   Verify: uninstall removes only Sane-owned material and preserves user-owned config.
 - [ ] Lifecycle behavior is verified and committed.
   Verify: milestone commit exists and the phase 4 checks above pass.

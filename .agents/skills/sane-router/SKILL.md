@@ -1,6 +1,6 @@
 ---
 name: sane-router
-description: Use this skill when a Sane-enabled session needs to choose between direct work, RTK routing, agent lanes, pack export, or lifecycle commands.
+description: "Use this skill when a Sane-enabled session needs to choose between direct work, RTK routing, agent lanes, pack export, or lifecycle commands."
 license: MIT
 compatibility: Pi, Codex
 ---

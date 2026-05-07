@@ -28,6 +28,12 @@ enabled = true
 source = "../.agents/skills/sane-router"
 targets = ["pi", "codex"]
 
+[[user_packs]]
+id = "example-user-pack"
+enabled = false
+source = "../.agents/skills/example-user-pack"
+targets = ["pi", "codex"]
+
 [[export_targets]]
 id = "pi"
 kind = "pi-skill"

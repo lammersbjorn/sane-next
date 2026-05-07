@@ -10,6 +10,7 @@ import (
 type saneConfig struct {
 	Defaults      defaults       `toml:"defaults"`
 	Packs         []pack         `toml:"packs"`
+	UserPacks     []pack         `toml:"user_packs"`
 	ExportTargets []exportTarget `toml:"export_targets"`
 	Ownership     ownership      `toml:"ownership"`
 }
@@ -71,12 +72,24 @@ func validateConfig(cfg saneConfig) error {
 			return fmt.Errorf("pack id and source are required")
 		}
 	}
+	for _, p := range cfg.UserPacks {
+		if p.ID == "" || p.Source == "" {
+			return fmt.Errorf("user pack id and source are required")
+		}
+	}
 	for _, target := range cfg.ExportTargets {
 		if target.ID == "" || target.Kind == "" || target.Path == "" {
 			return fmt.Errorf("export target id, kind, and path are required")
 		}
 	}
 	return nil
+}
+
+func (cfg saneConfig) allPacks() []pack {
+	packs := make([]pack, 0, len(cfg.Packs)+len(cfg.UserPacks))
+	packs = append(packs, cfg.Packs...)
+	packs = append(packs, cfg.UserPacks...)
+	return packs
 }
 
 func (cfg saneConfig) target(id string) (exportTarget, bool) {
