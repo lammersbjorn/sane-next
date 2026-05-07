@@ -120,7 +120,7 @@ Stop only when the ROADMAP completion rule is satisfied and the final acceptance
   Verify: config changes alter exported or loaded pack behavior.
 - [x] Shared pack format stays compatible with both Pi and Codex export targets.
   Verify: the same authored pack source can drive both targets.
-- [ ] Extensibility is verified and committed.
+- [x] Extensibility is verified and committed.
   Verify: milestone commit exists and the phase 3 checks above pass.
 
 ---
@@ -139,22 +139,22 @@ Stop only when the ROADMAP completion rule is satisfied and the final acceptance
   Verify: repair restores a broken fixture install.
 - [x] CLI `uninstall` is implemented.
   Verify: uninstall removes only Sane-owned material and preserves user-owned config.
-- [ ] Lifecycle behavior is verified and committed.
+- [x] Lifecycle behavior is verified and committed.
   Verify: milestone commit exists and the phase 4 checks above pass.
 
 ---
 
 # Phase 5 — Verification, acceptance, and release discipline
 
-- [ ] A single acceptance command exists.
+- [x] A single acceptance command exists.
   Verify: one documented repo command runs the full acceptance path.
-- [ ] Acceptance covers install/export/load/extensibility/uninstall/recovery behavior.
+- [x] Acceptance covers install/export/load/extensibility/uninstall/recovery behavior.
   Verify: acceptance fixtures cover those behaviors.
-- [ ] Acceptance fails on drift, placeholder-only implementations, and broken ownership boundaries.
+- [x] Acceptance fails on drift, placeholder-only implementations, and broken ownership boundaries.
   Verify: negative fixtures or tests prove the checks fail correctly.
-- [ ] CI is added only as needed and stays Linux-only while the repo is private.
+- [x] CI is added only as needed and stays Linux-only while the repo is private.
   Verify: workflow config shows Linux-only runners.
-- [ ] Release discipline matches ADR 0009.
+- [x] Release discipline matches ADR 0009.
   Verify: commit/tag workflow matches annotated tags and `v0.y.z`.
 - [ ] Final product acceptance is verified and committed.
   Verify: final acceptance command passes and the completion rule can be checked honestly.

@@ -1,8 +1,8 @@
 version = 2
 updated = "2026-05-07"
-phase = "phase-3-extensibility-and-lifecycle"
+phase = "phase-5-acceptance"
 goal = "Build the smallest reliable Codex workflow tool that improves long-running coding outcomes without recreating Sane's bloat."
-next_focus = "Add user-pack discovery plus ownership-aware lifecycle commands."
+next_focus = "Add one acceptance command, release discipline checks, and completion audit evidence."
 
 [tracking]
 schema = "active-window-v1"
@@ -23,11 +23,11 @@ rules = [
 ]
 
 [current]
-summary = "Phase 2 shared pack export and Pi-side config loading are implemented and verified. The next active slice is Phase 3/4 groundwork: support user-added packs, config enablement, and lifecycle commands that preserve user-owned config."
+summary = "Extensibility and lifecycle commands are implemented and verified. The next active slice is final acceptance: one command must cover install, export, Pi config load, extensibility, uninstall, and recovery behavior."
 exit_criteria = [
-  "A fixture custom pack can be discovered and exported through the Sane config model.",
-  "Pack enablement changes exported artifacts for built-in and user-added packs.",
-  "Lifecycle commands beyond install have ownership-aware fixture behavior.",
+  "A single acceptance command exists and passes.",
+  "Acceptance covers install/export/load/extensibility/uninstall/recovery behavior.",
+  "Release discipline checks match annotated v0.y.z tags and Linux-only CI while private.",
 ]
 refs = [
   "docs/roadmap/ROADMAP.md",
@@ -43,37 +43,17 @@ refs = [
 ]
 
 [[work_items]]
-id = "phase-3-extensibility-and-lifecycle"
-status = "ready"
-title = "Add extensibility and lifecycle behavior"
-why_now = "The product must support packs and user-added extensibility before lifecycle commands can be considered complete."
-write_scope = [
-  ".agents/skills/",
-  "cli/",
-  "pi-plugin/",
-]
-inputs = [
-  "docs/adr/0004-use-pi-overlay-with-codex-skill-export.md",
-  "docs/roadmap/ROADMAP.md",
-  "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md",
-]
-done_when = [
-  "A fixture custom pack can be discovered and exported.",
-  "Built-in pack enablement and user pack enablement alter exported artifacts.",
-  "CLI lifecycle commands beyond install have ownership-aware fixture checks.",
-]
-
-[[work_items]]
 id = "phase-5-acceptance"
-status = "queued"
+status = "ready"
 title = "Add final acceptance and release discipline"
-why_now = "After extensibility and lifecycle behavior exists, the repo needs one acceptance command and release gates."
+why_now = "The implementation now needs one command that proves the whole product surface and protects release discipline."
 write_scope = [
   "cli/",
   "pi-plugin/",
   ".github/workflows/",
 ]
 inputs = [
+  "docs/adr/0004-use-pi-overlay-with-codex-skill-export.md",
   "docs/roadmap/ROADMAP.md",
   "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md",
 ]

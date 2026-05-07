@@ -87,7 +87,7 @@ func usage(w io.Writer) {
 	fmt.Fprintln(w)
 	fmt.Fprintln(w, "Usage:")
 	fmt.Fprintln(w, "  sane-next doctor [--root PATH]")
-	fmt.Fprintln(w, "  sane-next export [--config PATH] [--target codex] [--target-root PATH]")
+	fmt.Fprintln(w, "  sane-next export [--config PATH] [--source-root PATH] [--target codex] [--target-root PATH]")
 	fmt.Fprintln(w, "  sane-next install [--root PATH]")
 	fmt.Fprintln(w, "  sane-next repair [--root PATH]")
 	fmt.Fprintln(w, "  sane-next uninstall [--root PATH]")
