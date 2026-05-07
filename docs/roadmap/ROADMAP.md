@@ -156,5 +156,5 @@ Stop only when the ROADMAP completion rule is satisfied and the final acceptance
   Verify: workflow config shows Linux-only runners.
 - [x] Release discipline matches ADR 0009.
   Verify: commit/tag workflow matches annotated tags and `v0.y.z`.
-- [ ] Final product acceptance is verified and committed.
+- [x] Final product acceptance is verified and committed.
   Verify: final acceptance command passes and the completion rule can be checked honestly.
