@@ -90,7 +90,7 @@ Stop only when the ROADMAP completion rule is satisfied and the final acceptance
   Verify: `cli/main.go` builds cleanly.
 - [x] The CLI exposes `install`.
   Verify: the install command runs and exits cleanly.
-- [ ] Phase 1 behavior is verified and committed.
+- [x] Phase 1 behavior is verified and committed.
   Verify: milestone commit exists and the phase 1 checks above pass.
 
 ---
