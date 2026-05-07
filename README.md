@@ -9,6 +9,7 @@ This repo is intentionally small and still pre-implementation. Old Sane is refer
 - **Current state:** `TRACK.toml`
 - **Durable decisions:** `docs/adr/0002-use-track-toml-plus-adrs-for-tracking.md`
 - **Current architecture direction:** `docs/adr/0004-use-pi-overlay-with-codex-skill-export.md`
+- **Instruction authoring standard:** `docs/standards/INSTRUCTION-SURFACE-STANDARD.md`
 - **Agent rules:** `AGENTS.md`
 - **Copilot repo instructions:** `.github/copilot-instructions.md`
 

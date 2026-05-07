@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+message_file="${1:?commit message file required}"
+first_line="$(sed -n '1{s/\r$//;p;q;}' "$message_file")"
+
+if [[ "$first_line" =~ ^(Merge\ |fixup\!|squash\!|Revert\ ) ]]; then
+  exit 0
+fi
+
+pattern='^(feat|fix|refactor|docs|research|build|ci|test|chore|revert)(\([a-z0-9][a-z0-9/-]*\))?(!)?: [a-z0-9].{0,71}$'
+
+if [[ "$first_line" =~ $pattern ]]; then
+  exit 0
+fi
+
+cat >&2 <<'EOF'
+Commit message must follow Conventional Commits:
+
+  type(scope): subject
+
+Allowed types:
+  feat, fix, refactor, docs, research, build, ci, test, chore, revert
+
+Examples:
+  chore(repo): enable committed git hooks
+  research(tooling): narrow default MCP policy
+  feat(cli): add install command skeleton
+EOF
+
+exit 1

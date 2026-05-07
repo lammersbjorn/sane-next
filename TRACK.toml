@@ -16,7 +16,8 @@ rules = [
   "Use commits and pull requests as progress evidence.",
   "Do not create parallel TODO, plan, memory, or research-dump files.",
   "Read AGENTS.md and .github/copilot-instructions.md before broad work.",
-  "Treat only current ADRs as authoritative; superseded files should not remain in the repo."
+  "Treat only current ADRs as authoritative; superseded files should not remain in the repo.",
+  "Use committed git hooks and Conventional Commits for all new commits."
 ]
 
 [[items]]
