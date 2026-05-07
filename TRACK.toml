@@ -1,8 +1,8 @@
 version = 2
 updated = "2026-05-07"
-phase = "phase-2-packs-and-export"
+phase = "phase-3-extensibility-and-lifecycle"
 goal = "Build the smallest reliable Codex workflow tool that improves long-running coding outcomes without recreating Sane's bloat."
-next_focus = "Wire shared pack export and Pi-side config loading without reaching into Pi internals."
+next_focus = "Add user-pack discovery plus ownership-aware lifecycle commands."
 
 [tracking]
 schema = "active-window-v1"
@@ -23,11 +23,11 @@ rules = [
 ]
 
 [current]
-summary = "Phase 1 foundations are implemented and locally verified. The next active slice is Phase 2: prove that the shared core-workflow pack can export to a Codex-native target and be read through the Pi overlay config layer."
+summary = "Phase 2 shared pack export and Pi-side config loading are implemented and verified. The next active slice is Phase 3/4 groundwork: support user-added packs, config enablement, and lifecycle commands that preserve user-owned config."
 exit_criteria = [
-  "A fixture export writes the enabled core-workflow pack to a Codex-native skill location.",
-  "Pi-side config loading reads Sane config through the repo's overlay-owned parser, not Pi internals.",
-  "Pack enablement changes the exported or loaded behavior.",
+  "A fixture custom pack can be discovered and exported through the Sane config model.",
+  "Pack enablement changes exported artifacts for built-in and user-added packs.",
+  "Lifecycle commands beyond install have ownership-aware fixture behavior.",
 ]
 refs = [
   "docs/roadmap/ROADMAP.md",
@@ -43,10 +43,10 @@ refs = [
 ]
 
 [[work_items]]
-id = "phase-2-packs-and-export"
+id = "phase-3-extensibility-and-lifecycle"
 status = "ready"
-title = "Wire pack export and Pi-side loading"
-why_now = "After the foundations exist, the next step is proving shared pack export and Pi-side config loading without reaching into Pi internals."
+title = "Add extensibility and lifecycle behavior"
+why_now = "The product must support packs and user-added extensibility before lifecycle commands can be considered complete."
 write_scope = [
   ".agents/skills/",
   "cli/",
@@ -58,28 +58,26 @@ inputs = [
   "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md",
 ]
 done_when = [
-  "A CLI or script path can export the first shared skill to a Codex-native location.",
-  "The Pi plugin reads Sane config without reaching into Pi internals.",
+  "A fixture custom pack can be discovered and exported.",
+  "Built-in pack enablement and user pack enablement alter exported artifacts.",
+  "CLI lifecycle commands beyond install have ownership-aware fixture checks.",
 ]
 
 [[work_items]]
-id = "phase-3-extensibility-and-lifecycle"
+id = "phase-5-acceptance"
 status = "queued"
-title = "Add packs, extensibility, and lifecycle commands"
-why_now = "The remake must include packs and extensibility, not just a narrow initial flow. After export/load works, phase 3 should add user-pack discovery/config and the companion CLI lifecycle commands beyond install."
+title = "Add final acceptance and release discipline"
+why_now = "After extensibility and lifecycle behavior exists, the repo needs one acceptance command and release gates."
 write_scope = [
-  ".agents/skills/",
   "cli/",
   "pi-plugin/",
+  ".github/workflows/",
 ]
 inputs = [
-  "docs/reference/OLD-SANE-POSTMORTEM.md",
   "docs/roadmap/ROADMAP.md",
-  "docs/adr/0004-use-pi-overlay-with-codex-skill-export.md",
   "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md",
 ]
 done_when = [
-  "Shared packs can be enabled through the Sane config model.",
-  "The repo has a clear path for user-added packs/extensibility.",
-  "The CLI has justified progress beyond install toward export/update/doctor/repair flows.",
+  "One acceptance command covers install/export/load/extensibility/uninstall/recovery behavior.",
+  "Any CI added is Linux-only.",
 ]

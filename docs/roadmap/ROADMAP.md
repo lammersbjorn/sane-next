@@ -105,7 +105,7 @@ Stop only when the ROADMAP completion rule is satisfied and the final acceptance
   Verify: pack enablement changes produced artifacts or runtime behavior.
 - [x] The CLI exposes a justified export path.
   Verify: export command or script path works in a fixture target.
-- [ ] Phase 2 behavior is verified and committed.
+- [x] Phase 2 behavior is verified and committed.
   Verify: milestone commit exists and the phase 2 checks above pass.
 
 ---
