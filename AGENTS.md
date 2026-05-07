@@ -7,7 +7,7 @@
 
 ## Startup rules
 
-- Read `TRACK.toml`, `docs/adr/0002-use-track-toml-plus-adrs-for-tracking.md`, `docs/adr/0004-use-pi-overlay-with-codex-skill-export.md`, and `docs/standards/INSTRUCTION-SURFACE-STANDARD.md`.
+- Read `TRACK.toml`, `docs/standards/TRACK-STRUCTURE-STANDARD.md`, `docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md`, `docs/adr/0004-use-pi-overlay-with-codex-skill-export.md`, and `docs/standards/INSTRUCTION-SURFACE-STANDARD.md`.
 - Use current repo files and fresh external research. Do not trust old Sane claims or stale chat memory.
 - Keep always-on instructions small. Prefer trigger-based skills and on-demand references.
 - For stack, MCP, language, Pi, or Codex behavior choices, research current evidence before implementing.

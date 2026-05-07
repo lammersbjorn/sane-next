@@ -5,10 +5,12 @@ This repo is still pre-implementation. Keep process small and strict.
 ## Current truth
 
 - Current state: `TRACK.toml`
+- Track structure: `docs/standards/TRACK-STRUCTURE-STANDARD.md`
 - Durable decisions: `docs/adr/`
 - Agent rules: `AGENTS.md`
 - Copilot repo instructions: `.github/copilot-instructions.md`
 - Prompt/skill/agent standard: `docs/standards/INSTRUCTION-SURFACE-STANDARD.md`
+- Implementation-run protocol: `docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md`
 
 ## Commit convention
 

@@ -10,14 +10,59 @@ python3 - <<'PY'
 from pathlib import Path
 import tomllib
 
-tomllib.loads(Path("TRACK.toml").read_text(encoding="utf-8"))
+data = tomllib.loads(Path("TRACK.toml").read_text(encoding="utf-8"))
+
+required_top = {"version", "updated", "phase", "goal", "next_focus", "tracking", "current", "work_items"}
+missing_top = sorted(required_top - data.keys())
+if missing_top:
+    raise SystemExit(f"TRACK.toml missing required top-level keys: {', '.join(missing_top)}")
+
+for forbidden in ("items", "hypotheses"):
+    if forbidden in data:
+        raise SystemExit(f"TRACK.toml must not contain legacy section: {forbidden}")
+
+tracking = data["tracking"]
+for key in ("schema", "canonical_current_state", "canonical_decision_history", "canonical_standards", "progress_evidence", "rules"):
+    if key not in tracking:
+        raise SystemExit(f"TRACK.toml missing tracking.{key}")
+
+current = data["current"]
+for key in ("summary", "exit_criteria", "refs"):
+    if key not in current:
+        raise SystemExit(f"TRACK.toml missing current.{key}")
+
+items = data["work_items"]
+if not isinstance(items, list) or not items:
+    raise SystemExit("TRACK.toml must contain at least one [[work_items]] entry")
+if len(items) > 4:
+    raise SystemExit("TRACK.toml must keep at most 4 active-window work items")
+
+allowed_statuses = {"ready", "in_progress", "blocked", "queued"}
+in_progress_count = 0
+for item in items:
+    for key in ("id", "status", "title", "why_now", "write_scope", "inputs", "done_when"):
+        if key not in item:
+            raise SystemExit(f"TRACK.toml work item missing {key}")
+    if item["status"] not in allowed_statuses:
+        raise SystemExit(f"TRACK.toml work item has invalid status: {item['status']}")
+    if item["status"] == "in_progress":
+        in_progress_count += 1
+    for key in ("write_scope", "inputs", "done_when"):
+        value = item[key]
+        if not isinstance(value, list) or not value:
+            raise SystemExit(f"TRACK.toml work item field {key} must be a non-empty list")
+
+if in_progress_count > 1:
+    raise SystemExit("TRACK.toml may contain at most one in_progress work item")
 PY
 
 for required in \
   "AGENTS.md" \
   ".github/copilot-instructions.md" \
   "docs/adr/0002-use-track-toml-plus-adrs-for-tracking.md" \
-  "docs/adr/0004-use-pi-overlay-with-codex-skill-export.md"; do
+  "docs/adr/0004-use-pi-overlay-with-codex-skill-export.md" \
+  "docs/standards/TRACK-STRUCTURE-STANDARD.md" \
+  "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md"; do
   if [ ! -f "$required" ]; then
     echo "Missing required repo file: $required" >&2
     exit 1

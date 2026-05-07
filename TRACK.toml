@@ -1,95 +1,99 @@
-version = 1
+version = 2
 updated = "2026-05-07"
-phase = "research-active"
+phase = "implementation-ready"
 goal = "Build the smallest reliable Codex workflow tool that improves long-running coding outcomes without recreating Sane's bloat."
-next_focus = "Finish the one-shot build protocol, repo rules, tool/MCP policy, release strategy, and companion CLI research before implementation starts."
+next_focus = "Run the first implementation slice: core workflow skill, Pi plugin manifest/config schema, and the Go install CLI skeleton."
 
 [tracking]
+schema = "active-window-v1"
 canonical_current_state = "TRACK.toml"
 canonical_decision_history = "docs/adr/"
-external_mirror = "optional"
-external_mirror_authority = "non-authoritative"
+canonical_standards = "docs/standards/"
+progress_evidence = "git commits and pull requests"
 
 rules = [
-  "Keep only active and near-term state here.",
-  "Record decisions in ADRs, not in TRACK.toml notes.",
+  "Keep only active-window state here.",
+  "Do not store completed work, hypotheses, research notes, or historical narrative here.",
+  "Every work item must include why_now, write_scope, inputs, and done_when.",
+  "Use ADRs for durable decisions and standards docs for structure/protocol definitions.",
   "Use commits and pull requests as progress evidence.",
-  "Do not create parallel TODO, plan, memory, or research-dump files.",
-  "Read AGENTS.md and .github/copilot-instructions.md before broad work.",
-  "Treat only current ADRs as authoritative; superseded files should not remain in the repo.",
-  "Use committed git hooks and Conventional Commits for all new commits."
+  "Do not create parallel TODO, plan, memory, or research-dump files."
 ]
 
-[[items]]
-id = "tracking-system"
-status = "done"
-title = "Choose canonical tracking system"
-notes = "Use TRACK.toml plus ADRs. External mirrors are optional and non-authoritative."
+[current]
+summary = "Planning is locked. The next run should execute the first small end-to-end implementation slice."
+exit_criteria = [
+  "The core-workflow skill exists and follows the instruction standard.",
+  "The Pi plugin manifest and config schema exist without rebuilding Pi internals.",
+  "The Go CLI install command builds and exits cleanly.",
+  "The implementation follows the MCP and release policies captured in ADR 0008 and ADR 0009."
+]
 refs = [
-  "docs/adr/0002-use-track-toml-plus-adrs-for-tracking.md",
+  "docs/adr/0004-use-pi-overlay-with-codex-skill-export.md",
+  "docs/adr/0007-use-go-for-companion-cli.md",
+  "docs/adr/0008-use-small-tooling-policy-and-optional-mcps.md",
+  "docs/adr/0009-use-annotated-semver-and-linux-only-ci-while-private.md",
+  "docs/standards/TRACK-STRUCTURE-STANDARD.md",
+  "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md",
+  "docs/standards/INSTRUCTION-SURFACE-STANDARD.md",
 ]
 
-[[items]]
-id = "sane-postmortem"
-status = "done"
-title = "Extract lessons from current Sane"
-notes = "Preserve outcome-first vision, minimal always-on guidance, verification discipline, skill-first extensibility, and explicit recovery. Discard TUI-heavy scope, doc sprawl, framework growth, and premature routing complexity."
-refs = ["docs/adr/0004-use-pi-overlay-with-codex-skill-export.md"]
+[[work_items]]
+id = "phase-1-scaffold"
+status = "ready"
+title = "Create the first code surfaces"
+why_now = "This is the smallest useful implementation slice that proves the product shape without recreating old Sane complexity."
+write_scope = [
+  ".agents/skills/core-workflow/",
+  "pi-plugin/",
+  "cli/",
+]
+inputs = [
+  "docs/adr/0004-use-pi-overlay-with-codex-skill-export.md",
+  "docs/adr/0007-use-go-for-companion-cli.md",
+  "docs/adr/0008-use-small-tooling-policy-and-optional-mcps.md",
+  "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md",
+  "docs/standards/INSTRUCTION-SURFACE-STANDARD.md",
+]
+done_when = [
+  "The core-workflow skill exists with the required sections and Pi/Codex compatibility.",
+  "The Pi plugin manifest and config schema exist and parse cleanly.",
+  "The Go CLI install command builds and exits 0.",
+]
 
-[[items]]
-id = "architecture-direction"
-status = "done"
-title = "Choose initial product direction"
-notes = "Use Pi as the primary runtime via an overlay/distribution model, keep packs skill-first, add a small companion CLI for install/export/update/doctor, and export the same packs to Codex-native skill paths."
-refs = ["docs/adr/0004-use-pi-overlay-with-codex-skill-export.md"]
+[[work_items]]
+id = "phase-2-export-and-load"
+status = "queued"
+title = "Wire export and config loading"
+why_now = "After the first surfaces exist, the next highest-value step is proving that shared pack content can reach Codex paths while Pi reads Sane config."
+write_scope = [
+  "cli/",
+  "pi-plugin/",
+]
+inputs = [
+  "docs/adr/0004-use-pi-overlay-with-codex-skill-export.md",
+  "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md",
+]
+done_when = [
+  "A CLI or script path can export the first shared skill to a Codex-native location.",
+  "The Pi plugin reads the Sane config without reaching into Pi internals.",
+]
 
-[[items]]
-id = "implementation-run"
-status = "next"
-title = "Prepare the first implementation slice"
-notes = "Define the first Pi overlay slice: core plugin manifest, companion CLI surface, shared skill pack export to Pi and Codex, and the first end-to-end acceptance path."
-depends_on = ["tracking-system", "sane-postmortem", "architecture-direction"]
-
-[[hypotheses]]
-id = "sane-vision-good-current-bloated"
-status = "confirmed"
-
-[[hypotheses]]
-id = "smaller-and-more-focused"
-status = "confirmed"
-
-[[hypotheses]]
-id = "small-config-over-tui"
-status = "confirmed"
-
-[[hypotheses]]
-id = "gpt55-low-enough-often"
-status = "likely"
-
-[[hypotheses]]
-id = "gpt55-low-reduces-cost"
-status = "likely"
-
-[[hypotheses]]
-id = "one-strong-default-over-heavy-routing"
-status = "confirmed"
-
-[[hypotheses]]
-id = "pi-style-architecture-efficient"
-status = "confirmed"
-
-[[hypotheses]]
-id = "workflow-discipline-over-code-complexity"
-status = "confirmed"
-
-[[hypotheses]]
-id = "tracking-system-makes-or-breaks-project"
-status = "confirmed"
-
-[[hypotheses]]
-id = "pi-overlay-better-than-fork"
-status = "confirmed"
-
-[[hypotheses]]
-id = "shared-skill-packs-should-export-to-codex-too"
-status = "confirmed"
+[[work_items]]
+id = "phase-3-acceptance"
+status = "queued"
+title = "Prove the first slice end to end"
+why_now = "The first slice only counts if install, export, and plugin/config behavior are verifiable and reversible."
+write_scope = [
+  "cli/",
+  "pi-plugin/",
+  ".github/workflows/",
+]
+inputs = [
+  "docs/adr/0009-use-annotated-semver-and-linux-only-ci-while-private.md",
+  "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md",
+]
+done_when = [
+  "The first-slice acceptance path in the implementation protocol passes.",
+  "Any CI added remains Linux-only while the repo is private.",
+]

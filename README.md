@@ -7,9 +7,11 @@ This repo is intentionally small and still pre-implementation. Old Sane is refer
 ## Current truth
 
 - **Current state:** `TRACK.toml`
+- **TRACK structure:** `docs/standards/TRACK-STRUCTURE-STANDARD.md`
 - **Durable decisions:** `docs/adr/0002-use-track-toml-plus-adrs-for-tracking.md`
 - **Current architecture direction:** `docs/adr/0004-use-pi-overlay-with-codex-skill-export.md`
 - **Instruction authoring standard:** `docs/standards/INSTRUCTION-SURFACE-STANDARD.md`
+- **Implementation-run protocol:** `docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md`
 - **Agent rules:** `AGENTS.md`
 - **Copilot repo instructions:** `.github/copilot-instructions.md`
 
