@@ -28,6 +28,7 @@ Implement `sane-next` as a full remake with bounded phases, not as an unbounded 
 ## Inputs
 
 - `TRACK.toml`
+- `docs/roadmap/ROADMAP.md`
 - `docs/reference/OLD-SANE-POSTMORTEM.md`
 - core ADRs in `docs/adr/`
 - standards in `docs/standards/`
@@ -43,14 +44,15 @@ Implement `sane-next` as a full remake with bounded phases, not as an unbounded 
 ## How To Run
 
 1. Read `TRACK.toml` first and identify the active phase plus write boundaries.
-2. Read the old-Sane postmortem and the relevant ADRs/standards before choosing the approach.
-3. Treat the product scope as the full remake: packs, extensibility, Pi integration, Codex export, and CLI lifecycle all matter.
-4. Treat the active phase as bounded execution, not as the full product scope.
-5. If running with `/goal`, use `/goal` as a budgeted objective anchor, not as the sole execution contract.
-6. Keep `AGENTS.md` small; put recurring procedure detail here or in referenced docs instead of expanding always-on instructions.
-7. Prefer one clear write boundary per lane. If parallelizing, keep file ownership disjoint.
-8. Commit after meaningful milestones so git becomes the primary resume anchor.
-9. If the run pauses or hits budget, resume from git state first, then continue the remaining work only.
+2. Read `docs/roadmap/ROADMAP.md` to understand the full remake scope and the verified checklist.
+3. Read the old-Sane postmortem and the relevant ADRs/standards before choosing the approach.
+4. Treat the product scope as the full remake: packs, extensibility, Pi integration, Codex export, and CLI lifecycle all matter.
+5. Treat the active phase as bounded execution, not as the full product scope.
+6. If running with `/goal`, use the concrete `/goal` text from `docs/roadmap/ROADMAP.md`.
+7. Keep `AGENTS.md` small; put recurring procedure detail here or in referenced docs instead of expanding always-on instructions.
+8. Prefer one clear write boundary per lane. If parallelizing, keep file ownership disjoint.
+9. Commit after meaningful milestones so git becomes the primary resume anchor.
+10. If the run pauses or hits budget, resume from git state first, then continue the remaining unchecked verified work from the roadmap.
 
 ## Verification
 
@@ -63,6 +65,7 @@ Implement `sane-next` as a full remake with bounded phases, not as an unbounded 
 - do not copy old Sane code into `sane-next`
 - do not let the run narrow the full remake into "just the first slice"
 - do not let packs/extensibility disappear from the plan
+- do not check roadmap boxes without matching verification
 - do not enable broad MCP/tool surfaces unless they are clearly justified
 - do not treat the old `sane` repo as a writable workspace
 - do not grow `TRACK.toml` into a backlog or research dump

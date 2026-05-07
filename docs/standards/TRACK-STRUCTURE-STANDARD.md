@@ -4,6 +4,8 @@ This file defines the only allowed structure for `TRACK.toml`.
 
 `TRACK.toml` is the repo's **active execution window**, not a backlog, not a history file, and not a hypothesis dump.
 
+The whole-program verified checklist can live in `docs/roadmap/ROADMAP.md`. `TRACK.toml` should mirror only the current active phase from that roadmap.
+
 ## Hard rules
 
 1. Keep `TRACK.toml` short enough to read at the start of a run.
@@ -11,6 +13,7 @@ This file defines the only allowed structure for `TRACK.toml`.
 3. Remove completed work once the resulting repo state is committed.
 4. Do not store hypotheses, research summaries, meeting notes, or historical narrative here.
 5. Use ADRs for durable decisions and standards docs for durable structure/protocol rules.
+6. Use `docs/roadmap/ROADMAP.md` for the broader verified roadmap when the project needs a whole-program execution ledger.
 
 ## Top-level schema
 
@@ -97,6 +100,15 @@ Rules:
 - research digests
 - duplicate task ledgers
 - broad future backlog
+
+## Relationship to ROADMAP
+
+If the repo has a canonical roadmap file, use this split:
+
+- `docs/roadmap/ROADMAP.md` = full program checklist with verification gates
+- `TRACK.toml` = current active phase only
+
+The roadmap may list the whole remake. `TRACK.toml` should list only the next bounded slice.
 
 ## Example
 

@@ -7,24 +7,25 @@ This repo is intentionally small, but it is **not** a single-summary-doc repo. T
 ## Read in this order
 
 1. `TRACK.toml` — the current active slice
-2. `docs/reference/OLD-SANE-POSTMORTEM.md` — what old Sane taught us and what not to copy
-3. core ADRs:
+2. `docs/roadmap/ROADMAP.md` — the full remake checklist and the concrete `/goal` prompt
+3. `docs/reference/OLD-SANE-POSTMORTEM.md` — what old Sane taught us and what not to copy
+4. core ADRs:
    - `docs/adr/0002-use-track-toml-plus-adrs-for-tracking.md`
    - `docs/adr/0004-use-pi-overlay-with-codex-skill-export.md`
    - `docs/adr/0007-use-go-for-companion-cli.md`
    - `docs/adr/0008-use-small-tooling-policy-and-optional-mcps.md`
    - `docs/adr/0009-use-annotated-semver-and-linux-only-ci-while-private.md`
-4. standards:
+5. standards:
    - `docs/standards/TRACK-STRUCTURE-STANDARD.md`
    - `docs/standards/INSTRUCTION-SURFACE-STANDARD.md`
-    - `docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md`
-   - `docs/standards/GOAL-RUN-STANDARD.md`
-5. `AGENTS.md` — small startup rules
-6. `CONTRIBUTING.md` — commit and hook rules
+   - `docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md`
+6. `AGENTS.md` — small startup rules
+7. `CONTRIBUTING.md` — commit and hook rules
 
 ## Repo structure
 
 - `TRACK.toml` — bounded active execution window only
+- `docs/roadmap/` — full remake roadmap and `/goal` launch material
 - `docs/reference/` — reference context and postmortems
 - `docs/adr/` — durable decisions
 - `docs/standards/` — durable standards and execution protocols
@@ -32,7 +33,7 @@ This repo is intentionally small, but it is **not** a single-summary-doc repo. T
 - `AGENTS.md` — tiny always-on instruction surface
 - `.githooks/` — committed repo hooks
 
-`TRACK.toml` is **not** the whole product plan. It only holds the active phase. The full remake scope lives in ADRs, standards, and implementation skills.
+`TRACK.toml` is **not** the whole product plan. It only holds the active phase. The full remake scope and verified checklist live in `docs/roadmap/ROADMAP.md`.
 
 The intended product is still the broader remake: Pi-first runtime integration, shared packs, Codex export, extensibility, user-added packs, and the small Sane companion CLI around install/export/update/doctor/repair flows.
 

@@ -11,8 +11,8 @@ The repo should not confuse "phase 1" with "the whole product."
 | Concern | Owner |
 | --- | --- |
 | Current execution window | `TRACK.toml` |
+| Full remake checklist and `/goal` prompt | `docs/roadmap/ROADMAP.md` |
 | Tracking shape | `docs/standards/TRACK-STRUCTURE-STANDARD.md` |
-| `/goal` implementation-run setup | `docs/standards/GOAL-RUN-STANDARD.md` |
 | Durable decisions | `docs/adr/` |
 | Instruction/skill/agent authoring | `docs/standards/INSTRUCTION-SURFACE-STANDARD.md` |
 | Implementation run shape | `docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md` |
@@ -32,6 +32,8 @@ That remake includes:
 - explicit verification and recovery
 
 `TRACK.toml` only holds the current phase because the execution window should be bounded. The product scope still includes the larger remake.
+
+Use `docs/roadmap/ROADMAP.md` as the whole-program execution ledger for the later `/goal` run.
 
 ## One-shot prompt contract
 
@@ -120,49 +122,9 @@ Apply ADR 0009:
 - no full release automation yet
 
 ## Phase roadmap
+The detailed whole-program phase checklist lives in `docs/roadmap/ROADMAP.md`.
 
-### Phase 1 — foundations
-
-Create the foundation surfaces without pretending phase 1 is the whole product:
-
-1. **Core workflow skill**
-   - create `.agents/skills/core-workflow/SKILL.md`
-   - keep it Pi/Codex compatible
-   - follow the instruction-surface standard exactly
-
-2. **Pi plugin scaffold**
-   - create `pi-plugin/manifest.toml`
-   - create `pi-plugin/config-schema.toml`
-   - keep the schema limited to packs, model/reasoning defaults, and export targets
-
-3. **Companion CLI scaffold**
-   - use Go per ADR 0007
-   - create `cli/go.mod`, `cli/main.go`, and `cli/cmd/install.go`
-   - start with `install` only
-
-### Phase 2 — packs and export/load
-
-After the phase 1 foundations exist:
-
-1. wire the first shared-pack export path to Codex-native locations
-2. make the Pi side load Sane config and pack state without reaching into Pi internals
-3. prove the pack model is actually central, not decorative
-
-### Phase 3 — extensibility and CLI lifecycle
-
-After export/load works:
-
-1. add the path for user-added packs and explicit extensibility
-2. extend the companion CLI beyond `install` toward `export`, `update`, `doctor`, and `repair`
-3. keep the config model small while supporting packs and exports cleanly
-
-### Phase 4 — acceptance, recovery, and release discipline
-
-After the main remake surfaces exist:
-
-1. verify install/export/extensibility/recovery behavior end to end
-2. add only the CI needed for the acceptance path
-3. keep release discipline aligned with ADR 0009
+`TRACK.toml` should mirror only the current active phase from that roadmap.
 
 ## Lane sequence
 
@@ -186,6 +148,8 @@ Done means all of the following are true:
 5. the first export/load path is wired without rebuilding Pi internals.
 6. the repo has a clear path for packs/extensibility beyond the initial pack.
 7. any CI added remains Linux-only while the repo is private.
+
+The whole-program acceptance rule lives in `docs/roadmap/ROADMAP.md`.
 
 ## Open risks that remain outside TRACK
 

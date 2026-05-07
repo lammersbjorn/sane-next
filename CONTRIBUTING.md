@@ -5,6 +5,7 @@ This repo is still pre-implementation. Keep process small and strict.
 ## Current truth
 
 - Current state: `TRACK.toml`
+- Full remake roadmap: `docs/roadmap/ROADMAP.md`
 - Old Sane reference context: `docs/reference/OLD-SANE-POSTMORTEM.md`
 - Durable decisions: `docs/adr/`
 - Tracking/prompt/skill standards: `docs/standards/`

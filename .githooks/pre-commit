@@ -22,7 +22,7 @@ for forbidden in ("items", "hypotheses"):
         raise SystemExit(f"TRACK.toml must not contain legacy section: {forbidden}")
 
 tracking = data["tracking"]
-for key in ("schema", "canonical_current_state", "canonical_reference", "canonical_decision_history", "canonical_standards", "progress_evidence", "rules"):
+for key in ("schema", "canonical_current_state", "canonical_roadmap", "canonical_reference", "canonical_decision_history", "canonical_standards", "progress_evidence", "rules"):
     if key not in tracking:
         raise SystemExit(f"TRACK.toml missing tracking.{key}")
 
@@ -69,6 +69,7 @@ allowed_exact = {
 }
 allowed_prefixes = (
     "docs/adr/",
+    "docs/roadmap/",
     "docs/standards/",
     "docs/reference/",
     ".agents/skills/",
@@ -85,6 +86,7 @@ PY
 for required in \
   "AGENTS.md" \
   ".github/copilot-instructions.md" \
+  "docs/roadmap/ROADMAP.md" \
   "docs/reference/OLD-SANE-POSTMORTEM.md" \
   "docs/adr/0002-use-track-toml-plus-adrs-for-tracking.md" \
   "docs/adr/0004-use-pi-overlay-with-codex-skill-export.md" \
@@ -96,7 +98,6 @@ for required in \
   "docs/standards/INSTRUCTION-SURFACE-STANDARD.md" \
   "docs/standards/TRACK-STRUCTURE-STANDARD.md" \
   "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md" \
-  "docs/standards/GOAL-RUN-STANDARD.md" \
   ".agents/skills/sane-next-implementation/SKILL.md"; do
   if [ ! -f "$required" ]; then
     echo "Missing required repo file: $required" >&2
