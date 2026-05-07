@@ -22,7 +22,7 @@ for forbidden in ("items", "hypotheses"):
         raise SystemExit(f"TRACK.toml must not contain legacy section: {forbidden}")
 
 tracking = data["tracking"]
-for key in ("schema", "canonical_current_state", "canonical_foundation", "canonical_steps", "progress_evidence", "rules"):
+for key in ("schema", "canonical_current_state", "canonical_reference", "canonical_decision_history", "canonical_standards", "progress_evidence", "rules"):
     if key not in tracking:
         raise SystemExit(f"TRACK.toml missing tracking.{key}")
 
@@ -34,8 +34,8 @@ for key in ("summary", "exit_criteria", "refs"):
 items = data["work_items"]
 if not isinstance(items, list) or not items:
     raise SystemExit("TRACK.toml must contain at least one [[work_items]] entry")
-if len(items) > 2:
-    raise SystemExit("TRACK.toml must keep at most 2 active-window work items")
+if len(items) > 4:
+    raise SystemExit("TRACK.toml must keep at most 4 active-window work items")
 
 allowed_statuses = {"ready", "in_progress", "blocked", "queued"}
 in_progress_count = 0
@@ -55,34 +55,46 @@ for item in items:
 if in_progress_count > 1:
     raise SystemExit("TRACK.toml may contain at most one in_progress work item")
 
-allowed_markdown = {
-    "README.md",
-    "AGENTS.md",
-    "CONTRIBUTING.md",
-    ".github/copilot-instructions.md",
-    "docs/FOUNDATION.md",
-    "docs/IMPLEMENTATION.md",
-}
-
 actual_markdown = {
     str(path).replace("\\", "/")
     for path in Path(".").rglob("*.md")
     if ".git/" not in str(path).replace("\\", "/")
 }
 
-unexpected = sorted(actual_markdown - allowed_markdown)
+allowed_exact = {
+    "README.md",
+    "AGENTS.md",
+    "CONTRIBUTING.md",
+    ".github/copilot-instructions.md",
+}
+allowed_prefixes = (
+    "docs/adr/",
+    "docs/standards/",
+    "docs/reference/",
+)
+
+unexpected = sorted(
+    path for path in actual_markdown
+    if path not in allowed_exact and not any(path.startswith(prefix) for prefix in allowed_prefixes)
+)
 if unexpected:
-    raise SystemExit(
-        "Unexpected markdown files found outside the fixed repo structure: "
-        + ", ".join(unexpected)
-    )
+    raise SystemExit("Unexpected markdown files found outside the fixed repo structure: " + ", ".join(unexpected))
 PY
 
 for required in \
   "AGENTS.md" \
   ".github/copilot-instructions.md" \
-  "docs/FOUNDATION.md" \
-  "docs/IMPLEMENTATION.md"; do
+  "docs/reference/OLD-SANE-POSTMORTEM.md" \
+  "docs/adr/0002-use-track-toml-plus-adrs-for-tracking.md" \
+  "docs/adr/0004-use-pi-overlay-with-codex-skill-export.md" \
+  "docs/adr/0005-use-native-git-hooks-and-conventional-commits.md" \
+  "docs/adr/0006-use-bounded-track-window-and-track-standard.md" \
+  "docs/adr/0007-use-go-for-companion-cli.md" \
+  "docs/adr/0008-use-small-tooling-policy-and-optional-mcps.md" \
+  "docs/adr/0009-use-annotated-semver-and-linux-only-ci-while-private.md" \
+  "docs/standards/INSTRUCTION-SURFACE-STANDARD.md" \
+  "docs/standards/TRACK-STRUCTURE-STANDARD.md" \
+  "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md"; do
   if [ ! -f "$required" ]; then
     echo "Missing required repo file: $required" >&2
     exit 1

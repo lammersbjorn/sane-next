@@ -7,7 +7,7 @@
 
 ## Startup rules
 
-- Read `TRACK.toml`, `docs/FOUNDATION.md`, and `docs/IMPLEMENTATION.md` before broad work.
+- Read `TRACK.toml`, `docs/reference/OLD-SANE-POSTMORTEM.md`, `docs/adr/0002-use-track-toml-plus-adrs-for-tracking.md`, `docs/adr/0004-use-pi-overlay-with-codex-skill-export.md`, `docs/adr/0007-use-go-for-companion-cli.md`, `docs/adr/0008-use-small-tooling-policy-and-optional-mcps.md`, `docs/adr/0009-use-annotated-semver-and-linux-only-ci-while-private.md`, `docs/standards/TRACK-STRUCTURE-STANDARD.md`, `docs/standards/INSTRUCTION-SURFACE-STANDARD.md`, and `docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md` before broad work.
 - Use current repo files and fresh external research. Do not trust old Sane claims or stale chat memory.
 - Keep always-on instructions small.
 - Research current evidence before changing stack, Pi, MCP, or model assumptions.
@@ -18,7 +18,7 @@
 - Do not rebuild Pi's runtime in this repo.
 - Do not add a TUI-heavy standalone surface.
 - Do not create parallel `TODO`, `plan`, `memory`, ADR, or research-dump files in the repo.
-- Do not add extra markdown docs outside the fixed repo structure without intentionally changing the structure first.
+- Do not add markdown docs outside the fixed repo structure without intentionally changing the structure first.
 
 ## Done
 

@@ -7,15 +7,16 @@ next_focus = "Run the first implementation slice: core workflow skill, Pi plugin
 [tracking]
 schema = "active-window-v1"
 canonical_current_state = "TRACK.toml"
-canonical_foundation = "docs/FOUNDATION.md"
-canonical_steps = "docs/IMPLEMENTATION.md"
+canonical_reference = "docs/reference/"
+canonical_decision_history = "docs/adr/"
+canonical_standards = "docs/standards/"
 progress_evidence = "git commits and pull requests"
 
 rules = [
   "Keep only active-window state here.",
   "Do not store completed work, hypotheses, research notes, or historical narrative here.",
   "Every work item must include why_now, write_scope, inputs, and done_when.",
-  "Use docs/FOUNDATION.md for durable decisions and docs/IMPLEMENTATION.md for build order.",
+  "Use docs/adr/ for durable decisions, docs/standards/ for durable rules, and docs/reference/ for reference context.",
   "Use commits and pull requests as progress evidence.",
   "Do not create parallel TODO, plan, memory, or research-dump files."
 ]
@@ -26,11 +27,16 @@ exit_criteria = [
   "The core-workflow skill exists and follows the instruction standard.",
   "The Pi plugin manifest and config schema exist without rebuilding Pi internals.",
   "The Go CLI install command builds and exits cleanly.",
-  "The implementation follows the fixed repo rules in docs/FOUNDATION.md."
+  "The implementation follows the durable repo rules in docs/adr/ and docs/standards/."
 ]
 refs = [
-  "docs/FOUNDATION.md",
-  "docs/IMPLEMENTATION.md",
+  "docs/reference/OLD-SANE-POSTMORTEM.md",
+  "docs/adr/0004-use-pi-overlay-with-codex-skill-export.md",
+  "docs/adr/0007-use-go-for-companion-cli.md",
+  "docs/adr/0008-use-small-tooling-policy-and-optional-mcps.md",
+  "docs/adr/0009-use-annotated-semver-and-linux-only-ci-while-private.md",
+  "docs/standards/INSTRUCTION-SURFACE-STANDARD.md",
+  "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md",
   "AGENTS.md",
 ]
 
@@ -45,12 +51,51 @@ write_scope = [
   "cli/",
 ]
 inputs = [
-  "docs/FOUNDATION.md",
-  "docs/IMPLEMENTATION.md",
-  "AGENTS.md",
+  "docs/adr/0004-use-pi-overlay-with-codex-skill-export.md",
+  "docs/adr/0007-use-go-for-companion-cli.md",
+  "docs/adr/0008-use-small-tooling-policy-and-optional-mcps.md",
+  "docs/standards/INSTRUCTION-SURFACE-STANDARD.md",
+  "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md",
 ]
 done_when = [
   "The core-workflow skill exists with the required sections and Pi/Codex compatibility.",
   "The Pi plugin manifest and config schema exist and parse cleanly.",
   "The Go CLI install command builds and exits 0.",
+]
+
+[[work_items]]
+id = "phase-2-export-and-load"
+status = "queued"
+title = "Wire export and config loading"
+why_now = "After the first surfaces exist, the next step is proving shared pack export and Pi-side config loading without reaching into Pi internals."
+write_scope = [
+  "cli/",
+  "pi-plugin/",
+]
+inputs = [
+  "docs/adr/0004-use-pi-overlay-with-codex-skill-export.md",
+  "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md",
+]
+done_when = [
+  "A CLI or script path can export the first shared skill to a Codex-native location.",
+  "The Pi plugin reads Sane config without reaching into Pi internals.",
+]
+
+[[work_items]]
+id = "phase-3-acceptance"
+status = "queued"
+title = "Prove the first slice end to end"
+why_now = "The first slice only counts if install, export, and plugin/config behavior are verifiable and reversible."
+write_scope = [
+  "cli/",
+  "pi-plugin/",
+  ".github/workflows/",
+]
+inputs = [
+  "docs/adr/0009-use-annotated-semver-and-linux-only-ci-while-private.md",
+  "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md",
+]
+done_when = [
+  "The first-slice acceptance path in the implementation protocol passes.",
+  "Any CI added remains Linux-only while the repo is private.",
 ]

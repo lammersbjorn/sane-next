@@ -5,8 +5,9 @@ This repo is still pre-implementation. Keep process small and strict.
 ## Current truth
 
 - Current state: `TRACK.toml`
-- Product and repo decisions: `docs/FOUNDATION.md`
-- Implementation steps: `docs/IMPLEMENTATION.md`
+- Old Sane reference context: `docs/reference/OLD-SANE-POSTMORTEM.md`
+- Durable decisions: `docs/adr/`
+- Tracking/prompt/skill standards: `docs/standards/`
 - Agent rules: `AGENTS.md`
 - Copilot repo instructions: `.github/copilot-instructions.md`
 
