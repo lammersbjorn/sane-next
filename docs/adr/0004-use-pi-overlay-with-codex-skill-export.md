@@ -4,8 +4,6 @@
 
 Accepted
 
-Supersedes ADR 0003.
-
 ## Context
 
 Deeper research changed the architecture picture.

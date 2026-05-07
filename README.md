@@ -1,8 +1,16 @@
 # sane-next
 
-Clean-sheet successor to Sane.
+Pi-first overlay/distribution for high-leverage coding-agent workflows, with shared skill packs that also export to Codex-native skill paths.
 
-This repo starts intentionally small. It does not inherit the current Sane codebase, and it does not start with a repo-local TODO ledger, generated planning scaffold, or broad framework structure.
+This repo is intentionally small and still pre-implementation. Old Sane is reference material only for what failed or what may transfer conceptually. It is not a source of truth.
+
+## Current truth
+
+- **Current state:** `TRACK.toml`
+- **Durable decisions:** `docs/adr/0002-use-track-toml-plus-adrs-for-tracking.md`
+- **Current architecture direction:** `docs/adr/0004-use-pi-overlay-with-codex-skill-export.md`
+- **Agent rules:** `AGENTS.md`
+- **Copilot repo instructions:** `.github/copilot-instructions.md`
 
 ## Tracking
 

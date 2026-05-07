@@ -1,8 +1,8 @@
 version = 1
 updated = "2026-05-07"
-phase = "architecture-direction-set"
+phase = "research-active"
 goal = "Build the smallest reliable Codex workflow tool that improves long-running coding outcomes without recreating Sane's bloat."
-next_focus = "Design the first Pi overlay slice: core plugin, shared skill export, minimal companion CLI, and a small config schema for packs/defaults."
+next_focus = "Finish the one-shot build protocol, repo rules, tool/MCP policy, release strategy, and companion CLI research before implementation starts."
 
 [tracking]
 canonical_current_state = "TRACK.toml"
@@ -14,7 +14,9 @@ rules = [
   "Keep only active and near-term state here.",
   "Record decisions in ADRs, not in TRACK.toml notes.",
   "Use commits and pull requests as progress evidence.",
-  "Do not create parallel TODO, plan, memory, or research-dump files."
+  "Do not create parallel TODO, plan, memory, or research-dump files.",
+  "Read AGENTS.md and .github/copilot-instructions.md before broad work.",
+  "Treat only current ADRs as authoritative; superseded files should not remain in the repo."
 ]
 
 [[items]]
@@ -23,7 +25,6 @@ status = "done"
 title = "Choose canonical tracking system"
 notes = "Use TRACK.toml plus ADRs. External mirrors are optional and non-authoritative."
 refs = [
-  "docs/adr/0001-use-github-issues-plus-adrs-for-tracking.md",
   "docs/adr/0002-use-track-toml-plus-adrs-for-tracking.md",
 ]
 
