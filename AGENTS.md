@@ -7,21 +7,21 @@
 
 ## Startup rules
 
-- Read `TRACK.toml`, `docs/standards/TRACK-STRUCTURE-STANDARD.md`, `docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md`, `docs/adr/0004-use-pi-overlay-with-codex-skill-export.md`, and `docs/standards/INSTRUCTION-SURFACE-STANDARD.md`.
+- Read `TRACK.toml`, `docs/FOUNDATION.md`, and `docs/IMPLEMENTATION.md` before broad work.
 - Use current repo files and fresh external research. Do not trust old Sane claims or stale chat memory.
-- Keep always-on instructions small. Prefer trigger-based skills and on-demand references.
-- For stack, MCP, language, Pi, or Codex behavior choices, research current evidence before implementing.
-- Update `TRACK.toml` for current state and ADRs for durable decisions.
+- Keep always-on instructions small.
+- Research current evidence before changing stack, Pi, MCP, or model assumptions.
+- Update `TRACK.toml` only for the active slice.
 
 ## Hard boundaries
 
 - Do not rebuild Pi's runtime in this repo.
 - Do not add a TUI-heavy standalone surface.
-- Do not create parallel `TODO`, `plan`, `memory`, or research-dump files in the repo.
-- Do not add duplicated policy or generated repo summaries to always-on surfaces.
+- Do not create parallel `TODO`, `plan`, `memory`, ADR, or research-dump files in the repo.
+- Do not add extra markdown docs outside the fixed repo structure without intentionally changing the structure first.
 
 ## Done
 
 - Current files reflect current truth.
-- Superseded files are removed.
-- Instruction surfaces stay small and non-duplicated.
+- Repo docs stay small and structured.
+- The implementation path stays clear without chat context.

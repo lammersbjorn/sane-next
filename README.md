@@ -1,24 +1,23 @@
 # sane-next
 
-Pi-first overlay/distribution for high-leverage coding-agent workflows, with shared skill packs that also export to Codex-native skill paths.
+`sane-next` is a **Pi-first overlay/distribution** for high-leverage coding-agent workflows, with shared packs that also export to Codex-native skill paths.
 
-This repo is intentionally small and still pre-implementation. Old Sane is reference material only for what failed or what may transfer conceptually. It is not a source of truth.
+This repo is intentionally small. The implementation agent should be able to work from the repo alone without chat history.
 
-## Current truth
+## Read in this order
 
-- **Current state:** `TRACK.toml`
-- **TRACK structure:** `docs/standards/TRACK-STRUCTURE-STANDARD.md`
-- **Durable decisions:** `docs/adr/0002-use-track-toml-plus-adrs-for-tracking.md`
-- **Current architecture direction:** `docs/adr/0004-use-pi-overlay-with-codex-skill-export.md`
-- **Instruction authoring standard:** `docs/standards/INSTRUCTION-SURFACE-STANDARD.md`
-- **Implementation-run protocol:** `docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md`
-- **Agent rules:** `AGENTS.md`
-- **Copilot repo instructions:** `.github/copilot-instructions.md`
+1. `TRACK.toml` — the current active slice
+2. `docs/FOUNDATION.md` — the fixed product and repo decisions
+3. `docs/IMPLEMENTATION.md` — the exact build order and acceptance path
+4. `AGENTS.md` — small startup rules
+5. `CONTRIBUTING.md` — commit and hook rules
 
-## Tracking
+## Repo structure
 
-- **Active work:** `TRACK.toml`
-- **Significant decisions:** `docs/adr/`
-- **Progress evidence:** commits and pull requests
+- `TRACK.toml` — bounded active execution window only
+- `docs/FOUNDATION.md` — current truth about product, boundaries, tooling, and repo rules
+- `docs/IMPLEMENTATION.md` — step-by-step implementation sequence
+- `AGENTS.md` — tiny always-on instruction surface
+- `.githooks/` — committed repo hooks
 
-External mirrors are optional later, but they are not authoritative.
+Do not add more planning, TODO, memory, ADR, or research markdown files unless the repo structure is intentionally changed first.

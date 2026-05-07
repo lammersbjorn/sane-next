@@ -5,12 +5,10 @@ This repo is still pre-implementation. Keep process small and strict.
 ## Current truth
 
 - Current state: `TRACK.toml`
-- Track structure: `docs/standards/TRACK-STRUCTURE-STANDARD.md`
-- Durable decisions: `docs/adr/`
+- Product and repo decisions: `docs/FOUNDATION.md`
+- Implementation steps: `docs/IMPLEMENTATION.md`
 - Agent rules: `AGENTS.md`
 - Copilot repo instructions: `.github/copilot-instructions.md`
-- Prompt/skill/agent standard: `docs/standards/INSTRUCTION-SURFACE-STANDARD.md`
-- Implementation-run protocol: `docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md`
 
 ## Commit convention
 
@@ -75,7 +73,8 @@ Current hooks:
   - fails on whitespace/conflict-marker issues
   - parses `TRACK.toml`
   - verifies required repo truth files exist
-  - blocks superseded ADR files from reappearing
+  - enforces the bounded TRACK shape
+  - blocks markdown sprawl outside the fixed repo structure
 - `commit-msg`
   - enforces the Conventional Commit format
 
@@ -83,4 +82,4 @@ Current hooks:
 
 - Use **annotated** tags only.
 - While pre-stable, use `v0.y.z`.
-- Do not start cross-platform release automation until the release policy lands; current workflow research favors Linux-only CI while the repo is private.
+- Keep CI Linux-only while the repo is private.

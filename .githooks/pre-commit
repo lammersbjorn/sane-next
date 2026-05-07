@@ -22,7 +22,7 @@ for forbidden in ("items", "hypotheses"):
         raise SystemExit(f"TRACK.toml must not contain legacy section: {forbidden}")
 
 tracking = data["tracking"]
-for key in ("schema", "canonical_current_state", "canonical_decision_history", "canonical_standards", "progress_evidence", "rules"):
+for key in ("schema", "canonical_current_state", "canonical_foundation", "canonical_steps", "progress_evidence", "rules"):
     if key not in tracking:
         raise SystemExit(f"TRACK.toml missing tracking.{key}")
 
@@ -34,8 +34,8 @@ for key in ("summary", "exit_criteria", "refs"):
 items = data["work_items"]
 if not isinstance(items, list) or not items:
     raise SystemExit("TRACK.toml must contain at least one [[work_items]] entry")
-if len(items) > 4:
-    raise SystemExit("TRACK.toml must keep at most 4 active-window work items")
+if len(items) > 2:
+    raise SystemExit("TRACK.toml must keep at most 2 active-window work items")
 
 allowed_statuses = {"ready", "in_progress", "blocked", "queued"}
 in_progress_count = 0
@@ -54,26 +54,37 @@ for item in items:
 
 if in_progress_count > 1:
     raise SystemExit("TRACK.toml may contain at most one in_progress work item")
+
+allowed_markdown = {
+    "README.md",
+    "AGENTS.md",
+    "CONTRIBUTING.md",
+    ".github/copilot-instructions.md",
+    "docs/FOUNDATION.md",
+    "docs/IMPLEMENTATION.md",
+}
+
+actual_markdown = {
+    str(path).replace("\\", "/")
+    for path in Path(".").rglob("*.md")
+    if ".git/" not in str(path).replace("\\", "/")
+}
+
+unexpected = sorted(actual_markdown - allowed_markdown)
+if unexpected:
+    raise SystemExit(
+        "Unexpected markdown files found outside the fixed repo structure: "
+        + ", ".join(unexpected)
+    )
 PY
 
 for required in \
   "AGENTS.md" \
   ".github/copilot-instructions.md" \
-  "docs/adr/0002-use-track-toml-plus-adrs-for-tracking.md" \
-  "docs/adr/0004-use-pi-overlay-with-codex-skill-export.md" \
-  "docs/standards/TRACK-STRUCTURE-STANDARD.md" \
-  "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md"; do
+  "docs/FOUNDATION.md" \
+  "docs/IMPLEMENTATION.md"; do
   if [ ! -f "$required" ]; then
     echo "Missing required repo file: $required" >&2
-    exit 1
-  fi
-done
-
-for forbidden in \
-  "docs/adr/0001-use-github-issues-plus-adrs-for-tracking.md" \
-  "docs/adr/0003-start-with-a-small-coordinator-not-a-framework.md"; do
-  if [ -e "$forbidden" ]; then
-    echo "Superseded ADR file must not exist: $forbidden" >&2
     exit 1
   fi
 done
