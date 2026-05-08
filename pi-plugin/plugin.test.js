@@ -1,7 +1,7 @@
 "use strict";
 
 const assert = require("assert");
-const { applyPrettyEnvironmentDefaults, buildQuietStatusSummary, buildRelevantLedgerContext, buildWebResearchHint, commandRequiresRtk, extractAssistantProgress, getLedgerEntries, getRtkRoutingMode, hasLedgerConflict, isRtkRoutingEnabled, isRtkRoutingEnforced, isStaleLedgerEntry, loadSaneConfig, makeLedgerEntry, parseGoalCommand, parseSaneToml, summarizeGoalState, validateSaneConfig } = require("./plugin");
+const { applyPrettyEnvironmentDefaults, buildQuietStatusSummary, buildRelevantLedgerContext, buildSubagentRoutingHint, buildWebResearchHint, commandRequiresRtk, extractAssistantProgress, getLedgerEntries, getRtkRoutingMode, hasLedgerConflict, isRtkRoutingEnabled, isRtkRoutingEnforced, isStaleLedgerEntry, isSubagentsConfigured, loadSaneConfig, makeLedgerEntry, parseGoalCommand, parseSaneToml, summarizeGoalState, validateSaneConfig } = require("./plugin");
 
 const loaded = validateSaneConfig({
   defaults: { model: "gpt-5.5", reasoning: "low", responseStyle: "caveman" },
@@ -79,6 +79,15 @@ for (const id of craftPackIds) {
   assert.equal(pack.enabled, true, `${id} should be enabled`);
   assert.deepEqual(pack.targets, ["pi", "codex"], `${id} should target Pi and Codex`);
 }
+const subagentsPackage = realConfig.recommendedPiPackages.find((candidate) => candidate.id === "pi-subagents");
+assert.ok(subagentsPackage, "real config missing pi-subagents package");
+assert.equal(subagentsPackage.enabled, true);
+assert.equal(subagentsPackage.defaultInstall, true);
+assert.equal(isSubagentsConfigured(realConfig), true);
+assert.match(buildQuietStatusSummary(realConfig, {}), /subagents=configured/);
+assert.match(buildQuietStatusSummary(realConfig, { subagentsAvailable: true }), /subagents=ready/);
+assert.match(buildSubagentRoutingHint(realConfig, "Do research and fix this properly"), /Sane subagent hint/);
+assert.equal(buildSubagentRoutingHint(realConfig, "answer one tiny question"), "");
 
 const loadedFromToml = loadSaneConfig("config-schema.toml", {
   readFileSync: () => `
@@ -112,7 +121,7 @@ assert.equal(loadedFromToml.packs[0].id, "rtk-routing");
 assert.equal(loadedFromToml.recommendedPiPackages[0].package, "npm:pi-web-providers@3.0.0");
 assert.match(buildWebResearchHint(loadedFromToml, "research latest package status"), /Sane web hint/);
 assert.equal(buildWebResearchHint(loadedFromToml, "edit local file"), "");
-assert.equal(buildQuietStatusSummary(loadedFromToml, { activeGoal: { text: "ship" } }), "Sane: packs=1, web=ready, goal=active");
+assert.equal(buildQuietStatusSummary(loadedFromToml, { activeGoal: { text: "ship" } }), "Sane: packs=1, subagents=off, web=ready, goal=active");
 assert.equal(isRtkRoutingEnabled(loadedFromToml), true);
 assert.equal(getRtkRoutingMode(loadedFromToml), "enforce");
 assert.equal(isRtkRoutingEnforced(loadedFromToml), true);

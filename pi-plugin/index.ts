@@ -11,6 +11,7 @@ delete require.cache[pluginPath];
 const plugin = require(pluginPath) as {
   buildRelevantLedgerContext: (entries: unknown[], prompt: string) => string;
   buildQuietStatusSummary: (config: any, state?: any) => string;
+  buildSubagentRoutingHint: (config: any, prompt: string) => string;
   buildWebResearchHint: (config: any, prompt: string) => string;
   applyPrettyEnvironmentDefaults: (config: any, env?: any) => any;
   commandRequiresRtk: (command: string) => boolean;
@@ -25,7 +26,7 @@ const plugin = require(pluginPath) as {
   parseGoalCommand: (args: string) => { action: string; value: string };
   summarizeGoalState: (entries: unknown[]) => { activeGoal?: { text?: string } };
 };
-const { applyPrettyEnvironmentDefaults, buildRelevantLedgerContext, buildQuietStatusSummary, buildWebResearchHint, commandRequiresRtk, extractAssistantProgress, getLedgerEntries, getRtkRoutingMode, isRtkRoutingEnabled, isRtkRoutingEnforced, LEDGER_ENTRY_TYPE, loadSaneConfig, makeLedgerEntry, parseGoalCommand, summarizeGoalState } = plugin;
+const { applyPrettyEnvironmentDefaults, buildRelevantLedgerContext, buildQuietStatusSummary, buildSubagentRoutingHint, buildWebResearchHint, commandRequiresRtk, extractAssistantProgress, getLedgerEntries, getRtkRoutingMode, isRtkRoutingEnabled, isRtkRoutingEnforced, LEDGER_ENTRY_TYPE, loadSaneConfig, makeLedgerEntry, parseGoalCommand, summarizeGoalState } = plugin;
 
 const baseDir = dirname(fileURLToPath(import.meta.url));
 const configPath = join(baseDir, "config-schema.toml");
@@ -60,6 +61,9 @@ export default function (pi: ExtensionAPI) {
 
     const webHint = buildWebResearchHint(cfg, event.prompt ?? "");
     if (webHint) additions.push(webHint);
+
+    const subagentHint = buildSubagentRoutingHint(cfg, event.prompt ?? "");
+    if (subagentHint) additions.push(subagentHint);
 
     const ledgerContext = buildRelevantLedgerContext(getLedgerEntries(ctx.sessionManager), event.prompt ?? "");
     if (ledgerContext) additions.push(ledgerContext);
@@ -135,7 +139,16 @@ export default function (pi: ExtensionAPI) {
       const styleStatus = cfg.defaults.responseStyle ? `, style=${cfg.defaults.responseStyle}` : "";
       const { activeGoal } = summarizeGoalState(getLedgerEntries(ctx.sessionManager));
       const goalStatus = activeGoal ? `, goal=${activeGoal.text}` : ", goal=none";
-      ctx.ui.notify(`Sane overlay loaded ${packCount} pack(s), model=${cfg.defaults.model}, reasoning=${cfg.defaults.reasoning}${styleStatus}${rtkStatus}${goalStatus}`, "info");
+      const subagentStatus = buildQuietStatusSummary(cfg, { activeGoal }).match(/subagents=[^,]+/)?.[0] ?? "subagents=off";
+      ctx.ui.notify(`Sane overlay loaded ${packCount} pack(s), model=${cfg.defaults.model}, reasoning=${cfg.defaults.reasoning}${styleStatus}${rtkStatus}, ${subagentStatus}${goalStatus}. For broad independent work, use agent-lanes with pi-subagents (/subagents-status, /subagents-doctor, or /parallel when available).`, "info");
+    },
+  });
+
+  pi.registerCommand("sane-lanes", {
+    description: "Ask Sane to split broad independent work into pi-subagents agent lanes when useful",
+    handler: async (args, _ctx) => {
+      const objective = args.trim() || "the current task";
+      await pi.sendUserMessage(`Use Sane agent-lanes for ${objective}: if the work has independent research, review, verification, or disjoint implementation lanes and pi-subagents is available, launch focused subagents with clear boundaries; otherwise explain why main-thread work is better.`);
     },
   });
 

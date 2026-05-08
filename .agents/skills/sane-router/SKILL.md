@@ -42,7 +42,7 @@ Pick the smallest Sane surface that fits the task: direct main-thread work, RTK 
 
 1. If the task is tiny, keep it in the main thread.
 2. If shell/search/test/log work is involved and RTK is enabled or required, load `rtk-routing`.
-3. If work can run in parallel with clean boundaries, load `agent-lanes`.
+3. If work can run in parallel with clean boundaries, load `agent-lanes`; when `pi-subagents` is available, actually delegate focused lanes instead of only planning them.
 4. If the task is an ongoing resume or implementation run, load `core-workflow`.
 5. If the task is install/export/update/doctor/repair/uninstall, use the Sane companion CLI.
 6. Keep only the selected skill bodies in context.

@@ -318,11 +318,29 @@ function buildWebResearchHint(config, prompt) {
   return "Sane web hint: for current docs, package status, or freshness-sensitive claims, use available web research tools and cite sources briefly.";
 }
 
+function isSubagentLanesEnabled(config) {
+  return [...(config.packs || []), ...(config.userPacks || [])]
+    .some((pack) => pack.id === "agent-lanes" && pack.enabled === true && (pack.targets || []).includes("pi"));
+}
+
+function isSubagentsConfigured(config) {
+  const hasPackage = (config.recommendedPiPackages || [])
+    .some((pkg) => pkg.enabled && pkg.defaultInstall && pkg.id === "pi-subagents");
+  return hasPackage && isSubagentLanesEnabled(config);
+}
+
+function buildSubagentRoutingHint(config, prompt) {
+  if (!isSubagentsConfigured(config)) return "";
+  if (!/\b(?:sub-?agents?|agents?|lanes?|parallel|delegate|delegation|broad|research|review|verify|verification|implement|refactor|fix\s+this\s+properly)\b/i.test(prompt || "")) return "";
+  return "Sane subagent hint: pi-subagents is a default Sane runtime package and agent-lanes is enabled. For broad independent research, review, verification, or disjoint implementation work, delegate lanes with the available subagent tool/commands; keep small or tightly coupled work in the main thread.";
+}
+
 function buildQuietStatusSummary(config, state = {}) {
   const packs = [...(config.packs || []), ...(config.userPacks || [])].filter((pack) => pack.enabled).length;
+  const subagents = state.subagentsAvailable ? "subagents=ready" : (isSubagentsConfigured(config) ? "subagents=configured" : "subagents=off");
   const web = (config.recommendedPiPackages || []).some((pkg) => pkg.enabled && pkg.id === "pi-web-providers") ? "web=ready" : "web=off";
   const goal = state.activeGoal ? "goal=active" : "goal=none";
-  return `Sane: packs=${packs}, ${web}, ${goal}`;
+  return `Sane: packs=${packs}, ${subagents}, ${web}, ${goal}`;
 }
 
 function extractTextBlocks(content) {
@@ -358,6 +376,9 @@ module.exports = {
   hasLedgerConflict,
   extractAssistantProgress,
   buildWebResearchHint,
+  buildSubagentRoutingHint,
   buildQuietStatusSummary,
+  isSubagentLanesEnabled,
+  isSubagentsConfigured,
   applyPrettyEnvironmentDefaults,
 };

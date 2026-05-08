@@ -36,7 +36,9 @@ The install flow keeps the default Pi package allowlist small and pinned:
 - `npm:pi-rewind@0.5.0` for checkpoint/rewind safety.
 - `npm:pi-web-providers@3.0.0` for freshness-sensitive web research.
 
-Use `--recommended-pi-packages=false` to skip these package installs.
+Use `--recommended-pi-packages=false` to skip these package installs. Fixture or alternate-root installs do not mutate your global Pi package set unless explicitly enabled; if needed, install the lane runtime directly with `./sane-next package install pi-subagents`.
+
+When `pi-subagents` is available, Sane surfaces it through `/sane-status`, compact startup hints for broad work, and `/sane-lanes <objective>`. You can also use the package commands directly, such as `/subagents-status`, `/subagents-doctor`, and `/parallel` when exposed by your Pi session.
 
 ## Export packs to Codex
 
@@ -84,7 +86,9 @@ List optional package recommendations and install one by ID through `pi install`
 ./sane-next package install --config ../pi-plugin/config-schema.toml pi-curated-themes
 ```
 
-Optional recommendations are disabled for default install and include curated themes, Markdown preview, compact tool rendering, ask-user clarification, plan/accept-edits mode, and container sandboxing. When `pi-pretty` is installed, Sane defaults compact its previews, keeps Nerd Font icons, and disables Shiki read backgrounds that clash with the GitHub theme.
+Optional recommendations are disabled for default install and include curated themes, Markdown preview, compact tool rendering, ask-user clarification, plan/accept-edits mode, and advanced container sandboxing. When `pi-pretty` is installed, Sane defaults compact its previews, keeps Nerd Font icons, and disables Shiki read backgrounds that clash with the GitHub theme.
+
+Package pins should be refreshed from live Pi package pages plus installable npm artifacts; public search snippets and repository default branches can lag the currently published package.
 
 ## Add a user pack
 
