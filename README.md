@@ -1,14 +1,17 @@
 # sane-next
 
-**Sane** is a Pi-first workflow overlay for serious coding sessions.
+**Sane** aims to be the best way to use your Codex subscription for real software work.
 
-It installs a small set of Pi skills, package recommendations, and CLI lifecycle commands that help agents start from repo truth, keep work bounded, use focused craft skills, and verify before claiming done.
+It is a Pi-first workflow overlay: Pi stays the fast interactive runtime, while Sane adds the skills, defaults, and habits that make Codex sessions more reliable. The goal is not another agent runtime. The goal is to turn a strong model subscription into a better coding environment: repo-aware, bounded, parallel when useful, and honest about verification.
+
+Sane installs a small set of Pi skills, package recommendations, and CLI lifecycle commands that help agents start from repo truth, use focused craft skills, and leave recoverable handoffs instead of long, unreviewable chat drift.
 
 > [!NOTE]
 > `sane-next` is pre-stable. The current release line is `0.3.0-beta.1`, with GitHub Releases as the first distribution channel. There is no Homebrew or npm install channel yet.
 
 ## Contents
 
+- [Philosophy](#philosophy)
 - [What you get](#what-you-get)
 - [Requirements](#requirements)
 - [Install](#install)
@@ -16,6 +19,17 @@ It installs a small set of Pi skills, package recommendations, and CLI lifecycle
 - [Included packages and packs](#included-packages-and-packs)
 - [Troubleshooting](#troubleshooting)
 - [Project docs](#project-docs)
+
+## Philosophy
+
+Sane is built around a few product beliefs:
+
+- **Codex is strongest with a good operating environment.** Sane supplies workflow structure, not a replacement brain.
+- **Repo truth beats chat memory.** Agents should read current files and project rules before making broad claims.
+- **Big work needs lanes.** Research, implementation, review, and verification can run in parallel, but one main agent should stay accountable.
+- **Craft matters.** Docs, frontend, accessibility, review, and UX copy deserve focused skills instead of generic prompting.
+- **Verification is part of the answer.** A session should end with concrete checks or an explicit handoff, not vibes.
+- **User control comes first.** Sane can recommend packages and themes, but personal Pi preferences change only through explicit commands.
 
 ## What you get
 
