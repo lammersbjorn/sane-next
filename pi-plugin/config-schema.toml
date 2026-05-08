@@ -1,9 +1,30 @@
+# Sane Next Pi overlay config.
+# Global install copy: ~/.sane-next/pi-plugin/config-schema.toml
+# Repo source copy: pi-plugin/config-schema.toml
+# After manual edits to the repo source, run: cd cli && ./sane-next update --root ~/.sane-next
+
 version = 1
 
+# Defaults requested from Pi sessions that load Sane.
+# reasoning: low, medium, high, or another value supported by your active model/provider.
+# response_style is optional; current special value: caveman. Omit for normal responses.
 [defaults]
 model = "gpt-5.5"
 reasoning = "low"
 
+# RTK routing controls how strongly Sane discourages raw shell for search/read/test/diff work.
+# mode values: off = no RTK policy; advise = prompt guidance only; warn = warn/status; enforce = block matching raw shell commands.
+[rtk]
+mode = "warn"
+
+# Defaults applied before pi-pretty renders tool output. These are no-ops unless pi-pretty is installed.
+[pretty]
+max_preview_lines = 24
+max_hl_chars = 1
+icons = "nerd"
+
+# Built-in Sane skill packs. Set enabled = false to stop loading/exporting one.
+# targets: pi loads the pack in Pi; codex includes it in Codex skill export.
 [[packs]]
 id = "core-workflow"
 enabled = true
@@ -28,12 +49,56 @@ enabled = true
 source = "../.agents/skills/sane-router"
 targets = ["pi", "codex"]
 
+[[packs]]
+id = "craft-router"
+enabled = true
+source = "../.agents/skills/craft-router"
+targets = ["pi", "codex"]
+
+[[packs]]
+id = "frontend-craft"
+enabled = true
+source = "../.agents/skills/frontend-craft"
+targets = ["pi", "codex"]
+
+[[packs]]
+id = "frontend-review"
+enabled = true
+source = "../.agents/skills/frontend-review"
+targets = ["pi", "codex"]
+
+[[packs]]
+id = "frontend-accessibility"
+enabled = true
+source = "../.agents/skills/frontend-accessibility"
+targets = ["pi", "codex"]
+
+[[packs]]
+id = "docs-writing"
+enabled = true
+source = "../.agents/skills/docs-writing"
+targets = ["pi", "codex"]
+
+[[packs]]
+id = "ux-copy"
+enabled = true
+source = "../.agents/skills/ux-copy"
+targets = ["pi", "codex"]
+
+[[packs]]
+id = "caveman-speak"
+enabled = false
+source = "../.agents/skills/caveman-speak"
+targets = ["pi", "codex"]
+
+# User packs are externally authored skills registered into Sane.
 [[user_packs]]
 id = "example-user-pack"
 enabled = false
 source = "../.agents/skills/example-user-pack"
 targets = ["pi", "codex"]
 
+# Export targets used by sane-next export. path is relative to --target-root unless absolute.
 [[export_targets]]
 id = "pi"
 kind = "pi-skill"
@@ -44,6 +109,79 @@ id = "codex"
 kind = "codex-skill"
 path = ".codex/skills"
 
+# Pi packages known to Sane. default_install=true packages are installed by sane-next install unless skipped.
+# Optional packages stay default_install=false and can be installed with: sane-next package install <id>
+[[recommended_pi_packages]]
+id = "pi-subagents"
+enabled = true
+default_install = true
+package = "npm:pi-subagents@0.24.0"
+purpose = "Runtime-backed Pi subagent delegation for Sane agent lanes."
+
+[[recommended_pi_packages]]
+id = "pi-rewind"
+enabled = true
+default_install = true
+package = "npm:pi-rewind@0.5.0"
+purpose = "Git-backed checkpoint and rewind support for safer long-running Pi sessions."
+
+[[recommended_pi_packages]]
+id = "pi-web-providers"
+enabled = true
+default_install = true
+package = "npm:pi-web-providers@3.0.0"
+purpose = "Configurable web search, content, answer, and research tools for freshness-sensitive work."
+
+[[recommended_pi_packages]]
+id = "pi-prompt-template-model"
+enabled = true
+default_install = false
+package = "npm:pi-prompt-template-model@0.9.3"
+purpose = "Optional prompt-template model, reasoning, skill, and subagent routing for power workflows."
+
+[[recommended_pi_packages]]
+id = "pi-curated-themes"
+enabled = true
+default_install = false
+package = "npm:@victor-software-house/pi-curated-themes@0.2.1"
+purpose = "Optional curated Pi theme pack with dark and GitHub-style variants."
+
+[[recommended_pi_packages]]
+id = "pi-markdown-preview"
+enabled = true
+default_install = false
+package = "npm:pi-markdown-preview@0.9.7"
+purpose = "Optional Markdown, code, diff, browser, terminal, and PDF preview support."
+
+[[recommended_pi_packages]]
+id = "pi-pretty"
+enabled = true
+default_install = false
+package = "npm:@heyhuynhgiabuu/pi-pretty"
+purpose = "Optional pretty visual rendering for Pi tool calls."
+
+[[recommended_pi_packages]]
+id = "pi-ask-user"
+enabled = true
+default_install = false
+package = "npm:pi-ask-user@0.10.0"
+purpose = "Optional clarification tool for high-impact ambiguity and assumptions."
+
+[[recommended_pi_packages]]
+id = "pi-pledit"
+enabled = true
+default_install = false
+package = "npm:pi-pledit@1.0.1"
+purpose = "Optional plan and accept-edits mode package for users who want explicit edit review."
+
+[[recommended_pi_packages]]
+id = "pi-container-sandbox"
+enabled = true
+default_install = false
+package = "npm:pi-container-sandbox"
+purpose = "Optional higher-safety container sandbox for users who accept container setup cost."
+
+# Ownership controls Sane lifecycle safety. Do not change marker_file for an existing install unless repairing deliberately.
 [ownership]
 marker_file = ".sane-next-owned"
 preserve_user_config = true

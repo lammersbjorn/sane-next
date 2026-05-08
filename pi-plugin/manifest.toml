@@ -1,3 +1,4 @@
+# Sane-owned overlay manifest. Pi package discovery uses the generated package.json.
 id = "sane-next"
 name = "Sane Next"
 version = "0.1.0"
@@ -6,7 +7,7 @@ entrypoint = "index.ts"
 
 [runtime]
 host = "pi"
-minimum_version = "0.0.0"
+minimum_version = "0.73.0"
 
 [config]
 schema = "config-schema.toml"
