@@ -6,9 +6,9 @@ Accepted
 
 ## Context
 
-`sane-next` needs a strict, low-bloat contribution protocol from the start so the repo stays clean while the product is still in heavy research and early implementation.
+`sane-next` needed a strict, low-bloat contribution protocol from the start so the repo would stay clean through research, implementation, and pre-stable source-built use.
 
-The repo is intentionally small and pre-implementation. This is the right time to lock lightweight discipline around commits and local validation before habits drift.
+When this ADR was accepted, the repo was intentionally small and pre-implementation. The same lightweight discipline still applies now that the CLI, packs, overlay, and acceptance flow exist.
 
 ## Decision
 

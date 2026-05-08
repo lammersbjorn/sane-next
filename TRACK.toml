@@ -1,8 +1,8 @@
 version = 2
 updated = "2026-05-08"
-phase = "layered-pi-customization-profile"
-goal = "Implement ADR 0012 layered Pi customization with opt-in package recommendations, explicit theme configuration, compact runtime hints, docs, and verification."
-next_focus = "Phase 8 is verified; next active slice should be chosen from the remaining roadmap or release needs."
+phase = "release-readiness-selection"
+goal = "Choose the next bounded release-readiness slice after the docs/tracking reset."
+next_focus = "Select one roadmap item to activate: distribution-channel ADR, pre-stable release checklist, or package pin refresh."
 
 [tracking]
 schema = "active-window-v1"
@@ -16,52 +16,45 @@ rules = [
   "Keep only active-window state here.",
   "Do not store completed work, hypotheses, research notes, or historical narrative here.",
   "Every work item must include why_now, write_scope, inputs, and done_when.",
-  "Use docs/roadmap/ROADMAP.md for the full verified product checklist, docs/adr/ for durable decisions, docs/standards/ for durable rules, and docs/reference/ for reference context.",
+  "Use docs/roadmap/ROADMAP.md for broader prioritization, docs/adr/ for durable decisions, docs/standards/ for durable rules, and docs/reference/ for stable background.",
   "Use commits and pull requests as progress evidence.",
   "Do not create parallel TODO, plan, memory, or research-dump files."
 ]
 
 [current]
-summary = "The active slice is ADR 0012's layered Pi customization profile after Phase 7 craft-router acceptance passed."
+summary = "Docs/tracking cleanup has been applied in the working tree. The next active slice should be selected from the living roadmap before further implementation."
 exit_criteria = [
-  "Optional Pi package recommendations are configured with default_install = false while ADR 0010 defaults remain default-installed.",
-  "The CLI lists and installs configured recommendations by ID through pi install with fixture-safe tests.",
-  "The CLI can explicitly set theme = github-dark-pro in a supplied/temp Pi settings file without overwriting unrelated settings.",
-  "Runtime hints remain compact and testable.",
-  "README documents default packages, optional recommendations, and explicit configure/package commands.",
-  "Phase 8 verification commands pass."
+  "One release-readiness roadmap item is selected as the active implementation slice.",
+  "TRACK.toml is updated with that slice's write scope, inputs, and verification gates.",
+  "Any ambiguous release or distribution decision is captured in an ADR before implementation."
 ]
 refs = [
-  "docs/adr/0012-use-layered-pi-customization-profile.md",
-  "docs/adr/0010-use-curated-default-pi-packages.md",
-  "docs/roadmap/ROADMAP.md#phase-8--layered-pi-customization-profile",
-  "docs/standards/INSTRUCTION-SURFACE-STANDARD.md",
+  "docs/README.md",
+  "docs/roadmap/ROADMAP.md",
+  "docs/standards/DOCS-STRUCTURE-STANDARD.md",
+  "docs/standards/TRACK-STRUCTURE-STANDARD.md"
 ]
 
 [[work_items]]
-id = "layered-pi-customization-profile"
-status = "done"
-title = "Add ADR 0012 layered Pi customization behavior"
-why_now = "Phase 7 craft-router behavior is implemented and acceptance has passed, unblocking ADR 0012 Phase 8 work."
+id = "select-release-readiness-slice"
+status = "ready"
+title = "Choose the next release-readiness slice"
+why_now = "The initial implementation baseline and docs/tracking reset are complete enough that further work needs an explicit next release-readiness objective."
 write_scope = [
-  "pi-plugin/config-schema.toml",
-  "pi-plugin/plugin.js",
-  "pi-plugin/index.ts",
-  "pi-plugin/plugin.test.js",
-  "cli/",
-  "README.md",
-  "docs/roadmap/ROADMAP.md",
   "TRACK.toml",
+  "docs/roadmap/ROADMAP.md",
+  "docs/adr/",
+  "README.md",
+  "pi-plugin/config-schema.toml",
+  "cli/"
 ]
 inputs = [
-  "docs/adr/0012-use-layered-pi-customization-profile.md",
-  "docs/adr/0010-use-curated-default-pi-packages.md",
-  "docs/standards/INSTRUCTION-SURFACE-STANDARD.md",
+  "docs/roadmap/ROADMAP.md#next",
+  "docs/standards/DOCS-STRUCTURE-STANDARD.md",
+  "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md"
 ]
 done_when = [
-  "Optional recommendations are in config with default_install = false.",
-  "package list/install and configure --theme have fixture-safe tests.",
-  "cd cli && go test ./... passes.",
-  "node --test pi-plugin/plugin.test.js passes.",
-  "cd cli && ./acceptance.sh passes."
+  "Exactly one next release-readiness slice is chosen.",
+  "TRACK.toml is updated to make that slice active with valid bounded active-window fields.",
+  "Required decision docs or verification commands for the selected slice are identified."
 ]

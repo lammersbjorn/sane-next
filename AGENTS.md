@@ -7,8 +7,8 @@
 
 ## Startup rules
 
-- Before broad work, read `TRACK.toml`, `README.md`, the roadmap, core ADRs, and standards listed there.
-- For implementation runs, load `.agents/skills/sane-next-implementation/SKILL.md`.
+- Before broad work, read `TRACK.toml`; then follow only the roadmap, ADRs, standards, or source files referenced by the active slice.
+- For docs placement, use `docs/README.md` and `docs/standards/DOCS-STRUCTURE-STANDARD.md`; for implementation runs, load `.agents/skills/sane-next-implementation/SKILL.md`.
 - Use current repo files and fresh external research; do not trust old Sane claims or stale chat memory.
 - Keep always-on instructions small and update `TRACK.toml` only for the active slice.
 

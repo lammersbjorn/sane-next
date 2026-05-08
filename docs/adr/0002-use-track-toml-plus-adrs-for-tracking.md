@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted
+Accepted; refined by ADR 0006, which makes `TRACK.toml` a bounded active-window file and forbids hypotheses/history there.
 
 ## Context
 

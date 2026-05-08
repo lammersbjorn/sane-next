@@ -74,18 +74,16 @@ Do not default-install optional visual, plan, ask-user, preview, or sandbox pack
 
 ### Layer 4: Explicit configuration commands
 
-Add companion CLI support for applying Sane preferences explicitly, for example:
+Add companion CLI support for applying Sane preferences explicitly. The implemented command surface is:
 
 ```bash
 sane-next configure --theme github-dark-pro
-sane-next configure --quiet-startup
-sane-next configure --keybindings sane
 sane-next package list
 sane-next package install pi-markdown-preview
 sane-next package install pi-ask-user
 ```
 
-Configuration commands should preserve unrelated user settings, be dry-run capable where practical, and write only documented Pi settings files or call `pi install` for selected package IDs.
+Configuration commands should preserve unrelated user settings, be dry-run capable where practical, and write only documented Pi settings files or call `pi install` for selected package IDs. Other preferences, such as quiet startup or keybindings, require separate implementation and tests before they should appear as executable docs.
 
 ## Implementation plan after craft-router work
 

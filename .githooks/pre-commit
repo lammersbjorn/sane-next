@@ -38,7 +38,7 @@ if not isinstance(items, list) or not items:
 if len(items) > 4:
     raise SystemExit("TRACK.toml must keep at most 4 active-window work items")
 
-allowed_statuses = {"ready", "in_progress", "blocked", "queued", "done"}
+allowed_statuses = {"ready", "in_progress", "blocked", "queued"}
 in_progress_count = 0
 for item in items:
     for key in ("id", "status", "title", "why_now", "write_scope", "inputs", "done_when"):
@@ -67,6 +67,7 @@ allowed_exact = {
     "AGENTS.md",
     "CONTRIBUTING.md",
     ".github/copilot-instructions.md",
+    "docs/README.md",
 }
 allowed_prefixes = (
     "docs/adr/",
@@ -98,6 +99,7 @@ for required in \
   "docs/adr/0009-use-annotated-semver-and-linux-only-ci-while-private.md" \
   "docs/standards/INSTRUCTION-SURFACE-STANDARD.md" \
   "docs/standards/TRACK-STRUCTURE-STANDARD.md" \
+  "docs/standards/DOCS-STRUCTURE-STANDARD.md" \
   "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md" \
   ".agents/skills/sane-next-implementation/SKILL.md"; do
   if [ ! -f "$required" ]; then

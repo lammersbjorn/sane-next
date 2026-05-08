@@ -1,17 +1,30 @@
 # Contributing
 
-This repo is still pre-implementation. Keep process small and strict.
+`sane-next` is implemented but still pre-stable and source-built. Keep changes small, verified, and grounded in the repo truth files.
 
 ## Current truth
 
 - Current state: `TRACK.toml`
-- Full remake roadmap: `docs/roadmap/ROADMAP.md`
+- Product roadmap and release readiness: `docs/roadmap/ROADMAP.md`
+- Docs map and placement rules: `docs/README.md`, `docs/standards/DOCS-STRUCTURE-STANDARD.md`
 - Old Sane reference context: `docs/reference/OLD-SANE-POSTMORTEM.md`
 - Durable decisions: `docs/adr/`
 - Tracking/prompt/skill standards: `docs/standards/`
 - Repo-local implementation skill: `.agents/skills/sane-next-implementation/SKILL.md`
 - Agent rules: `AGENTS.md`
 - Copilot repo instructions: `.github/copilot-instructions.md`
+
+Before broad implementation work, read `TRACK.toml` first, then follow only the docs and source files referenced by the active slice. Inspect current CLI behavior rather than relying on old chat context.
+
+## Local verification
+
+Use the narrowest check that proves your change, then run broader checks when behavior crosses boundaries.
+
+```bash
+cd cli && go test ./...
+node --test pi-plugin/plugin.test.js
+cd cli && ./acceptance.sh
+```
 
 ## Commit convention
 
@@ -52,10 +65,9 @@ Recommended scopes:
 Examples:
 
 ```text
-research(pi): capture Pi extension boundaries
-docs(rules): tighten prompt authoring rules
-chore(repo): enable committed git hooks
-feat(cli): add install command skeleton
+docs(readme): clarify install side effects
+fix(cli): preserve settings during theme configure
+feat(packs): add accessibility skill export
 ```
 
 Use lowercase type and scope. Keep the subject short, imperative, and specific.
@@ -87,6 +99,7 @@ Current hooks:
   - verifies required repo truth files exist
   - enforces the bounded TRACK shape
   - blocks markdown sprawl outside the fixed repo structure
+  - requires the docs structure standard
 - `commit-msg`
   - enforces the Conventional Commit format
 
