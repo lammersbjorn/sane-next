@@ -1,7 +1,7 @@
 "use strict";
 
 const assert = require("assert");
-const { applyPrettyEnvironmentDefaults, buildQuietStatusSummary, buildRelevantLedgerContext, buildSubagentRoutingHint, buildWebResearchHint, commandRequiresRtk, extractAssistantProgress, getLedgerEntries, getRtkRoutingMode, hasLedgerConflict, isRtkRoutingEnabled, isRtkRoutingEnforced, isStaleLedgerEntry, isSubagentsConfigured, loadSaneConfig, makeLedgerEntry, parseGoalCommand, parseSaneToml, summarizeGoalState, validateSaneConfig } = require("./plugin");
+const { applyPrettyEnvironmentDefaults, buildQuietStatusSummary, buildRelevantLedgerContext, buildRtkRoutingHint, buildSubagentRoutingHint, buildWebResearchHint, commandRequiresRtk, extractAssistantProgress, getLedgerEntries, getRtkRoutingMode, hasLedgerConflict, isRtkRoutingEnabled, isRtkRoutingEnforced, isStaleLedgerEntry, isSubagentsConfigured, loadSaneConfig, makeLedgerEntry, parseGoalCommand, parseSaneToml, summarizeGoalState, validateSaneConfig } = require("./plugin");
 
 const loaded = validateSaneConfig({
   defaults: { model: "gpt-5.5", reasoning: "low", responseStyle: "caveman" },
@@ -70,6 +70,7 @@ assert.deepEqual(applyPrettyEnvironmentDefaults({ pretty: { maxPreviewLines: 24,
 
 const realConfig = loadSaneConfig(require("node:path").join(__dirname, "config-schema.toml"));
 assert.equal(getRtkRoutingMode(realConfig), "warn");
+assert.match(buildRtkRoutingHint(realConfig), /mode=warn/);
 assert.deepEqual(realConfig.pretty, { maxPreviewLines: 24, maxHlChars: 1, icons: "nerd" });
 assert.equal(isRtkRoutingEnforced(realConfig), false);
 const craftPackIds = ["craft-router", "frontend-craft", "frontend-review", "frontend-accessibility", "docs-writing", "ux-copy"];
@@ -124,9 +125,11 @@ assert.equal(buildWebResearchHint(loadedFromToml, "edit local file"), "");
 assert.equal(buildQuietStatusSummary(loadedFromToml, { activeGoal: { text: "ship" } }), "Sane: packs=1, subagents=off, web=ready, goal=active");
 assert.equal(isRtkRoutingEnabled(loadedFromToml), true);
 assert.equal(getRtkRoutingMode(loadedFromToml), "enforce");
+assert.match(buildRtkRoutingHint(loadedFromToml), /mode=enforce/);
 assert.equal(isRtkRoutingEnforced(loadedFromToml), true);
 assert.equal(isRtkRoutingEnabled(loaded), false);
 assert.equal(getRtkRoutingMode(loaded), "off");
+assert.equal(buildRtkRoutingHint(loaded), "");
 assert.equal(isRtkRoutingEnforced(loaded), false);
 
 assert.equal(commandRequiresRtk("grep -R TODO ."), true);

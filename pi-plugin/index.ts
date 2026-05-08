@@ -12,6 +12,7 @@ const plugin = require(pluginPath) as {
   buildRelevantLedgerContext: (entries: unknown[], prompt: string) => string;
   buildQuietStatusSummary: (config: any, state?: any) => string;
   buildSubagentRoutingHint: (config: any, prompt: string) => string;
+  buildRtkRoutingHint: (config: any) => string;
   buildWebResearchHint: (config: any, prompt: string) => string;
   applyPrettyEnvironmentDefaults: (config: any, env?: any) => any;
   commandRequiresRtk: (command: string) => boolean;
@@ -26,7 +27,7 @@ const plugin = require(pluginPath) as {
   parseGoalCommand: (args: string) => { action: string; value: string };
   summarizeGoalState: (entries: unknown[]) => { activeGoal?: { text?: string } };
 };
-const { applyPrettyEnvironmentDefaults, buildRelevantLedgerContext, buildQuietStatusSummary, buildSubagentRoutingHint, buildWebResearchHint, commandRequiresRtk, extractAssistantProgress, getLedgerEntries, getRtkRoutingMode, isRtkRoutingEnabled, isRtkRoutingEnforced, LEDGER_ENTRY_TYPE, loadSaneConfig, makeLedgerEntry, parseGoalCommand, summarizeGoalState } = plugin;
+const { applyPrettyEnvironmentDefaults, buildRelevantLedgerContext, buildQuietStatusSummary, buildRtkRoutingHint, buildSubagentRoutingHint, buildWebResearchHint, commandRequiresRtk, extractAssistantProgress, getLedgerEntries, getRtkRoutingMode, isRtkRoutingEnabled, isRtkRoutingEnforced, LEDGER_ENTRY_TYPE, loadSaneConfig, makeLedgerEntry, parseGoalCommand, summarizeGoalState } = plugin;
 
 const baseDir = dirname(fileURLToPath(import.meta.url));
 const configPath = join(baseDir, "config-schema.toml");
@@ -64,6 +65,9 @@ export default function (pi: ExtensionAPI) {
 
     const subagentHint = buildSubagentRoutingHint(cfg, event.prompt ?? "");
     if (subagentHint) additions.push(subagentHint);
+
+    const rtkHint = buildRtkRoutingHint(cfg);
+    if (rtkHint) additions.push(rtkHint);
 
     const ledgerContext = buildRelevantLedgerContext(getLedgerEntries(ctx.sessionManager), event.prompt ?? "");
     if (ledgerContext) additions.push(ledgerContext);

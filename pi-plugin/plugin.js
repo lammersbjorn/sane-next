@@ -335,6 +335,18 @@ function buildSubagentRoutingHint(config, prompt) {
   return "Sane subagent hint: pi-subagents is a default Sane runtime package and agent-lanes is enabled. For broad independent research, review, verification, or disjoint implementation work, delegate lanes with the available subagent tool/commands; keep small or tightly coupled work in the main thread.";
 }
 
+function buildRtkRoutingHint(config) {
+  const mode = getRtkRoutingMode(config);
+  if (mode === "off") return "";
+  if (mode === "advise") {
+    return "Sane RTK hint: prefer RTK for noisy shell/search/test/diff/log work when it has a direct equivalent; raw shell remains allowed.";
+  }
+  if (mode === "warn") {
+    return "Sane RTK mode=warn: use RTK routes for direct equivalents such as rtk grep/read/find/ls/git/test/lint/diff before raw shell; use rtk run only when exact shell semantics are needed.";
+  }
+  return "Sane RTK mode=enforce: use RTK routes for covered shell/search/test/diff/log work; matching raw commands may be blocked.";
+}
+
 function buildQuietStatusSummary(config, state = {}) {
   const packs = [...(config.packs || []), ...(config.userPacks || [])].filter((pack) => pack.enabled).length;
   const subagents = state.subagentsAvailable ? "subagents=ready" : (isSubagentsConfigured(config) ? "subagents=configured" : "subagents=off");
@@ -377,6 +389,7 @@ module.exports = {
   extractAssistantProgress,
   buildWebResearchHint,
   buildSubagentRoutingHint,
+  buildRtkRoutingHint,
   buildQuietStatusSummary,
   isSubagentLanesEnabled,
   isSubagentsConfigured,
