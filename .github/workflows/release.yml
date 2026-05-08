@@ -73,4 +73,20 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
-        run: gh release upload "$GITHUB_REF_NAME" dist/sane-next_* --clobber
+        run: |
+          set -euo pipefail
+          notes_file=".github/release-notes-${GITHUB_REF_NAME}.txt"
+          prerelease=()
+          if [[ "$GITHUB_REF_NAME" == *-* ]]; then
+            prerelease=(--prerelease)
+          fi
+          if ! gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            create_args=("$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME")
+            if [[ -f "$notes_file" ]]; then
+              create_args+=(--notes-file "$notes_file")
+            else
+              create_args+=(--generate-notes)
+            fi
+            gh release create "${create_args[@]}" "${prerelease[@]}"
+          fi
+          gh release upload "$GITHUB_REF_NAME" dist/*.tar.gz dist/*.zip --clobber
