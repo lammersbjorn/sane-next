@@ -91,25 +91,86 @@ func validateConfig(cfg saneConfig) error {
 	if len(cfg.ExportTargets) == 0 {
 		return fmt.Errorf("config must define at least one export target")
 	}
+	packIDs := map[string]bool{}
 	for _, p := range cfg.Packs {
 		if p.ID == "" || p.Source == "" {
 			return fmt.Errorf("pack id and source are required")
 		}
+		if err := validateSafeID("pack", p.ID); err != nil {
+			return err
+		}
+		if packIDs[p.ID] {
+			return fmt.Errorf("duplicate pack id %q", p.ID)
+		}
+		packIDs[p.ID] = true
 	}
 	for _, p := range cfg.UserPacks {
 		if p.ID == "" || p.Source == "" {
 			return fmt.Errorf("user pack id and source are required")
 		}
+		if err := validateSafeID("user pack", p.ID); err != nil {
+			return err
+		}
+		if packIDs[p.ID] {
+			return fmt.Errorf("duplicate pack id %q", p.ID)
+		}
+		packIDs[p.ID] = true
 	}
+	targetIDs := map[string]bool{}
 	for _, target := range cfg.ExportTargets {
 		if target.ID == "" || target.Kind == "" || target.Path == "" {
 			return fmt.Errorf("export target id, kind, and path are required")
 		}
+		if err := validateSafeID("export target", target.ID); err != nil {
+			return err
+		}
+		if targetIDs[target.ID] {
+			return fmt.Errorf("duplicate export target id %q", target.ID)
+		}
+		if target.Kind != "pi-skill" && target.Kind != "codex-skill" {
+			return fmt.Errorf("unsupported export target kind %q", target.Kind)
+		}
+		if err := validateRelativeSubpath("export target path", target.Path); err != nil {
+			return err
+		}
+		targetIDs[target.ID] = true
 	}
+	packageIDs := map[string]bool{}
 	for _, pkg := range cfg.RecommendedPiPackages {
 		if pkg.ID == "" || pkg.Package == "" || pkg.Purpose == "" {
 			return fmt.Errorf("recommended Pi package id, package, and purpose are required")
 		}
+		if err := validateSafeID("recommended Pi package", pkg.ID); err != nil {
+			return err
+		}
+		if packageIDs[pkg.ID] {
+			return fmt.Errorf("duplicate recommended Pi package id %q", pkg.ID)
+		}
+		packageIDs[pkg.ID] = true
+	}
+	return nil
+}
+
+func validateSafeID(label, value string) error {
+	if value == "." || value == ".." || strings.ContainsAny(value, `/\\`) {
+		return fmt.Errorf("%s id %q must be a single path-safe segment", label, value)
+	}
+	for _, r := range value {
+		if (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') || (r >= '0' && r <= '9') || r == '-' || r == '_' || r == '.' {
+			continue
+		}
+		return fmt.Errorf("%s id %q contains unsupported character %q", label, value, r)
+	}
+	return nil
+}
+
+func validateRelativeSubpath(label, value string) error {
+	if filepath.IsAbs(value) {
+		return fmt.Errorf("%s %q must be relative", label, value)
+	}
+	clean := filepath.Clean(value)
+	if clean == "." || clean == ".." || strings.HasPrefix(clean, ".."+string(filepath.Separator)) {
+		return fmt.Errorf("%s %q must stay within its root", label, value)
 	}
 	return nil
 }
@@ -142,7 +203,7 @@ func supportsTarget(p pack, target string) bool {
 func renderConfig(cfg saneConfig) string {
 	var b strings.Builder
 	b.WriteString("# Sane Next Pi overlay config.\n")
-	b.WriteString("# Global install copy: ~/.sane-next/pi-plugin/config-schema.toml\n")
+	b.WriteString("# Installed runtime copy: ~/.sane-next/extensions/sane-next/config-schema.toml\n")
 	b.WriteString("# Repo source copy: pi-plugin/config-schema.toml\n")
 	b.WriteString("# After manual edits to the repo source, run: cd cli && ./sane-next update --root ~/.sane-next\n\n")
 	b.WriteString("version = 1\n\n")
@@ -187,7 +248,7 @@ func renderConfig(cfg saneConfig) string {
 		b.WriteString("[[user_packs]]\n")
 		b.WriteString(fmt.Sprintf("id = %q\nenabled = %t\nsource = %q\ntargets = %s\n\n", p.ID, p.Enabled, filepath.ToSlash(p.Source), tomlStringArray(p.Targets)))
 	}
-	b.WriteString("# Export targets used by sane-next export. path is relative to --target-root unless absolute.\n")
+	b.WriteString("# Export targets used by sane-next export. path must be relative to --target-root.\n")
 	for _, t := range cfg.ExportTargets {
 		b.WriteString("[[export_targets]]\n")
 		b.WriteString(fmt.Sprintf("id = %q\nkind = %q\npath = %q\n\n", t.ID, t.Kind, t.Path))

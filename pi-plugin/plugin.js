@@ -200,11 +200,13 @@ function isRtkRoutingEnforced(config) {
 }
 
 function commandRequiresRtk(command) {
-  const normalized = stripShellPrefixes(command || "");
-  if (!normalized) return false;
-  if (/^(?:rtk|command\s+-v\s+rtk|which\s+rtk)\b/.test(normalized)) return false;
+  return shellCommandSegments(command || "").some((segment) => {
+    const normalized = stripShellPrefixes(segment);
+    if (!normalized) return false;
+    if (/^(?:rtk|command\s+-v\s+rtk|which\s+rtk)\b/.test(normalized)) return false;
 
-  return /^(?:grep|rg|find|ls|tree|cat|sed|awk|git\s+(?:status|diff|log|show)|go\s+test|npm\s+test|pnpm\s+(?:test|lint)|yarn\s+(?:test|lint))\b/.test(normalized);
+    return /^(?:grep|rg|find|ls|tree|cat|sed|awk|git\s+(?:status|diff|log|show)|go\s+test|npm\s+test|pnpm\s+(?:test|lint)|yarn\s+(?:test|lint))\b/.test(normalized);
+  });
 }
 
 const LEDGER_ENTRY_TYPE = "sane-ledger";
@@ -347,6 +349,14 @@ function buildRtkRoutingHint(config) {
   return "Sane RTK mode=enforce: use RTK routes for covered shell/search/test/diff/log work; matching raw commands may be blocked.";
 }
 
+function buildGoalRunPrompt(goalText) {
+  return [
+    "Continue working toward this Sane goal until it is done, blocked, unsafe, or needs user approval.",
+    `Goal: ${goalText}`,
+    "Treat this explicit goal as the current user objective. Repo trackers such as TRACK.toml are planning context, not a replacement for the goal; if the active tracker slice conflicts with the goal, pause and ask the user whether to retarget the tracker or narrow the goal before doing unrelated work.",
+  ].join(" ");
+}
+
 function buildQuietStatusSummary(config, state = {}) {
   const packs = [...(config.packs || []), ...(config.userPacks || [])].filter((pack) => pack.enabled).length;
   const subagents = state.subagentsAvailable ? "subagents=ready" : (isSubagentsConfigured(config) ? "subagents=configured" : "subagents=off");
@@ -361,6 +371,10 @@ function extractTextBlocks(content) {
   return content
     .filter((block) => block && typeof block === "object" && block.type === "text" && typeof block.text === "string")
     .map((block) => block.text);
+}
+
+function shellCommandSegments(command) {
+  return command.split(/&&|\|\||[;|]/).map((segment) => segment.trim()).filter(Boolean);
 }
 
 function stripShellPrefixes(command) {
@@ -390,6 +404,7 @@ module.exports = {
   buildWebResearchHint,
   buildSubagentRoutingHint,
   buildRtkRoutingHint,
+  buildGoalRunPrompt,
   buildQuietStatusSummary,
   isSubagentLanesEnabled,
   isSubagentsConfigured,

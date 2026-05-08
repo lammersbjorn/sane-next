@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 )
@@ -51,9 +52,12 @@ func TestInstallCopiesAndRepairRestoresOwnedAssets(t *testing.T) {
 	if _, err := runInstall([]string{"--root", root}); err != nil {
 		t.Fatal(err)
 	}
-	plugin := filepath.Join(root, "pi-plugin", "index.ts")
+	if _, err := os.Stat(filepath.Join(root, "pi-plugin")); !os.IsNotExist(err) {
+		t.Fatalf("expected legacy pi-plugin copy to be absent, got %v", err)
+	}
+	plugin := filepath.Join(root, "extensions", "sane-next", "index.ts")
 	if _, err := os.Stat(plugin); err != nil {
-		t.Fatalf("expected plugin copied: %v", err)
+		t.Fatalf("expected extension plugin copied: %v", err)
 	}
 	if err := os.Remove(plugin); err != nil {
 		t.Fatal(err)
@@ -63,6 +67,9 @@ func TestInstallCopiesAndRepairRestoresOwnedAssets(t *testing.T) {
 	}
 	if _, err := runRepair([]string{"--root", root}); err != nil {
 		t.Fatal(err)
+	}
+	if _, err := os.Stat(filepath.Join(root, "pi-plugin")); !os.IsNotExist(err) {
+		t.Fatalf("expected repair to keep legacy pi-plugin absent, got %v", err)
 	}
 	if _, err := os.Stat(plugin); err != nil {
 		t.Fatalf("expected repair to restore plugin: %v", err)
@@ -78,6 +85,19 @@ func TestDryRunPreviewsDoNotWrite(t *testing.T) {
 	}
 	if _, err := os.Stat(filepath.Join(root, ".sane-next-owned")); !os.IsNotExist(err) {
 		t.Fatalf("expected dry-run not to write ownership marker, got %v", err)
+	}
+}
+
+func TestInstallRefusesNonEmptyUnownedRoot(t *testing.T) {
+	root := t.TempDir()
+	if err := os.WriteFile(filepath.Join(root, "user.txt"), []byte("keep me\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runInstall([]string{"--root", root}); err == nil {
+		t.Fatal("expected install to refuse non-empty unowned root")
+	}
+	if _, err := os.Stat(filepath.Join(root, "user.txt")); err != nil {
+		t.Fatalf("expected user file to remain: %v", err)
 	}
 }
 
@@ -119,6 +139,34 @@ func TestPackEnableDisableEditsConfig(t *testing.T) {
 	}
 }
 
+func TestFullCLIFlowIsCrossPlatform(t *testing.T) {
+	root := t.TempDir()
+	if _, err := runInstall([]string{"--root", root}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runDoctor([]string{"--root", root}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runExport([]string{"--config", filepath.Join("..", "pi-plugin", "config-schema.toml"), "--target", "codex", "--target-root", filepath.Join(root, "exports-fixture")}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runPack([]string{"validate", "--config", filepath.Join("..", "pi-plugin", "config-schema.toml")}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runRepair([]string{"--root", root}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runUpdate([]string{"--root", root}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runUninstall([]string{"--root", root}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(filepath.Join(root, "extensions")); !os.IsNotExist(err) {
+		t.Fatalf("expected uninstall to remove extension assets, got %v", err)
+	}
+}
+
 func TestPackageListAndInstallAreFixtureSafe(t *testing.T) {
 	result, err := runPackage([]string{"list", "--config", filepath.Join("..", "pi-plugin", "config-schema.toml")})
 	if err != nil {
@@ -131,11 +179,7 @@ func TestPackageListAndInstallAreFixtureSafe(t *testing.T) {
 	}
 
 	root := t.TempDir()
-	piBin := filepath.Join(root, "pi")
-	log := filepath.Join(root, "pi.log")
-	if err := os.WriteFile(piBin, []byte("#!/bin/sh\necho \"$@\" >> "+log+"\n"), 0o755); err != nil {
-		t.Fatal(err)
-	}
+	piBin, log := writeFakePi(t, root)
 	if _, err := runPackage([]string{"install", "--config", filepath.Join("..", "pi-plugin", "config-schema.toml"), "--pi-bin", piBin, "pi-markdown-preview"}); err != nil {
 		t.Fatal(err)
 	}
@@ -143,9 +187,28 @@ func TestPackageListAndInstallAreFixtureSafe(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if got := string(data); got != "install npm:pi-markdown-preview@0.9.7\n" {
+	if got := strings.ReplaceAll(string(data), "\r\n", "\n"); got != "install npm:pi-markdown-preview@0.9.7\n" {
 		t.Fatalf("unexpected pi invocation %q", got)
 	}
+}
+
+func writeFakePi(t *testing.T, root string) (string, string) {
+	t.Helper()
+	log := filepath.Join(root, "pi.log")
+	if runtime.GOOS == "windows" {
+		piBin := filepath.Join(root, "pi.bat")
+		content := "@echo off\r\necho %*>>\"" + log + "\"\r\n"
+		if err := os.WriteFile(piBin, []byte(content), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		return piBin, log
+	}
+	piBin := filepath.Join(root, "pi")
+	content := "#!/bin/sh\necho \"$@\" >> \"" + log + "\"\n"
+	if err := os.WriteFile(piBin, []byte(content), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	return piBin, log
 }
 
 func TestConfigureThemePreservesUnrelatedSettings(t *testing.T) {
@@ -185,5 +248,50 @@ func TestExportRefusesNonSaneOwnedDestination(t *testing.T) {
 	_, err := runExport([]string{"--config", filepath.Join("..", "pi-plugin", "config-schema.toml"), "--target-root", root})
 	if err == nil {
 		t.Fatal("expected export to refuse non-Sane destination")
+	}
+}
+
+func TestCopyDirRejectsSymlinks(t *testing.T) {
+	root := t.TempDir()
+	src := filepath.Join(root, "src")
+	if err := os.MkdirAll(src, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(root, "secret.txt"), []byte("secret\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink(filepath.Join(root, "secret.txt"), filepath.Join(src, "linked.txt")); err != nil {
+		t.Skipf("symlink unavailable: %v", err)
+	}
+	if err := copyDir(src, filepath.Join(root, "dst")); err == nil {
+		t.Fatal("expected symlink copy to be rejected")
+	}
+}
+
+func TestConfigRejectsUnsafeIDsAndExportPaths(t *testing.T) {
+	base, err := os.ReadFile(filepath.Join("..", "pi-plugin", "config-schema.toml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	cases := []struct {
+		name string
+		old  string
+		new  string
+	}{
+		{name: "pack traversal", old: `id = "core-workflow"`, new: `id = "../core-workflow"`},
+		{name: "absolute export path", old: `path = ".codex/skills"`, new: `path = "/tmp/sane-next-skills"`},
+		{name: "escaping export path", old: `path = ".codex/skills"`, new: `path = "../skills"`},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			config := filepath.Join(t.TempDir(), "config.toml")
+			data := strings.Replace(string(base), tc.old, tc.new, 1)
+			if err := os.WriteFile(config, []byte(data), 0o644); err != nil {
+				t.Fatal(err)
+			}
+			if _, err := loadConfig(config); err == nil {
+				t.Fatal("expected invalid config to be rejected")
+			}
+		})
 	}
 }

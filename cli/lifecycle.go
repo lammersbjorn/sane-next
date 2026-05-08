@@ -88,8 +88,8 @@ func lifecycleRoot(name string, args []string) (string, string, bool, error) {
 }
 
 func lifecyclePreview(action, root, sourceRoot string) string {
-	owned := []string{"packs", "extensions", "pi-plugin", "exports", "themes", "package.json", ".sane-next-owned"}
-	return fmt.Sprintf("dry-run %s: root=%s source=%s Sane-owned paths=%s; user config and user-packs are preserved", action, root, sourceRoot, strings.Join(owned, ", "))
+	owned := []string{"packs", "extensions", "exports", "themes", "package.json", ".sane-next-owned"}
+	return fmt.Sprintf("dry-run %s: root=%s source=%s Sane-owned paths=%s; legacy pi-plugin is removed; user config and user-packs are preserved", action, root, sourceRoot, strings.Join(owned, ", "))
 }
 
 func requireOwnedInstall(root string) error {
@@ -113,9 +113,8 @@ func requireHealthyInstall(root string) error {
 		"extensions/sane-next/index.ts",
 		"themes/github-dark-pro.json",
 		"package.json",
-		"pi-plugin/index.ts",
-		"pi-plugin/manifest.toml",
-		"pi-plugin/config-schema.toml",
+		"extensions/sane-next/manifest.toml",
+		"extensions/sane-next/config-schema.toml",
 	} {
 		full := filepath.Join(root, path)
 		if _, err := os.Stat(full); err != nil {

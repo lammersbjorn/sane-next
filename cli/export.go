@@ -49,8 +49,10 @@ func runExport(args []string) (commandResult, error) {
 			continue
 		}
 		sourceDir := filepath.Clean(filepath.Join(baseDir, p.Source))
-		targetSkill := filepath.Join(root, target.Path, p.ID, "SKILL.md")
-		destDir := filepath.Dir(targetSkill)
+		destDir, err := safeJoinUnder(root, target.Path, p.ID)
+		if err != nil {
+			return commandResult{}, err
+		}
 		if *dryRun {
 			preview = append(preview, fmt.Sprintf("%s -> %s", sourceDir, destDir))
 			count++

@@ -1,8 +1,8 @@
 version = 2
 updated = "2026-05-08"
-phase = "release-readiness-selection"
-goal = "Choose the next bounded release-readiness slice after the docs/tracking reset."
-next_focus = "Select one roadmap item to activate: distribution-channel ADR, pre-stable release checklist, or package pin refresh."
+phase = "release-readiness-complete"
+goal = "Keep the pre-stable release-readiness baseline verified while choosing any later release automation deliberately."
+next_focus = "Wait for the next explicit release or implementation slice; do not add Homebrew, npm, or release automation without a new bounded decision."
 
 [tracking]
 schema = "active-window-v1"
@@ -22,39 +22,34 @@ rules = [
 ]
 
 [current]
-summary = "Docs/tracking cleanup has been applied in the working tree. The next active slice should be selected from the living roadmap before further implementation."
+summary = "The release-readiness items that were queued are complete: package pins match live npm latest, source-built acceptance passes, and ADR 0013 selects GitHub Releases as the first pre-stable distribution channel."
 exit_criteria = [
-  "One release-readiness roadmap item is selected as the active implementation slice.",
-  "TRACK.toml is updated with that slice's write scope, inputs, and verification gates.",
-  "Any ambiguous release or distribution decision is captured in an ADR before implementation."
+  "No active release-readiness implementation slice is open.",
+  "Future package-manager or release-automation work starts with a new TRACK slice and ADR if it changes distribution policy."
 ]
 refs = [
-  "docs/README.md",
+  "README.md",
   "docs/roadmap/ROADMAP.md",
-  "docs/standards/DOCS-STRUCTURE-STANDARD.md",
-  "docs/standards/TRACK-STRUCTURE-STANDARD.md"
+  "docs/adr/0013-use-github-releases-as-first-distribution-channel.md",
+  "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md"
 ]
 
 [[work_items]]
-id = "select-release-readiness-slice"
-status = "ready"
-title = "Choose the next release-readiness slice"
-why_now = "The initial implementation baseline and docs/tracking reset are complete enough that further work needs an explicit next release-readiness objective."
+id = "await-next-release-slice"
+status = "queued"
+title = "Await next bounded release or implementation slice"
+why_now = "The current release-readiness selection set is exhausted; further work should be driven by an explicit release artifact, automation, or product slice."
 write_scope = [
   "TRACK.toml",
   "docs/roadmap/ROADMAP.md",
   "docs/adr/",
-  "README.md",
-  "pi-plugin/config-schema.toml",
-  "cli/"
+  "README.md"
 ]
 inputs = [
-  "docs/roadmap/ROADMAP.md#next",
-  "docs/standards/DOCS-STRUCTURE-STANDARD.md",
+  "docs/roadmap/ROADMAP.md#later",
+  "docs/adr/0013-use-github-releases-as-first-distribution-channel.md",
   "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md"
 ]
 done_when = [
-  "Exactly one next release-readiness slice is chosen.",
-  "TRACK.toml is updated to make that slice active with valid bounded active-window fields.",
-  "Required decision docs or verification commands for the selected slice are identified."
+  "A new active slice is chosen only when there is an explicit next release, automation, or product objective."
 ]

@@ -18,8 +18,10 @@ Instead of asking you to remember a perfect prompt every time, Sane installs a s
 
 ## Status
 
-- Current version: `0.2.0` from source.
+- Current version: `0.3.0-beta.1` from source.
 - No published binary, Homebrew formula, or npm channel yet.
+- First planned pre-stable distribution channel: GitHub Releases.
+- Compatibility target: Linux, macOS, and Windows for the companion CLI and Pi extension tests; full shell acceptance remains Linux/Bash-only.
 - Build the CLI locally from `cli/`.
 
 ## Prerequisites

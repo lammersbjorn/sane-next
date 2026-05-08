@@ -10,6 +10,7 @@ const pluginPath = require.resolve("./plugin.js");
 delete require.cache[pluginPath];
 const plugin = require(pluginPath) as {
   buildRelevantLedgerContext: (entries: unknown[], prompt: string) => string;
+  buildGoalRunPrompt: (goalText: string) => string;
   buildQuietStatusSummary: (config: any, state?: any) => string;
   buildSubagentRoutingHint: (config: any, prompt: string) => string;
   buildRtkRoutingHint: (config: any) => string;
@@ -27,7 +28,7 @@ const plugin = require(pluginPath) as {
   parseGoalCommand: (args: string) => { action: string; value: string };
   summarizeGoalState: (entries: unknown[]) => { activeGoal?: { text?: string } };
 };
-const { applyPrettyEnvironmentDefaults, buildRelevantLedgerContext, buildQuietStatusSummary, buildRtkRoutingHint, buildSubagentRoutingHint, buildWebResearchHint, commandRequiresRtk, extractAssistantProgress, getLedgerEntries, getRtkRoutingMode, isRtkRoutingEnabled, isRtkRoutingEnforced, LEDGER_ENTRY_TYPE, loadSaneConfig, makeLedgerEntry, parseGoalCommand, summarizeGoalState } = plugin;
+const { applyPrettyEnvironmentDefaults, buildGoalRunPrompt, buildRelevantLedgerContext, buildQuietStatusSummary, buildRtkRoutingHint, buildSubagentRoutingHint, buildWebResearchHint, commandRequiresRtk, extractAssistantProgress, getLedgerEntries, getRtkRoutingMode, isRtkRoutingEnabled, isRtkRoutingEnforced, LEDGER_ENTRY_TYPE, loadSaneConfig, makeLedgerEntry, parseGoalCommand, summarizeGoalState } = plugin;
 
 const baseDir = dirname(fileURLToPath(import.meta.url));
 const configPath = join(baseDir, "config-schema.toml");
@@ -81,7 +82,7 @@ export default function (pi: ExtensionAPI) {
   pi.on("session_start", async (_event, ctx) => {
     const cfg = loadSaneConfig(configPath);
     if (getRtkRoutingMode(cfg) !== "off") {
-      const rtk = await pi.exec("sh", ["-lc", "command -v rtk"], { timeout: 2000 });
+      const rtk = await pi.exec("rtk", ["--help"], { timeout: 2000 });
       if (rtk.exitCode !== 0) {
         ctx.ui.notify("Sane RTK routing is enabled, but rtk is not on PATH", "warning");
       }
@@ -157,12 +158,23 @@ export default function (pi: ExtensionAPI) {
   });
 
   pi.registerCommand("sane-goal", {
-    description: "Manage Sane goal/ledger state: set <goal>, decide <decision>, block <reason>, status, run, handoff, clear",
+    description: "Set and start a Sane goal, or manage state: /sane-goal <prompt>; set, decide, block, status, run, handoff, clear",
     handler: async (args, ctx) => {
+      const cfg = loadSaneConfig(configPath);
+      const directGoal = parseDirectGoal(args);
+      if (directGoal) {
+        pi.appendEntry(LEDGER_ENTRY_TYPE, makeLedgerEntry("goal", { text: directGoal, source: "user-command", confidence: "explicit" }));
+        ctx.ui.setStatus?.("sane-next", buildQuietStatusSummary(cfg, { activeGoal: { text: directGoal } }));
+        ctx.ui.notify(`Sane goal set: ${directGoal}`, "success");
+        await pi.sendUserMessage(buildGoalRunPrompt(directGoal));
+        return;
+      }
+
       const parsed = parseGoalCommand(args);
       if (parsed.action === "set") {
         if (!parsed.value) return ctx.ui.notify("Usage: /sane-goal set <goal>", "warning");
         pi.appendEntry(LEDGER_ENTRY_TYPE, makeLedgerEntry("goal", { text: parsed.value, source: "user-command", confidence: "explicit" }));
+        ctx.ui.setStatus?.("sane-next", buildQuietStatusSummary(cfg, { activeGoal: { text: parsed.value } }));
         return ctx.ui.notify(`Sane goal set: ${parsed.value}`, "success");
       }
       if (parsed.action === "decide") {
@@ -177,13 +189,14 @@ export default function (pi: ExtensionAPI) {
       }
       if (parsed.action === "clear") {
         pi.appendEntry(LEDGER_ENTRY_TYPE, makeLedgerEntry("goal", { text: "Goal cleared by user.", status: "done", source: "user-command", confidence: "explicit" }));
+        ctx.ui.setStatus?.("sane-next", buildQuietStatusSummary(cfg, {}));
         return ctx.ui.notify("Sane goal cleared", "info");
       }
 
       const state = summarizeGoalState(getLedgerEntries(ctx.sessionManager));
       if (parsed.action === "run") {
         if (!state.activeGoal) return ctx.ui.notify("No active Sane goal. Use /sane-goal set <goal> first.", "warning");
-        await pi.sendUserMessage(`Continue working toward this Sane goal until it is done, blocked, unsafe, or needs user approval. Goal: ${state.activeGoal.text}`);
+        await pi.sendUserMessage(buildGoalRunPrompt(state.activeGoal.text));
         return;
       }
       if (parsed.action === "handoff") {
@@ -194,6 +207,13 @@ export default function (pi: ExtensionAPI) {
       ctx.ui.notify(buildGoalStatusText(state), "info");
     },
   });
+}
+
+function parseDirectGoal(args: string) {
+  const text = args.trim();
+  if (!text) return "";
+  const action = text.split(/\s+/, 1)[0].toLowerCase();
+  return ["set", "decide", "block", "status", "run", "handoff", "clear"].includes(action) ? "" : text;
 }
 
 function buildGoalStatusText(state: { activeGoal?: { text?: string }, decisions?: Array<{ text?: string }>, progress?: Array<{ text?: string }>, blockers?: Array<{ text?: string }> }) {

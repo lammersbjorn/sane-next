@@ -20,12 +20,12 @@ The repo is pre-stable and source-built. The next work should focus on release r
 
 ## Next
 
-- [ ] Decide the first distribution channel for source-built users.
-  Evidence: an ADR records whether the next release path is GitHub releases, Homebrew, npm, or another explicit channel.
-- [ ] Prepare a pre-stable release checklist.
-  Evidence: install/export/doctor/repair/uninstall acceptance passes from a clean checkout and README install commands match the built artifact.
-- [ ] Refresh package recommendation pins from live Pi package/npm state.
-  Evidence: package IDs and pins in `pi-plugin/config-schema.toml` are checked against current installable artifacts before release.
+- [x] Decide the first distribution channel for source-built users.
+  Evidence: `docs/adr/0013-use-github-releases-as-first-distribution-channel.md` selects GitHub Releases as the first pre-stable distribution channel.
+- [x] Prepare a pre-stable release checklist.
+  Evidence: `bash .githooks/pre-commit`, `cd cli && go test ./...`, `node --test pi-plugin/plugin.test.js`, and `cd cli && ./acceptance.sh` pass; top-level CLI help now lists the source-built install/update/repair/package flags used by README and acceptance.
+- [x] Refresh package recommendation pins from live Pi package/npm state.
+  Evidence: `npm view <package> version dist-tags --json` confirmed every configured recommendation is already at the current `latest` dist-tag, and `cd cli && go test ./...` plus dry-run `sane-next package install` checks passed for every package ID.
 
 ## Later
 

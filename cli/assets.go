@@ -26,15 +26,16 @@ func syncOwnedAssets(root, sourceRoot string) error {
 	if err != nil {
 		return err
 	}
+	existingCfg, hasExistingCfg := loadExistingInstalledConfig(root)
 
-	for _, dir := range []string{"packs", "extensions", "pi-plugin", "exports", "themes", "user-packs"} {
+	for _, dir := range []string{"packs", "extensions", "exports", "themes", "user-packs"} {
 		if err := os.MkdirAll(filepath.Join(root, dir), 0o755); err != nil {
 			return fmt.Errorf("create %s: %w", dir, err)
 		}
 	}
 
-	if err := replaceDir(filepath.Join(sourceRoot, "pi-plugin"), filepath.Join(root, "pi-plugin")); err != nil {
-		return err
+	if err := os.RemoveAll(filepath.Join(root, "pi-plugin")); err != nil {
+		return fmt.Errorf("remove legacy pi-plugin dir: %w", err)
 	}
 	if err := replaceDir(filepath.Join(sourceRoot, "pi-plugin"), filepath.Join(root, "extensions", "sane-next")); err != nil {
 		return err
@@ -53,7 +54,10 @@ func syncOwnedAssets(root, sourceRoot string) error {
 			continue
 		}
 		src := filepath.Clean(filepath.Join(filepath.Dir(cfgPath), p.Source))
-		dst := filepath.Join(root, "packs", p.ID)
+		dst, err := safeJoinUnder(filepath.Join(root, "packs"), p.ID)
+		if err != nil {
+			return err
+		}
 		if err := replaceDir(src, dst); err != nil {
 			return err
 		}
@@ -63,6 +67,9 @@ func syncOwnedAssets(root, sourceRoot string) error {
 	}
 	if err := os.WriteFile(filepath.Join(root, "packs", "VERSION"), []byte(version+"\n"), 0o644); err != nil {
 		return fmt.Errorf("write pack version: %w", err)
+	}
+	if hasExistingCfg && cfg.Ownership.PreserveUserConfig {
+		cfg = preserveUserConfig(cfg, existingCfg)
 	}
 	if err := writeInstalledConfig(root, cfg); err != nil {
 		return err
@@ -91,11 +98,34 @@ func writePackageJSON(root string) error {
 	return os.WriteFile(filepath.Join(root, "package.json"), []byte(content), 0o644)
 }
 
-func writeInstalledConfig(root string, cfg saneConfig) error {
-	pluginCfg := installedConfigWithPackBase(cfg, "..")
-	if err := os.WriteFile(filepath.Join(root, "pi-plugin", "config-schema.toml"), []byte(renderConfig(pluginCfg)), 0o644); err != nil {
-		return err
+func loadExistingInstalledConfig(root string) (saneConfig, bool) {
+	cfg, err := loadConfig(filepath.Join(root, "extensions", "sane-next", "config-schema.toml"))
+	return cfg, err == nil
+}
+
+func preserveUserConfig(sourceCfg, existingCfg saneConfig) saneConfig {
+	sourceCfg.Defaults = existingCfg.Defaults
+	sourceCfg.Rtk = existingCfg.Rtk
+	sourceCfg.Pretty = existingCfg.Pretty
+	preservePackChoices(sourceCfg.Packs, existingCfg.Packs)
+	preservePackChoices(sourceCfg.UserPacks, existingCfg.UserPacks)
+	return sourceCfg
+}
+
+func preservePackChoices(sourcePacks, existingPacks []pack) {
+	existingByID := map[string]pack{}
+	for _, p := range existingPacks {
+		existingByID[p.ID] = p
 	}
+	for i := range sourcePacks {
+		if existing, ok := existingByID[sourcePacks[i].ID]; ok {
+			sourcePacks[i].Enabled = existing.Enabled
+			sourcePacks[i].Targets = existing.Targets
+		}
+	}
+}
+
+func writeInstalledConfig(root string, cfg saneConfig) error {
 	extensionCfg := installedConfigWithPackBase(cfg, filepath.Join("..", ".."))
 	if err := os.WriteFile(filepath.Join(root, "extensions", "sane-next", "config-schema.toml"), []byte(renderConfig(extensionCfg)), 0o644); err != nil {
 		return err
@@ -147,6 +177,23 @@ func replaceDir(src, dst string) error {
 	return copyDir(src, dst)
 }
 
+func safeJoinUnder(root string, elem ...string) (string, error) {
+	cleanRoot, err := filepath.Abs(filepath.Clean(root))
+	if err != nil {
+		return "", fmt.Errorf("resolve root %s: %w", root, err)
+	}
+	parts := append([]string{cleanRoot}, elem...)
+	joined := filepath.Clean(filepath.Join(parts...))
+	rel, err := filepath.Rel(cleanRoot, joined)
+	if err != nil {
+		return "", fmt.Errorf("resolve path %s: %w", joined, err)
+	}
+	if rel == ".." || strings.HasPrefix(rel, ".."+string(filepath.Separator)) || filepath.IsAbs(rel) {
+		return "", fmt.Errorf("path %s escapes root %s", joined, cleanRoot)
+	}
+	return joined, nil
+}
+
 func copyDir(src, dst string) error {
 	info, err := os.Stat(src)
 	if err != nil {
@@ -166,6 +213,9 @@ func copyDir(src, dst string) error {
 		target := filepath.Join(dst, rel)
 		if d.IsDir() {
 			return os.MkdirAll(target, 0o755)
+		}
+		if d.Type()&os.ModeSymlink != 0 {
+			return fmt.Errorf("refusing to copy symlink %s", path)
 		}
 		return copyFile(path, target)
 	})

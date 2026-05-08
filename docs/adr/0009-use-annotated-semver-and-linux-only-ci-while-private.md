@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted
+Accepted; CI operating-system scope superseded by [ADR 0014](0014-add-cross-platform-compatibility-checks.md)
 
 ## Context
 
@@ -30,6 +30,7 @@ Use the following release policy:
 2. **CI while private**
    - Keep CI Linux-only while the repo is private.
    - Do not add macOS or Windows runners yet.
+   - Superseded by ADR 0014 after the project adopted Linux, macOS, and Windows compatibility checks.
 
 3. **Release automation**
    - Keep release automation minimal at first.

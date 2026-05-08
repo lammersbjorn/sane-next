@@ -17,9 +17,9 @@ cd "$ROOT"
 
 "$GO_BIN" run . install --root "$TMP/install"
 test -f "$TMP/install/packs/core-workflow/SKILL.md"
-test -f "$TMP/install/pi-plugin/index.ts"
-test -f "$TMP/install/pi-plugin/config-schema.toml"
+test ! -e "$TMP/install/pi-plugin"
 test -f "$TMP/install/extensions/sane-next/index.ts"
+test -f "$TMP/install/extensions/sane-next/config-schema.toml"
 test -f "$TMP/install/themes/github-dark-pro.json"
 test ! -e "$TMP/install/skills"
 test -f "$TMP/install/package.json"
@@ -118,14 +118,14 @@ PY
 
 "$NODE_BIN" --test "$REPO/pi-plugin/plugin.test.js"
 rm -rf "$TMP/install/exports"
-rm -f "$TMP/install/pi-plugin/index.ts"
+rm -f "$TMP/install/extensions/sane-next/index.ts"
 if "$GO_BIN" run . doctor --root "$TMP/install" >"$TMP/doctor-broken.log" 2>&1; then
   echo "doctor unexpectedly passed with missing plugin" >&2
   exit 1
 fi
 "$GO_BIN" run . repair --root "$TMP/install"
 test -d "$TMP/install/exports"
-test -f "$TMP/install/pi-plugin/index.ts"
+test ! -e "$TMP/install/pi-plugin"
 test -f "$TMP/install/extensions/sane-next/index.ts"
 test -f "$TMP/install/themes/github-dark-pro.json"
 "$GO_BIN" run . update --root "$TMP/install"

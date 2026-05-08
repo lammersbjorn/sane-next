@@ -26,6 +26,9 @@ func runInstall(args []string) (commandResult, error) {
 	if *dryRun {
 		return commandResult{Message: lifecyclePreview("install", *root, *sourceRoot)}, nil
 	}
+	if err := requireInstallTargetWritable(*root); err != nil {
+		return commandResult{}, err
+	}
 	if err := syncOwnedAssets(*root, *sourceRoot); err != nil {
 		return commandResult{}, err
 	}
@@ -39,6 +42,25 @@ func runInstall(args []string) (commandResult, error) {
 		message = fmt.Sprintf("%s; installed recommended Pi packages: %s", message, strings.Join(installed, ", "))
 	}
 	return commandResult{Message: message}, nil
+}
+
+func requireInstallTargetWritable(root string) error {
+	if _, err := os.Stat(filepath.Join(root, ".sane-next-owned")); err == nil {
+		return nil
+	} else if err != nil && !os.IsNotExist(err) {
+		return err
+	}
+	entries, err := os.ReadDir(root)
+	if os.IsNotExist(err) {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	if len(entries) > 0 {
+		return fmt.Errorf("refusing to install into non-empty root without Sane ownership marker: %s", root)
+	}
+	return nil
 }
 
 func installRecommendedPiPackages(root, sourceRoot string, enabled bool) ([]string, error) {

@@ -1,5 +1,5 @@
 # Sane Next Pi overlay config.
-# Global install copy: ~/.sane-next/pi-plugin/config-schema.toml
+# Installed runtime copy: ~/.sane-next/extensions/sane-next/config-schema.toml
 # Repo source copy: pi-plugin/config-schema.toml
 # After manual edits to the repo source, run: cd cli && ./sane-next update --root ~/.sane-next
 
@@ -98,7 +98,7 @@ enabled = false
 source = "../.agents/skills/example-user-pack"
 targets = ["pi", "codex"]
 
-# Export targets used by sane-next export. path is relative to --target-root unless absolute.
+# Export targets used by sane-next export. path must be relative to --target-root.
 [[export_targets]]
 id = "pi"
 kind = "pi-skill"

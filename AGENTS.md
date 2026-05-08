@@ -7,7 +7,7 @@
 
 ## Startup rules
 
-- Before broad work, read `TRACK.toml`; then follow only the roadmap, ADRs, standards, or source files referenced by the active slice.
+- Before broad work, read `TRACK.toml`; then follow only the roadmap, ADRs, standards, or source files referenced by the active slice unless the user has given an explicit current goal. If an explicit goal conflicts with the tracker, pause to reconcile it instead of silently switching to the tracker slice.
 - For docs placement, use `docs/README.md` and `docs/standards/DOCS-STRUCTURE-STANDARD.md`; for implementation runs, load `.agents/skills/sane-next-implementation/SKILL.md`.
 - Use current repo files and fresh external research; do not trust old Sane claims or stale chat memory.
 - Keep always-on instructions small and update `TRACK.toml` only for the active slice.

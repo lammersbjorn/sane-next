@@ -1,7 +1,7 @@
 "use strict";
 
 const assert = require("assert");
-const { applyPrettyEnvironmentDefaults, buildQuietStatusSummary, buildRelevantLedgerContext, buildRtkRoutingHint, buildSubagentRoutingHint, buildWebResearchHint, commandRequiresRtk, extractAssistantProgress, getLedgerEntries, getRtkRoutingMode, hasLedgerConflict, isRtkRoutingEnabled, isRtkRoutingEnforced, isStaleLedgerEntry, isSubagentsConfigured, loadSaneConfig, makeLedgerEntry, parseGoalCommand, parseSaneToml, summarizeGoalState, validateSaneConfig } = require("./plugin");
+const { applyPrettyEnvironmentDefaults, buildGoalRunPrompt, buildQuietStatusSummary, buildRelevantLedgerContext, buildRtkRoutingHint, buildSubagentRoutingHint, buildWebResearchHint, commandRequiresRtk, extractAssistantProgress, getLedgerEntries, getRtkRoutingMode, hasLedgerConflict, isRtkRoutingEnabled, isRtkRoutingEnforced, isStaleLedgerEntry, isSubagentsConfigured, loadSaneConfig, makeLedgerEntry, parseGoalCommand, parseSaneToml, summarizeGoalState, validateSaneConfig } = require("./plugin");
 
 const loaded = validateSaneConfig({
   defaults: { model: "gpt-5.5", reasoning: "low", responseStyle: "caveman" },
@@ -134,6 +134,9 @@ assert.equal(isRtkRoutingEnforced(loaded), false);
 
 assert.equal(commandRequiresRtk("grep -R TODO ."), true);
 assert.equal(commandRequiresRtk("cd repo && rg TODO"), true);
+assert.equal(commandRequiresRtk("mkdir -p .tmp && ls -l .tmp"), true);
+assert.equal(commandRequiresRtk("go build ./... && find . -maxdepth 1 -type f"), true);
+assert.equal(commandRequiresRtk("go build ./... | grep ok"), true);
 assert.equal(commandRequiresRtk("git diff -- cli"), true);
 assert.equal(commandRequiresRtk("rtk grep TODO"), false);
 assert.equal(commandRequiresRtk("command -v rtk"), false);
@@ -141,6 +144,8 @@ assert.equal(commandRequiresRtk("go build ./..."), false);
 
 assert.deepEqual(parseGoalCommand("set ship the goal runner"), { action: "set", value: "ship the goal runner" });
 assert.deepEqual(parseGoalCommand(""), { action: "status", value: "" });
+assert.match(buildGoalRunPrompt("Audit everything"), /explicit goal as the current user objective/);
+assert.match(buildGoalRunPrompt("Audit everything"), /TRACK\.toml are planning context, not a replacement/);
 
 const goal = makeLedgerEntry("goal", { text: "Build goal runner", source: "user-command" });
 const decision = makeLedgerEntry("decision", { text: "Use Pi extensions for goal state", status: "accepted" });
