@@ -38,6 +38,7 @@ Stop only when the ROADMAP completion rule is satisfied and the final acceptance
 
 ## Completion rule
 
+- [x] The Pi overlay provides goal/ledger workflow machinery: explicit goal commands, decision capture, progress capture, safe source-labeled context injection, and a keep-going command that resumes work toward the active goal until done, blocked, unsafe, or awaiting approval.
 - [x] The full sane-next product can author shared packs, export them to Codex-native paths, load them through Pi integration, enable user-added packs, manage companion CLI lifecycle flows (`install`, `export`, `update`, `doctor`, `repair`, `uninstall`), and verify that only Sane-owned material is changed during install/uninstall.
 - [x] A single acceptance command exists and passes.
 - [x] `TRACK.toml` and this roadmap are updated only after matching behavior is implemented and verified.
@@ -55,7 +56,64 @@ Stop only when the ROADMAP completion rule is satisfied and the final acceptance
 
 ---
 
+# Phase 7 — Codex-first craft skill pack
+
+- [x] ADR 0011 defines the craft-pack architecture and upstream policy.
+  Verify: `docs/adr/0011-use-codex-first-craft-skill-pack.md` exists and is consistent with ADR 0008, ADR 0010, and the instruction-surface standard.
+- [x] A small router skill exists and does not contain craft doctrine.
+  Verify: `.agents/skills/craft-router/SKILL.md` exists and only classifies/dispatches frontend, docs, accessibility, review, and UX-copy work.
+- [x] Frontend implementation, visual review, accessibility, docs-writing, and UX-copy skills exist as narrow subordinate skills.
+  Verify: `.agents/skills/frontend-craft/SKILL.md`, `.agents/skills/frontend-review/SKILL.md`, `.agents/skills/frontend-accessibility/SKILL.md`, `.agents/skills/docs-writing/SKILL.md`, and `.agents/skills/ux-copy/SKILL.md` exist and follow `docs/standards/INSTRUCTION-SURFACE-STANDARD.md`.
+- [x] Upstream inspiration is recorded without vendoring large third-party prompt text.
+  Verify: provenance notes exist under the relevant `references/UPSTREAM.md` files and no new large copied upstream prompt files are added.
+- [x] The six craft skills are configured as built-in packs for both Pi and Codex targets.
+  Verify: `pi-plugin/config-schema.toml` includes enabled pack entries for `craft-router`, `frontend-craft`, `frontend-review`, `frontend-accessibility`, `docs-writing`, and `ux-copy`.
+- [x] Tests and acceptance cover the new pack set.
+  Verify: `cd cli && go test ./...`, `node pi-plugin/plugin.test.js`, and `bash cli/acceptance.sh` pass, and fixture exports include the new skills.
+
+---
+
+# Phase 8 — Layered Pi customization profile
+
+Start this phase only after Phase 7 craft-router work is implemented and acceptance passes.
+
+- [x] ADR 0012 records package choices and the layered customization policy.
+  Verify: `docs/adr/0012-use-layered-pi-customization-profile.md` exists and selects one preferred package for each optional category with rationale.
+- [x] Optional Pi package recommendations are listed but not default-installed.
+  Verify: `pi-plugin/config-schema.toml` includes disabled-by-default recommendations for curated themes, markdown preview, tool rendering, ask-user, plan mode, and sandbox packages while preserving the default-installed allowlist from ADR 0010.
+- [x] The companion CLI can list and install configured package recommendations by ID.
+  Verify: fixture-safe tests cover `sane-next package list` and `sane-next package install <id>` without mutating the real global Pi config.
+- [x] The companion CLI can explicitly apply the Sane theme preference without overwriting unrelated settings.
+  Verify: fixture-safe tests cover `sane-next configure --theme github-dark-pro` against a temporary Pi agent dir/settings file.
+- [x] Sane's Pi extension gives compact runtime hints without adding broad always-on instructions.
+  Verify: tests or source inspection cover a short web-research trigger and a quiet Sane status indicator when the relevant package/state is available.
+- [x] User-facing docs explain default packages, optional package recommendations, and explicit configuration commands.
+  Verify: README documents the commands and acceptance still passes.
+- [x] Layered customization behavior is verified.
+  Verify: `cd cli && go test ./...`, `node --test pi-plugin/plugin.test.js`, and `cd cli && ./acceptance.sh` pass.
+
+---
+
+# Phase 6 — Goal runner and safe ledger
+
+- [x] Pi extension exposes a Sane goal command surface.
+  Verify: `pi-plugin/index.ts` registers `sane-goal` and acceptance checks for it.
+- [x] Explicit decisions and goals are persisted outside normal LLM context.
+  Verify: tests cover `sane-ledger` custom entries and `pi.appendEntry` is wired.
+- [x] Progress is captured automatically at agent-turn boundaries.
+  Verify: tests cover assistant progress extraction and extension wires `agent_end`.
+- [x] Relevant prior context is injected conservatively with source/confidence labels and conflict guidance.
+  Verify: tests cover ledger context construction and acceptance checks for `buildRelevantLedgerContext`.
+- [x] A goal runner can continue from the active goal and stops through normal user/approval/blocker boundaries.
+  Verify: `sane-goal run` sends a bounded continuation prompt for the active goal; `sane-goal block` records blockers.
+- [x] Goal/ledger behavior is included in the single acceptance command.
+  Verify: `cli/acceptance.sh` passes.
+
+---
+
 # Phase 0 — `/goal` preflight
+
+These are operator/session checks for a future Codex `/goal` run, not repo implementation requirements. They intentionally remain unchecked unless verified inside that live runtime session.
 
 - [ ] GPT-5.5 access is verified locally, or an explicit GPT-5.4 fallback is chosen.
   Verify: start Codex with the target model and confirm via `/status`.

@@ -1,54 +1,129 @@
 # sane-next
 
-`sane-next` is a **Pi-first overlay/distribution** for high-leverage coding-agent workflows, with shared packs that also export to Codex-native skill paths.
+`sane-next` is a small Pi-first overlay for coding-agent workflows. It installs a Sane Pi extension plus shared workflow packs, and can export those packs to Codex-native skill directories.
 
-This repo is intentionally small, but it is **not** a single-summary-doc repo. The implementation agent should be able to work from the repo alone without chat history, so durable context is split by purpose.
+## What you get
 
-## Read in this order
+- Pi overlay files that can be installed with `pi install`.
+- Built-in workflow packs in `.agents/skills/`.
+- Optional user packs registered from your own directories.
+- A small Go companion CLI for install, export, update, doctor, repair, uninstall, pack management, package recommendations, and explicit Pi settings.
+- Codex skill export without making Codex the primary runtime.
 
-1. `TRACK.toml` — the current active slice
-2. `docs/roadmap/ROADMAP.md` — the full remake checklist and the concrete `/goal` prompt
-3. `docs/reference/OLD-SANE-POSTMORTEM.md` — what old Sane taught us and what not to copy
-4. core ADRs:
-   - `docs/adr/0002-use-track-toml-plus-adrs-for-tracking.md`
-   - `docs/adr/0004-use-pi-overlay-with-codex-skill-export.md`
-   - `docs/adr/0007-use-go-for-companion-cli.md`
-   - `docs/adr/0008-use-small-tooling-policy-and-optional-mcps.md`
-   - `docs/adr/0009-use-annotated-semver-and-linux-only-ci-while-private.md`
-5. standards:
-   - `docs/standards/TRACK-STRUCTURE-STANDARD.md`
-   - `docs/standards/INSTRUCTION-SURFACE-STANDARD.md`
-   - `docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md`
-6. `AGENTS.md` — small startup rules
-7. `CONTRIBUTING.md` — commit and hook rules
+## Current install path
 
-## Repo structure
-
-- `TRACK.toml` — bounded active execution window only
-- `docs/roadmap/` — full remake roadmap and `/goal` launch material
-- `docs/reference/` — reference context and postmortems
-- `docs/adr/` — durable decisions
-- `docs/standards/` — durable standards and execution protocols
-- `.agents/skills/` — trigger-loaded implementation and workflow skills
-- `AGENTS.md` — tiny always-on instruction surface
-- `.githooks/` — committed repo hooks
-
-`TRACK.toml` is **not** the whole product plan. It only holds the active phase. The full remake scope and verified checklist live in `docs/roadmap/ROADMAP.md`.
-
-The intended product is still the broader remake: Pi-first runtime integration, shared packs, Codex export, extensibility, user-added packs, and the small Sane companion CLI around install/export/update/doctor/repair flows.
-
-## Current source usage
-
-From this repo, build and use the companion CLI:
+There is no published binary or Homebrew/npm channel yet. Build from source:
 
 ```bash
 cd cli
 go build -o sane-next .
+```
+
+Create a local overlay, inspect it, then install it into Pi:
+
+```bash
+./sane-next install --root /tmp/sane-next-overlay --source-root .. --dry-run
 ./sane-next install --root /tmp/sane-next-overlay --source-root ..
+./sane-next doctor --root /tmp/sane-next-overlay
 pi install /tmp/sane-next-overlay
+```
+
+By default, `install` writes to `~/.sane-next`. Use `--root PATH` for a preview, fixture, or alternate install location.
+
+The install flow keeps the default Pi package allowlist small and pinned:
+
+- `npm:pi-subagents@0.24.0` for Sane agent lanes.
+- `npm:pi-rewind@0.5.0` for checkpoint/rewind safety.
+- `npm:pi-web-providers@3.0.0` for freshness-sensitive web research.
+
+Use `--recommended-pi-packages=false` to skip these package installs.
+
+## Export packs to Codex
+
+Export enabled packs to Codex-native skills:
+
+```bash
+./sane-next export --target codex --config ../pi-plugin/config-schema.toml --dry-run
 ./sane-next export --target codex --config ../pi-plugin/config-schema.toml
 ```
 
-The Codex export writes enabled shared packs to `~/.codex/skills` by default. Use `--target-root PATH` for fixture or preview exports.
+The default Codex target is `~/.codex/skills`. Use `--target-root PATH` for a fixture or alternate export directory.
 
-Do not add random planning, TODO, memory, or research markdown files outside this structure.
+Exported pack directories include a `.sane-next-exported` marker. Existing unmarked directories are treated as user-owned and are not overwritten.
+
+## Manage packs
+
+List and validate configured packs:
+
+```bash
+./sane-next pack list --config ../pi-plugin/config-schema.toml
+./sane-next pack validate --config ../pi-plugin/config-schema.toml
+```
+
+Enable or disable a configured pack ID:
+
+```bash
+./sane-next pack enable --config ../pi-plugin/config-schema.toml example-user-pack
+./sane-next pack disable --config ../pi-plugin/config-schema.toml example-user-pack
+```
+
+## Configure Pi preferences and optional packages
+
+Sane ships a local `github-dark-pro` theme asset, but it does not silently overwrite your active Pi theme. Apply it explicitly:
+
+```bash
+./sane-next configure --theme github-dark-pro
+./sane-next configure --theme github-dark-pro --agent-dir /tmp/pi-agent-fixture
+```
+
+List optional package recommendations and install one by ID through `pi install`:
+
+```bash
+./sane-next package list --config ../pi-plugin/config-schema.toml
+./sane-next package install --config ../pi-plugin/config-schema.toml pi-markdown-preview
+./sane-next package install --config ../pi-plugin/config-schema.toml pi-curated-themes
+```
+
+Optional recommendations are disabled for default install and include curated themes, Markdown preview, compact tool rendering, ask-user clarification, plan/accept-edits mode, and container sandboxing. When `pi-pretty` is installed, Sane defaults compact its previews, keeps Nerd Font icons, and disables Shiki read backgrounds that clash with the GitHub theme.
+
+## Add a user pack
+
+Create a directory containing `SKILL.md`, then register it in a Sane config file:
+
+```toml
+[[user_packs]]
+id = "my-review-pack"
+enabled = true
+source = "/absolute/path/to/my-review-pack"
+targets = ["pi", "codex"]
+```
+
+Then validate and export:
+
+```bash
+./sane-next pack validate --config ../pi-plugin/config-schema.toml
+./sane-next export --config ../pi-plugin/config-schema.toml --target codex
+```
+
+## Maintenance commands
+
+```bash
+./sane-next update --root ~/.sane-next --dry-run
+./sane-next update --root ~/.sane-next
+./sane-next repair --root ~/.sane-next
+./sane-next uninstall --root ~/.sane-next --dry-run
+./sane-next uninstall --root ~/.sane-next
+```
+
+`doctor` reports missing owned assets and suggests the next install or repair command.
+
+## Development notes
+
+- Acceptance: `./cli/acceptance.sh`
+- CLI tests: `cd cli && go test ./...`
+- Current work state: `TRACK.toml`
+- Full roadmap: `docs/roadmap/ROADMAP.md`
+- Durable decisions: `docs/adr/`
+- Standards: `docs/standards/`
+
+Release tags should remain annotated `v0.y.z` tags while this repo is private.

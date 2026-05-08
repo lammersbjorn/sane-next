@@ -1,8 +1,8 @@
 version = 2
-updated = "2026-05-07"
-phase = "complete"
-goal = "Build the smallest reliable Codex workflow tool that improves long-running coding outcomes without recreating Sane's bloat."
-next_focus = "No active implementation slice remains; use ROADMAP and acceptance if reopening scope."
+updated = "2026-05-08"
+phase = "layered-pi-customization-profile"
+goal = "Implement ADR 0012 layered Pi customization with opt-in package recommendations, explicit theme configuration, compact runtime hints, docs, and verification."
+next_focus = "Phase 8 is verified; next active slice should be chosen from the remaining roadmap or release needs."
 
 [tracking]
 schema = "active-window-v1"
@@ -12,7 +12,6 @@ canonical_reference = "docs/reference/"
 canonical_decision_history = "docs/adr/"
 canonical_standards = "docs/standards/"
 progress_evidence = "git commits and pull requests"
-
 rules = [
   "Keep only active-window state here.",
   "Do not store completed work, hypotheses, research notes, or historical narrative here.",
@@ -23,38 +22,46 @@ rules = [
 ]
 
 [current]
-summary = "The roadmap implementation is complete for the requested full remake slice. The acceptance command passes and covers shared packs, Codex export, Pi config loading, user-pack enablement, lifecycle commands, recovery, and ownership-preserving uninstall."
+summary = "The active slice is ADR 0012's layered Pi customization profile after Phase 7 craft-router acceptance passed."
 exit_criteria = [
-  "No active work remains in the current roadmap slice.",
-  "Reopen TRACK with a new bounded slice if future Pi package publishing, notification packs, safety packs, LSP diagnostics, or prompt-template artifacts are added.",
+  "Optional Pi package recommendations are configured with default_install = false while ADR 0010 defaults remain default-installed.",
+  "The CLI lists and installs configured recommendations by ID through pi install with fixture-safe tests.",
+  "The CLI can explicitly set theme = github-dark-pro in a supplied/temp Pi settings file without overwriting unrelated settings.",
+  "Runtime hints remain compact and testable.",
+  "README documents default packages, optional recommendations, and explicit configure/package commands.",
+  "Phase 8 verification commands pass."
 ]
 refs = [
-  "docs/roadmap/ROADMAP.md",
-  "docs/reference/OLD-SANE-POSTMORTEM.md",
-  "docs/adr/0004-use-pi-overlay-with-codex-skill-export.md",
-  "docs/adr/0007-use-go-for-companion-cli.md",
-  "docs/adr/0008-use-small-tooling-policy-and-optional-mcps.md",
-  "docs/adr/0009-use-annotated-semver-and-linux-only-ci-while-private.md",
-  "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md",
-  "pi-plugin/config-schema.toml",
-  "cli/",
-  ".agents/skills/core-workflow/SKILL.md",
+  "docs/adr/0012-use-layered-pi-customization-profile.md",
+  "docs/adr/0010-use-curated-default-pi-packages.md",
+  "docs/roadmap/ROADMAP.md#phase-8--layered-pi-customization-profile",
+  "docs/standards/INSTRUCTION-SURFACE-STANDARD.md",
 ]
 
 [[work_items]]
-id = "completion-audit"
-status = "ready"
-title = "Keep completion evidence current"
-why_now = "TRACK requires an active-window item even when the current implementation slice is complete."
+id = "layered-pi-customization-profile"
+status = "done"
+title = "Add ADR 0012 layered Pi customization behavior"
+why_now = "Phase 7 craft-router behavior is implemented and acceptance has passed, unblocking ADR 0012 Phase 8 work."
 write_scope = [
-  "TRACK.toml",
+  "pi-plugin/config-schema.toml",
+  "pi-plugin/plugin.js",
+  "pi-plugin/index.ts",
+  "pi-plugin/plugin.test.js",
+  "cli/",
+  "README.md",
   "docs/roadmap/ROADMAP.md",
+  "TRACK.toml",
 ]
 inputs = [
-  "docs/adr/0004-use-pi-overlay-with-codex-skill-export.md",
-  "docs/roadmap/ROADMAP.md",
-  "docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md",
+  "docs/adr/0012-use-layered-pi-customization-profile.md",
+  "docs/adr/0010-use-curated-default-pi-packages.md",
+  "docs/standards/INSTRUCTION-SURFACE-STANDARD.md",
 ]
 done_when = [
-  "A future task reopens TRACK with a concrete bounded implementation slice.",
+  "Optional recommendations are in config with default_install = false.",
+  "package list/install and configure --theme have fixture-safe tests.",
+  "cd cli && go test ./... passes.",
+  "node --test pi-plugin/plugin.test.js passes.",
+  "cd cli && ./acceptance.sh passes."
 ]
