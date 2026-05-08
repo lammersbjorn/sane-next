@@ -1,8 +1,16 @@
 Pre-stable beta release for Sane Next.
 
-Highlights:
-- Reframes repo and skill prompts around positive routing, workflow steps, and success criteria.
-- Adds instruction-surface guidance based on current OpenAI, Anthropic, and ETH negative-prompting research.
-- Keeps Sane Pi-first while preserving compact always-on instructions and focused skill surfaces.
+What changed since v0.3.0-beta.1:
+
+- Added GitHub Actions release packaging for Linux, macOS, and Windows archives.
+- Added `cli/package_release.sh` for building release archives with the CLI binary and README.
+- Fixed the release workflow so CI uploads only `.tar.gz` and `.zip` archives, not build directories.
+- Kept CI on the full matrix: Go unit tests and Pi plugin tests on Ubuntu, macOS, and Windows, plus Ubuntu acceptance.
+- Fixed Windows Codex export validation so POSIX-style absolute paths are rejected on Windows.
+- Tightened CLI acceptance coverage around install, doctor, export, repair, update, and uninstall behavior.
+- Updated README install instructions for the `0.3.0-beta.2` release archive names.
+- Rewrote repo and skill instructions to use positive routing and workflow steps instead of long negative-rule lists.
+- Added instruction-surface guidance for writing future AGENTS and skill prompts.
+- Refreshed project docs and tracking text to match the current GitHub Releases distribution path.
 
 Download the archive for your OS/CPU, extract it, and run the included `sane-next` command from the extracted directory.
