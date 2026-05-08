@@ -27,7 +27,7 @@ The repo is pre-stable with a beta GitHub Releases channel and self-contained re
 - [x] Refresh package recommendation pins from live Pi package/npm state.
   Evidence: `npm view <package> version dist-tags --json` confirmed every configured recommendation is already at the current `latest` dist-tag, and `cd cli && go test ./...` plus dry-run `sane-next package install` checks passed for every package ID.
 - [x] Make GitHub Release archives reproducible and smoke-checked.
-  Evidence: `cli/package_release.sh` builds README-named Linux, macOS, and Windows archives; CI and `cd cli && ./acceptance.sh` inspect tar/zip layout.
+  Evidence: `cli/package_release.sh` builds README-named Linux, macOS, and Windows archives; `.github/workflows/release.yml` inspects tar/zip layout on tag or manual release runs.
 
 ## Later
 

@@ -1,0 +1,76 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-release-archives:
+    name: build release archives
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
+        with:
+          go-version: "1.22"
+          cache-dependency-path: cli/go.sum
+      - name: Build release archives
+        shell: bash
+        run: ./cli/package_release.sh
+      - name: Inspect release archives
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(cd cli && go run . version)"
+          test -f "dist/sane-next_${version}_linux_amd64.tar.gz"
+          test -f "dist/sane-next_${version}_linux_arm64.tar.gz"
+          test -f "dist/sane-next_${version}_darwin_amd64.tar.gz"
+          test -f "dist/sane-next_${version}_darwin_arm64.tar.gz"
+          test -f "dist/sane-next_${version}_windows_amd64.zip"
+          test -f "dist/sane-next_${version}_windows_arm64.zip"
+          mkdir -p dist/check
+          tar -xzf "dist/sane-next_${version}_darwin_arm64.tar.gz" -C dist/check
+          test -f "dist/check/sane-next_${version}_darwin_arm64/sane-next"
+          test -f "dist/check/sane-next_${version}_darwin_arm64/README.md"
+          VERSION="$version" python3 - <<'PY'
+          import os
+          from pathlib import Path
+          import zipfile
+          version = os.environ["VERSION"]
+          archive = Path(f"dist/sane-next_{version}_windows_amd64.zip")
+          with zipfile.ZipFile(archive) as z:
+              names = set(z.namelist())
+          expected = {
+              f"sane-next_{version}_windows_amd64/sane-next.exe",
+              f"sane-next_{version}_windows_amd64/README.md",
+          }
+          missing = expected - names
+          if missing:
+              raise SystemExit(f"windows release archive missing: {sorted(missing)}")
+          PY
+      - uses: actions/upload-artifact@v5
+        with:
+          name: sane-next-release-tarballs
+          path: dist/sane-next_*.tar.gz
+      - uses: actions/upload-artifact@v5
+        with:
+          name: sane-next-release-zips
+          path: dist/sane-next_*.zip
+      - name: Upload archives to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: gh release upload "$GITHUB_REF_NAME" dist/sane-next_* --clobber
