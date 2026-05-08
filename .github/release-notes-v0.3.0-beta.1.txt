@@ -1,11 +1,9 @@
-Beta release with cross-platform CLI compatibility checks, GitHub Releases distribution decision, single active installed config, RTK enforce preservation, and refreshed package/release-readiness validation.
+Pre-stable beta release for Sane Next.
 
-Download the archive for your OS/CPU, extract it, and run the included sane-next command from the extracted directory. The archives include the CLI plus the overlay assets it installs.
+Highlights:
+- Adds cross-platform CLI release archives for Linux, macOS, and Windows.
+- Keeps GitHub Releases as the first pre-stable distribution channel.
+- Preserves the Pi-first overlay model and user-owned config boundaries.
+- Refreshes package and release-readiness validation.
 
-Verified locally:
-- bash .githooks/pre-commit
-- cd cli && go test ./...
-- node --test pi-plugin/plugin.test.js
-- cd cli && ./acceptance.sh
-- release archive install/doctor smoke test
-- cross-build Linux/macOS/Windows amd64+arm64
+Download the archive for your OS/CPU, extract it, and run the included `sane-next` command from the extracted directory.
