@@ -1,41 +1,48 @@
 # sane-next
 
-Sane is a better way to use Codex for serious coding work.
+**Sane** is a Pi-first workflow overlay for serious coding sessions.
 
-It gives Codex a stronger working environment: Pi as the fast interactive runtime, focused skills for the kinds of work you actually do, subagent lanes for broad tasks, web/research support when freshness matters, and checkpoint-friendly habits for long sessions.
+It installs a small set of Pi skills, package recommendations, and CLI lifecycle commands that help agents start from repo truth, keep work bounded, use focused craft skills, and verify before claiming done.
 
-Instead of asking you to remember a perfect prompt every time, Sane installs a small overlay that makes the good workflow the default:
+> [!NOTE]
+> `sane-next` is pre-stable. The current release line is `0.3.0-beta.1`, with GitHub Releases as the first distribution channel. There is no Homebrew or npm install channel yet.
 
-- **Start from repo truth.** Sane nudges agents to read the right local files, respect existing project rules, and avoid stale chat memory.
-- **Keep work bounded.** Long tasks are split into clear slices with explicit stop conditions instead of drifting into an unreviewable mega-run.
-- **Use the right skill at the right time.** Core workflow, agent lanes, docs, frontend craft, accessibility, review, UX copy, and RTK-aware routing live as focused skill packs.
-- **Parallelize when it helps.** Broad work can use subagent lanes for research, implementation, review, and verification while one main agent stays in control.
-- **Verify before claiming done.** Sane emphasizes concrete checks, acceptance commands, and recoverable handoffs.
-- **Stay portable.** Packs are authored once and can load in Pi or export to Codex-native skill directories.
-- **Respect your setup.** Optional packages and themes are available, but personal preferences are changed only by explicit commands.
+## Contents
 
-`sane-next` implements this as a Pi-first distribution: a Sane Pi extension, shared workflow packs, curated Pi package defaults, and a small companion CLI for install, export, update, repair, and configuration.
+- [What you get](#what-you-get)
+- [Requirements](#requirements)
+- [Install](#install)
+- [Common tasks](#common-tasks)
+- [Included packages and packs](#included-packages-and-packs)
+- [Troubleshooting](#troubleshooting)
+- [Project docs](#project-docs)
 
-## Status
+## What you get
 
-- Current version: `0.3.0-beta.1` beta.
-- First pre-stable distribution channel: GitHub Releases.
-- No Homebrew formula or npm channel yet.
-- Compatibility target: Linux, macOS, and Windows for the companion CLI and Pi extension tests; full shell acceptance remains Linux/Bash-only.
-- Use a GitHub Release archive, or build the CLI locally from `cli/`.
+- A Sane Pi overlay installed to `~/.sane-next` by default.
+- Focused skill packs for core workflow discipline, agent lanes, docs, frontend craft, accessibility, review, UX copy, and Sane routing.
+- Curated default Pi packages for subagents, checkpoints, and web research.
+- Optional package recommendations for themes, previews, prompt routing, clarification, edit review, and sandboxing.
+- Codex-native skill export for enabled packs.
+- Safe lifecycle commands that track Sane-owned files and preserve user-owned config.
 
-## Prerequisites
+## Requirements
 
-- Go 1.22+ to build and test the companion CLI.
-- A working `pi` CLI/runtime for `pi install` and Pi overlay loading.
-- Node.js only when running Pi plugin tests.
-- Network/npm access if you let Sane install recommended Pi packages.
+| Need | Used for |
+| --- | --- |
+| Go 1.22+ | Build and test the companion CLI from source. |
+| Pi CLI/runtime | Load the overlay with `pi install`. |
+| Node.js | Run Pi plugin tests. |
+| Network/npm access | Install recommended Pi packages automatically. |
 
-## Quick start from a GitHub Release
+## Install
 
-Download the archive for your OS and CPU from the latest GitHub Release. Extract it and run the included `sane-next` command from the extracted directory.
+### Option 1: GitHub Release archive
 
-macOS/Linux example:
+Download the archive for your OS/CPU from the latest GitHub Release, extract it, then run the included binary.
+
+<details open>
+<summary>macOS/Linux</summary>
 
 ```bash
 tar -xzf sane-next_0.3.0-beta.1_darwin_arm64.tar.gz
@@ -46,7 +53,10 @@ chmod +x sane-next
 pi install ~/.sane-next
 ```
 
-Windows PowerShell example:
+</details>
+
+<details>
+<summary>Windows PowerShell</summary>
 
 ```powershell
 Expand-Archive sane-next_0.3.0-beta.1_windows_amd64.zip -DestinationPath sane-next
@@ -56,16 +66,18 @@ cd sane-next\sane-next_0.3.0-beta.1_windows_amd64
 pi install $env:USERPROFILE\.sane-next
 ```
 
-The release archive includes the CLI plus the overlay assets it installs.
+</details>
 
-## Quick start from source
+### Option 2: Build from source
 
 ```bash
 cd cli
 go build -o sane-next .
+./sane-next install --source-root ..
+pi install ~/.sane-next
 ```
 
-Preview the overlay in a fixture directory, install it there, and inspect it:
+Preview an install without writing to your home directory:
 
 ```bash
 ./sane-next install --root /tmp/sane-next-overlay --source-root .. --dry-run
@@ -73,136 +85,64 @@ Preview the overlay in a fixture directory, install it there, and inspect it:
 ./sane-next doctor --root /tmp/sane-next-overlay
 ```
 
-Install that overlay into Pi:
+> [!TIP]
+> Use `--recommended-pi-packages=false` if you want to install the overlay without letting Sane call `pi install` for default package recommendations.
 
-```bash
-pi install /tmp/sane-next-overlay
-```
+## Common tasks
 
-By default, `install` writes to `~/.sane-next`. Use `--root PATH` for a preview, fixture, or alternate install location.
+| Task | Command |
+| --- | --- |
+| Check install health | `sane-next doctor --root ~/.sane-next` |
+| Update Sane-owned files | `sane-next update --root ~/.sane-next` |
+| Repair missing Sane-owned files | `sane-next repair --root ~/.sane-next` |
+| Preview uninstall | `sane-next uninstall --root ~/.sane-next --dry-run` |
+| Uninstall Sane-owned files | `sane-next uninstall --root ~/.sane-next` |
+| List pack config | `sane-next pack list --config pi-plugin/config-schema.toml` |
+| Validate pack config | `sane-next pack validate --config pi-plugin/config-schema.toml` |
+| Export enabled packs to Codex | `sane-next export --target codex --config pi-plugin/config-schema.toml` |
+| List Pi package recommendations | `sane-next package list --config pi-plugin/config-schema.toml` |
+| Install one package recommendation | `sane-next package install --config pi-plugin/config-schema.toml pi-subagents` |
+| Apply the bundled Pi theme | `sane-next configure --theme github-dark-pro` |
 
-## What Sane installs by default
+Use `--dry-run` where available to preview writes first.
 
-The default install keeps the Pi package allowlist small and pinned:
+## Included packages and packs
 
-| ID | Package | Why it is default |
-| --- | --- | --- |
-| `pi-subagents` | `npm:pi-subagents@0.24.0` | Runtime-backed agent lanes for broad Sane work. |
-| `pi-rewind` | `npm:pi-rewind@0.5.0` | Checkpoint/rewind safety for long sessions. |
-| `pi-web-providers` | `npm:pi-web-providers@3.0.0` | Fresh web search/research tools. |
+### Default Pi packages
 
-Default-root installs may call `pi install` for those packages. To skip package installation:
+These packages are installed by `sane-next install` unless disabled:
 
-```bash
-./sane-next install --recommended-pi-packages=false
-```
+| ID | Package |
+| --- | --- |
+| `pi-subagents` | `npm:pi-subagents@0.24.0` |
+| `pi-rewind` | `npm:pi-rewind@0.5.0` |
+| `pi-web-providers` | `npm:pi-web-providers@3.0.0` |
 
-Fixture or alternate-root installs do not mutate your global Pi package set unless package installation is explicitly enabled for that path. If you only need lanes, install the runtime directly:
+### Optional Pi packages
 
-```bash
-./sane-next package install pi-subagents
-```
+Optional packages are listed in config but installed only when requested:
 
-## Optional Pi packages
+`pi-prompt-template-model`, `pi-curated-themes`, `pi-markdown-preview`, `pi-pretty`, `pi-ask-user`, `pi-pledit`, and `pi-container-sandbox`.
 
-Optional recommendations are listed but not installed by default:
+### Workflow packs
 
-| ID | Package | Use when you want... |
-| --- | --- | --- |
-| `pi-prompt-template-model` | `npm:pi-prompt-template-model@0.9.3` | Prompt-template routing for model/reasoning/skill workflows. |
-| `pi-curated-themes` | `npm:@victor-software-house/pi-curated-themes@0.2.1` | More Pi themes. |
-| `pi-markdown-preview` | `npm:pi-markdown-preview@0.9.7` | Markdown, code, diff, browser, terminal, and PDF previews. |
-| `pi-pretty` | `npm:@heyhuynhgiabuu/pi-pretty@0.4.4` | Compact visual rendering for tool calls. |
-| `pi-ask-user` | `npm:pi-ask-user@0.10.0` | A clarification tool and skill for important ambiguity. |
-| `pi-pledit` | `npm:pi-pledit@1.0.1` | Plan mode and accept-edits mode. |
-| `pi-container-sandbox` | `npm:pi-container-sandbox@0.2.1` | Higher-safety container sandboxing. |
+Enabled packs load in Pi and can export to Codex: `core-workflow`, `rtk-routing`, `agent-lanes`, `sane-router`, `craft-router`, `frontend-craft`, `frontend-review`, `frontend-accessibility`, `docs-writing`, and `ux-copy`.
 
-List and install package recommendations by ID:
-
-```bash
-./sane-next package list --config ../pi-plugin/config-schema.toml
-./sane-next package install --config ../pi-plugin/config-schema.toml pi-markdown-preview
-```
-
-When `pi-pretty` is installed, Sane supplies compact defaults: short previews, Nerd Font icons, and minimal highlighting to avoid theme clashes.
-
-## Configure Pi preferences
-
-Sane ships a local `github-dark-pro` theme asset, but it does not silently change your active Pi theme. Apply it explicitly:
-
-```bash
-./sane-next configure --theme github-dark-pro
-```
-
-For a fixture or alternate Pi agent settings directory:
-
-```bash
-./sane-next configure --theme github-dark-pro --agent-dir /tmp/pi-agent-fixture --dry-run
-./sane-next configure --theme github-dark-pro --agent-dir /tmp/pi-agent-fixture
-```
-
-The configure command merges Pi settings and preserves unrelated keys.
-
-## Workflow packs
-
-Built-in packs are authored once under `.agents/skills/` and can be loaded by Pi or exported to Codex. Enabled packs include core workflow discipline, RTK routing, agent lanes, Sane routing, and focused craft skills for frontend, accessibility, docs, and UX copy. Disabled examples include `caveman-speak` and the fixture `example-user-pack`.
-
-Manage configured packs:
-
-```bash
-./sane-next pack list --config ../pi-plugin/config-schema.toml
-./sane-next pack validate --config ../pi-plugin/config-schema.toml
-./sane-next pack enable --config ../pi-plugin/config-schema.toml example-user-pack
-./sane-next pack disable --config ../pi-plugin/config-schema.toml example-user-pack
-```
-
-### Add a user pack
-
-Create a directory containing `SKILL.md`, then register it in a Sane config file:
-
-```toml
-[[user_packs]]
-id = "my-review-pack"
-enabled = true
-source = "/absolute/path/to/my-review-pack"
-targets = ["pi", "codex"]
-```
-
-Then validate and export:
-
-```bash
-./sane-next pack validate --config ../pi-plugin/config-schema.toml
-./sane-next export --config ../pi-plugin/config-schema.toml --target codex
-```
-
-## Export packs to Codex
-
-Export enabled packs to Codex-native skills:
-
-```bash
-./sane-next export --target codex --config ../pi-plugin/config-schema.toml --dry-run
-./sane-next export --target codex --config ../pi-plugin/config-schema.toml
-```
-
-The default Codex target is `~/.codex/skills`. Use `--target-root PATH` for a fixture or alternate export directory. Exported directories include a `.sane-next-exported` marker. Existing unmarked directories are treated as user-owned and are not overwritten.
-
-## Lifecycle commands and ownership
-
-Sane-owned install assets use the `.sane-next-owned` marker. Lifecycle commands are designed to update, repair, or remove Sane-owned material while preserving user-owned config.
-
-```bash
-./sane-next doctor --root ~/.sane-next
-./sane-next update --root ~/.sane-next --dry-run
-./sane-next update --root ~/.sane-next
-./sane-next repair --root ~/.sane-next
-./sane-next uninstall --root ~/.sane-next --dry-run
-./sane-next uninstall --root ~/.sane-next
-```
+Disabled example packs are kept as fixtures: `caveman-speak` and `example-user-pack`.
 
 ## Troubleshooting
 
-- `pi` not found: install/configure Pi first, or use `--recommended-pi-packages=false` while building the overlay.
-- Package install fails: retry with network/npm access, or install the package manually with the package spec shown by `package list`.
-- `doctor` reports missing Sane-owned assets: run `repair --root PATH`, then rerun `doctor`.
-- Export refuses to overwrite a skill directory: remove or move the user-owned directory, or export to a different `--target-root`.
-- Theme configuration looks wrong: run with `--agent-dir PATH --dry-run` first and inspect the target Pi settings file.
+| Problem | Try |
+| --- | --- |
+| `pi` is not found | Install/configure Pi first, or rerun install with `--recommended-pi-packages=false`. |
+| Package installation fails | Check network/npm access, then install the package ID manually with `sane-next package install`. |
+| `doctor` reports missing Sane-owned assets | Run `sane-next repair --root PATH`, then rerun `doctor`. |
+| Codex export refuses to overwrite a directory | Move the user-owned directory or export to a different `--target-root`. |
+| Theme config is risky to apply directly | Preview with `sane-next configure --theme github-dark-pro --agent-dir PATH --dry-run`. |
+
+## Project docs
+
+- [`docs/README.md`](docs/README.md) — documentation map.
+- [`docs/roadmap/ROADMAP.md`](docs/roadmap/ROADMAP.md) — current and future product direction.
+- [`docs/adr/`](docs/adr/) — accepted decisions.
+- [`docs/standards/`](docs/standards/) — repo documentation and implementation rules.
