@@ -28,6 +28,13 @@ func run(args []string, stdout io.Writer, stderr io.Writer) error {
 	}
 
 	switch args[0] {
+	case "configure":
+		result, err := runConfigure(args[1:])
+		if err != nil {
+			return err
+		}
+		fmt.Fprintln(stdout, result.Message)
+		return nil
 	case "doctor":
 		result, err := runDoctor(args[1:])
 		if err != nil {
@@ -44,6 +51,20 @@ func run(args []string, stdout io.Writer, stderr io.Writer) error {
 		return nil
 	case "install":
 		result, err := runInstall(args[1:])
+		if err != nil {
+			return err
+		}
+		fmt.Fprintln(stdout, result.Message)
+		return nil
+	case "pack":
+		result, err := runPack(args[1:])
+		if err != nil {
+			return err
+		}
+		fmt.Fprintln(stdout, result.Message)
+		return nil
+	case "package":
+		result, err := runPackage(args[1:])
 		if err != nil {
 			return err
 		}
@@ -86,12 +107,15 @@ func usage(w io.Writer) {
 	fmt.Fprintln(w, "sane-next manages the Sane Pi overlay and shared workflow packs.")
 	fmt.Fprintln(w)
 	fmt.Fprintln(w, "Usage:")
+	fmt.Fprintln(w, "  sane-next configure --theme github-dark-pro [--agent-dir PATH] [--dry-run]")
 	fmt.Fprintln(w, "  sane-next doctor [--root PATH]")
-	fmt.Fprintln(w, "  sane-next export [--config PATH] [--source-root PATH] [--target codex] [--target-root PATH]")
-	fmt.Fprintln(w, "  sane-next install [--root PATH]")
-	fmt.Fprintln(w, "  sane-next repair [--root PATH]")
-	fmt.Fprintln(w, "  sane-next uninstall [--root PATH]")
-	fmt.Fprintln(w, "  sane-next update [--root PATH]")
+	fmt.Fprintln(w, "  sane-next export [--config PATH] [--source-root PATH] [--target codex] [--target-root PATH] [--dry-run]")
+	fmt.Fprintln(w, "  sane-next install [--root PATH] [--dry-run]")
+	fmt.Fprintln(w, "  sane-next pack list|validate|enable|disable [--config PATH] [PACK_ID]")
+	fmt.Fprintln(w, "  sane-next package list|install [--config PATH] [PACKAGE_ID]")
+	fmt.Fprintln(w, "  sane-next repair [--root PATH] [--dry-run]")
+	fmt.Fprintln(w, "  sane-next uninstall [--root PATH] [--dry-run]")
+	fmt.Fprintln(w, "  sane-next update [--root PATH] [--dry-run]")
 	fmt.Fprintln(w, "  sane-next version")
 }
 

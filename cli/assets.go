@@ -27,7 +27,7 @@ func syncOwnedAssets(root, sourceRoot string) error {
 		return err
 	}
 
-	for _, dir := range []string{"packs", "skills", "extensions", "pi-plugin", "exports", "user-packs"} {
+	for _, dir := range []string{"packs", "extensions", "pi-plugin", "exports", "themes", "user-packs"} {
 		if err := os.MkdirAll(filepath.Join(root, dir), 0o755); err != nil {
 			return fmt.Errorf("create %s: %w", dir, err)
 		}
@@ -39,11 +39,14 @@ func syncOwnedAssets(root, sourceRoot string) error {
 	if err := replaceDir(filepath.Join(sourceRoot, "pi-plugin"), filepath.Join(root, "extensions", "sane-next")); err != nil {
 		return err
 	}
+	if err := replaceDir(filepath.Join(sourceRoot, "themes"), filepath.Join(root, "themes")); err != nil {
+		return err
+	}
 	if err := os.MkdirAll(filepath.Join(root, "packs"), 0o755); err != nil {
 		return err
 	}
-	if err := os.MkdirAll(filepath.Join(root, "skills"), 0o755); err != nil {
-		return err
+	if err := os.RemoveAll(filepath.Join(root, "skills")); err != nil {
+		return fmt.Errorf("remove legacy skills dir: %w", err)
 	}
 	for _, p := range cfg.Packs {
 		if !p.Enabled {
@@ -52,9 +55,6 @@ func syncOwnedAssets(root, sourceRoot string) error {
 		src := filepath.Clean(filepath.Join(filepath.Dir(cfgPath), p.Source))
 		dst := filepath.Join(root, "packs", p.ID)
 		if err := replaceDir(src, dst); err != nil {
-			return err
-		}
-		if err := replaceDir(src, filepath.Join(root, "skills", p.ID)); err != nil {
 			return err
 		}
 	}
@@ -84,7 +84,7 @@ func writePackageJSON(root string) error {
   },
   "pi": {
     "extensions": ["./extensions/sane-next/index.ts"],
-    "skills": ["./skills"]
+    "themes": ["./themes"]
   }
 }
 `, version)
@@ -92,23 +92,44 @@ func writePackageJSON(root string) error {
 }
 
 func writeInstalledConfig(root string, cfg saneConfig) error {
-	var b strings.Builder
-	b.WriteString("version = 1\n\n[defaults]\n")
-	b.WriteString(fmt.Sprintf("model = %q\nreasoning = %q\n\n", cfg.Defaults.Model, cfg.Defaults.Reasoning))
-	for _, p := range cfg.Packs {
-		b.WriteString("[[packs]]\n")
-		b.WriteString(fmt.Sprintf("id = %q\nenabled = %t\nsource = %q\ntargets = %s\n\n", p.ID, p.Enabled, filepath.ToSlash(filepath.Join("..", "packs", p.ID)), tomlStringArray(p.Targets)))
+	pluginCfg := installedConfigWithPackBase(cfg, "..")
+	if err := os.WriteFile(filepath.Join(root, "pi-plugin", "config-schema.toml"), []byte(renderConfig(pluginCfg)), 0o644); err != nil {
+		return err
 	}
-	for _, p := range cfg.UserPacks {
-		b.WriteString("[[user_packs]]\n")
-		b.WriteString(fmt.Sprintf("id = %q\nenabled = %t\nsource = %q\ntargets = %s\n\n", p.ID, p.Enabled, p.Source, tomlStringArray(p.Targets)))
+	extensionCfg := installedConfigWithPackBase(cfg, filepath.Join("..", ".."))
+	if err := os.WriteFile(filepath.Join(root, "extensions", "sane-next", "config-schema.toml"), []byte(renderConfig(extensionCfg)), 0o644); err != nil {
+		return err
 	}
-	for _, t := range cfg.ExportTargets {
-		b.WriteString("[[export_targets]]\n")
-		b.WriteString(fmt.Sprintf("id = %q\nkind = %q\npath = %q\n\n", t.ID, t.Kind, t.Path))
+	return writeInstalledManifest(root)
+}
+
+func installedConfigWithPackBase(cfg saneConfig, base string) saneConfig {
+	for i := range cfg.Packs {
+		cfg.Packs[i].Source = filepath.ToSlash(filepath.Join(base, "packs", cfg.Packs[i].ID))
 	}
-	b.WriteString("[ownership]\nmarker_file = \".sane-next-owned\"\npreserve_user_config = true\n")
-	return os.WriteFile(filepath.Join(root, "pi-plugin", "config-schema.toml"), []byte(b.String()), 0o644)
+	for i := range cfg.UserPacks {
+		cfg.UserPacks[i].Source = filepath.ToSlash(filepath.Join(base, "user-packs", cfg.UserPacks[i].ID))
+	}
+	return cfg
+}
+
+func writeInstalledManifest(root string) error {
+	content := fmt.Sprintf(`id = "sane-next"
+name = "Sane Next"
+version = %q
+description = "Pi-first overlay for Sane shared workflow packs and companion CLI integration."
+entrypoint = "index.ts"
+
+[runtime]
+host = "pi"
+minimum_version = "0.0.0"
+
+[config]
+schema = "config-schema.toml"
+
+# Skills are discovered dynamically from config-schema.toml by the extension.
+`, version)
+	return os.WriteFile(filepath.Join(root, "extensions", "sane-next", "manifest.toml"), []byte(content), 0o644)
 }
 
 func tomlStringArray(values []string) string {

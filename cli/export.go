@@ -3,7 +3,9 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"os"
 	"path/filepath"
+	"strings"
 )
 
 func runExport(args []string) (commandResult, error) {
@@ -13,6 +15,7 @@ func runExport(args []string) (commandResult, error) {
 	sourceRoot := fs.String("source-root", "", "base directory for relative pack sources")
 	targetID := fs.String("target", "codex", "export target id")
 	targetRoot := fs.String("target-root", "", "root directory for exported artifacts")
+	dryRun := fs.Bool("dry-run", false, "preview export paths without writing")
 	if err := fs.Parse(args); err != nil {
 		return commandResult{}, fmt.Errorf("%s", flagOutput.String())
 	}
@@ -35,6 +38,7 @@ func runExport(args []string) (commandResult, error) {
 	}
 
 	count := 0
+	var preview []string
 	configDir := filepath.Dir(*configPath)
 	baseDir := configDir
 	if *sourceRoot != "" {
@@ -46,11 +50,38 @@ func runExport(args []string) (commandResult, error) {
 		}
 		sourceDir := filepath.Clean(filepath.Join(baseDir, p.Source))
 		targetSkill := filepath.Join(root, target.Path, p.ID, "SKILL.md")
-		if err := copyDir(sourceDir, filepath.Dir(targetSkill)); err != nil {
+		destDir := filepath.Dir(targetSkill)
+		if *dryRun {
+			preview = append(preview, fmt.Sprintf("%s -> %s", sourceDir, destDir))
+			count++
+			continue
+		}
+		if err := requireExportWritable(destDir); err != nil {
 			return commandResult{}, err
+		}
+		if err := replaceDir(sourceDir, destDir); err != nil {
+			return commandResult{}, err
+		}
+		if err := os.WriteFile(filepath.Join(destDir, ".sane-next-exported"), []byte("sane-next\n"), 0o644); err != nil {
+			return commandResult{}, fmt.Errorf("write export marker: %w", err)
 		}
 		count++
 	}
 
+	if *dryRun {
+		return commandResult{Message: fmt.Sprintf("dry-run export %d pack(s) to %s target at %s\n%s", count, target.ID, root, strings.Join(preview, "\n"))}, nil
+	}
 	return commandResult{Message: fmt.Sprintf("exported %d pack(s) to %s target at %s", count, target.ID, root)}, nil
+}
+
+func requireExportWritable(destDir string) error {
+	if _, err := os.Stat(destDir); os.IsNotExist(err) {
+		return nil
+	} else if err != nil {
+		return err
+	}
+	if _, err := os.Stat(filepath.Join(destDir, ".sane-next-exported")); err != nil {
+		return fmt.Errorf("refusing to overwrite non-Sane export at %s", destDir)
+	}
+	return nil
 }
