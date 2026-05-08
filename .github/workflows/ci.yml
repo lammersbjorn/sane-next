@@ -47,15 +47,38 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: "1.22"
-      - name: Build release target matrix
+      - name: Build release archives
+        shell: bash
+        run: ./cli/package_release.sh
+      - name: Inspect release archives
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p dist
-          cd cli
-          GOOS=linux GOARCH=amd64 go build -o ../dist/sane-next-linux-amd64 .
-          GOOS=linux GOARCH=arm64 go build -o ../dist/sane-next-linux-arm64 .
-          GOOS=darwin GOARCH=amd64 go build -o ../dist/sane-next-darwin-amd64 .
-          GOOS=darwin GOARCH=arm64 go build -o ../dist/sane-next-darwin-arm64 .
-          GOOS=windows GOARCH=amd64 go build -o ../dist/sane-next-windows-amd64.exe .
-          GOOS=windows GOARCH=arm64 go build -o ../dist/sane-next-windows-arm64.exe .
+          test -f dist/sane-next_0.3.0-beta.1_darwin_arm64.tar.gz
+          test -f dist/sane-next_0.3.0-beta.1_windows_amd64.zip
+          mkdir -p dist/check
+          tar -xzf dist/sane-next_0.3.0-beta.1_darwin_arm64.tar.gz -C dist/check
+          test -f dist/check/sane-next_0.3.0-beta.1_darwin_arm64/sane-next
+          test -f dist/check/sane-next_0.3.0-beta.1_darwin_arm64/README.md
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile
+          archive = Path("dist/sane-next_0.3.0-beta.1_windows_amd64.zip")
+          with zipfile.ZipFile(archive) as z:
+              names = set(z.namelist())
+          expected = {
+              "sane-next_0.3.0-beta.1_windows_amd64/sane-next.exe",
+              "sane-next_0.3.0-beta.1_windows_amd64/README.md",
+          }
+          missing = expected - names
+          if missing:
+              raise SystemExit(f"windows release archive missing: {sorted(missing)}")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sane-next-release-archives
+          path: dist/sane-next_*.tar.gz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sane-next-release-zips
+          path: dist/sane-next_*.zip

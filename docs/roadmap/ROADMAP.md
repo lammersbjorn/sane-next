@@ -26,6 +26,8 @@ The repo is pre-stable with a beta GitHub Releases channel and self-contained re
   Evidence: `bash .githooks/pre-commit`, `cd cli && go test ./...`, `node --test pi-plugin/plugin.test.js`, and `cd cli && ./acceptance.sh` pass; top-level CLI help lists the install/update/repair/package flags used by README and acceptance.
 - [x] Refresh package recommendation pins from live Pi package/npm state.
   Evidence: `npm view <package> version dist-tags --json` confirmed every configured recommendation is already at the current `latest` dist-tag, and `cd cli && go test ./...` plus dry-run `sane-next package install` checks passed for every package ID.
+- [x] Make GitHub Release archives reproducible and smoke-checked.
+  Evidence: `cli/package_release.sh` builds README-named Linux, macOS, and Windows archives; CI and `cd cli && ./acceptance.sh` inspect tar/zip layout.
 
 ## Later
 

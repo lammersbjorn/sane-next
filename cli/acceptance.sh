@@ -16,6 +16,28 @@ cd "$ROOT"
 "$GO_BIN" build ./...
 
 "$GO_BIN" run . install --root "$TMP/install"
+DIST="$TMP/dist" "$ROOT/package_release.sh"
+test -f "$TMP/dist/sane-next_0.3.0-beta.1_darwin_arm64.tar.gz"
+test -f "$TMP/dist/sane-next_0.3.0-beta.1_windows_amd64.zip"
+rm -rf "$TMP/archive-check"
+mkdir -p "$TMP/archive-check"
+tar -xzf "$TMP/dist/sane-next_0.3.0-beta.1_darwin_arm64.tar.gz" -C "$TMP/archive-check"
+test -f "$TMP/archive-check/sane-next_0.3.0-beta.1_darwin_arm64/sane-next"
+test -f "$TMP/archive-check/sane-next_0.3.0-beta.1_darwin_arm64/README.md"
+"$PYTHON_BIN" - <<PY
+from pathlib import Path
+import zipfile
+archive = Path("$TMP/dist/sane-next_0.3.0-beta.1_windows_amd64.zip")
+with zipfile.ZipFile(archive) as z:
+    names = set(z.namelist())
+expected = {
+    "sane-next_0.3.0-beta.1_windows_amd64/sane-next.exe",
+    "sane-next_0.3.0-beta.1_windows_amd64/README.md",
+}
+missing = expected - names
+if missing:
+    raise SystemExit(f"windows release archive missing: {sorted(missing)}")
+PY
 test -f "$TMP/install/packs/core-workflow/SKILL.md"
 test ! -e "$TMP/install/pi-plugin"
 test -f "$TMP/install/extensions/sane-next/index.ts"
