@@ -33,8 +33,8 @@ The repo is pre-stable with a beta GitHub Releases channel. The next work should
   Evidence: a new ADR defines source of truth, sync direction, and failure mode.
 - [ ] Revisit Codex-native export after real user feedback.
   Evidence: exported skill format still matches current Codex expectations and user-owned directories remain protected.
-- [ ] Make GitHub Release artifacts self-contained.
-  Evidence: release archives let users install without a separate source checkout for overlay assets.
+- [x] Make GitHub Release artifacts self-contained.
+  Evidence: release archives include the CLI plus overlay assets, and the CLI discovers assets beside the executable before falling back to source checkout paths.
 - [ ] Consider publishing or automating release channels.
   Evidence: release automation preserves Sane-owned/user-owned boundaries and does not require a deep Pi fork.
 

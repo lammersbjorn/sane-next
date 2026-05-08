@@ -147,7 +147,7 @@ test ! -e "$TMP/install/exports"
 from pathlib import Path
 import re
 roadmap = Path("$REPO/docs/roadmap/ROADMAP.md").read_text()
-if "annotated tags" not in roadmap or "Linux-only" not in roadmap:
+if "annotated tags" not in roadmap or "compatibility CI on Linux, macOS, and Windows" not in roadmap:
     raise SystemExit("release discipline text missing")
 tags = [line.strip() for line in roadmap.splitlines() if "v0.y.z" in line]
 if not tags:

@@ -33,15 +33,16 @@ Instead of asking you to remember a perfect prompt every time, Sane installs a s
 
 ## Quick start from a GitHub Release
 
-Download the archive for your OS and CPU from the latest GitHub Release, then put the binary on your `PATH` as `sane-next`.
+Download the archive for your OS and CPU from the latest GitHub Release. Extract it and run the included `sane-next` command from the extracted directory.
 
 macOS/Linux example:
 
 ```bash
 tar -xzf sane-next_0.3.0-beta.1_darwin_arm64.tar.gz
+cd sane-next_0.3.0-beta.1_darwin_arm64
 chmod +x sane-next
 ./sane-next version
-./sane-next install --source-root /path/to/sane-next/source
+./sane-next install
 pi install ~/.sane-next
 ```
 
@@ -49,12 +50,13 @@ Windows PowerShell example:
 
 ```powershell
 Expand-Archive sane-next_0.3.0-beta.1_windows_amd64.zip -DestinationPath sane-next
-.\sane-next\sane-next.exe version
-.\sane-next\sane-next.exe install --source-root C:\path\to\sane-next\source
+cd sane-next\sane-next_0.3.0-beta.1_windows_amd64
+.\sane-next.exe version
+.\sane-next.exe install
 pi install $env:USERPROFILE\.sane-next
 ```
 
-The current beta CLI still needs a local source checkout for overlay assets via `--source-root`. Future release packaging should remove that requirement by embedding or bundling assets with the binary.
+The release archive includes the CLI plus the overlay assets it installs.
 
 ## Quick start from source
 

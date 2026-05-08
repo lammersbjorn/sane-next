@@ -9,14 +9,41 @@ import (
 )
 
 func defaultSourceRoot() string {
+	if exe, err := os.Executable(); err == nil {
+		exeDir := filepath.Dir(exe)
+		if hasSourceAssets(exeDir) {
+			return exeDir
+		}
+	}
+
 	wd, err := os.Getwd()
 	if err != nil {
 		return "."
 	}
+	if hasSourceAssets(wd) {
+		return wd
+	}
 	if filepath.Base(wd) == "cli" {
-		return filepath.Clean(filepath.Join(wd, ".."))
+		parent := filepath.Clean(filepath.Join(wd, ".."))
+		if hasSourceAssets(parent) {
+			return parent
+		}
 	}
 	return wd
+}
+
+func hasSourceAssets(root string) bool {
+	for _, path := range []string{
+		filepath.Join("pi-plugin", "config-schema.toml"),
+		filepath.Join("pi-plugin", "index.ts"),
+		"themes",
+		filepath.Join(".agents", "skills", "core-workflow", "SKILL.md"),
+	} {
+		if _, err := os.Stat(filepath.Join(root, path)); err != nil {
+			return false
+		}
+	}
+	return true
 }
 
 func syncOwnedAssets(root, sourceRoot string) error {
