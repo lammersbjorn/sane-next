@@ -17,7 +17,7 @@ Use subagents deliberately for speed, context isolation, and independent review 
 - implementation has disjoint write boundaries
 - verification needs a fresh perspective before a commit
 - logs, tests, or generated output would flood the main context
-- Pi or Codex exposes subagent execution for the current session
+- Pi or Codex exposes subagent execution for the current session, such as Sane's recommended `pi-subagents` Pi package
 
 ## Don't Use When
 
@@ -37,19 +37,20 @@ Use subagents deliberately for speed, context isolation, and independent review 
 ## Outputs
 
 - a compact lane table with owner, scope, write boundary, and verification
-- launched subagent tasks only when they can run independently
+- launched subagent tasks through the available runtime package only when they can run independently
 - returned summaries with changed files, evidence, and unresolved risk
 - coordinator integration and final verification
 
 ## How To Run
 
-1. Decide the main thread's immediate blocking task before delegating.
-2. Split only work that is independent enough to run without waiting on the main task.
-3. Give every lane one clear owner and one write boundary.
-4. Prefer read-only explorer lanes for broad discovery and verifier lanes for fresh review.
-5. Use implementation lanes only when their write sets do not overlap.
-6. Ask subagents for summaries and evidence, not full logs or broad file dumps.
-7. Integrate results in the main thread and run final verification before claiming completion.
+1. Check whether the runtime exposes a subagent package/tool first. In Sane's default Pi install, prefer the curated `pi-subagents` package when available; otherwise fall back to a lane table for manual/tmux delegation.
+2. Decide the main thread's immediate blocking task before delegating.
+3. Split only work that is independent enough to run without waiting on the main task.
+4. Give every lane one clear owner and one write boundary.
+5. Prefer read-only explorer lanes for broad discovery and verifier lanes for fresh review.
+6. Use implementation lanes only when their write sets do not overlap.
+7. Ask subagents for summaries and evidence, not full logs or broad file dumps.
+8. Integrate results in the main thread and run final verification before claiming completion.
 
 ## Verification
 
