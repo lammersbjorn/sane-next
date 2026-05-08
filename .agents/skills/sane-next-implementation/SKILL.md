@@ -51,8 +51,10 @@ Implement `sane-next` as a full remake with bounded phases, not as an unbounded 
 6. If running with `/goal`, use the concrete `/goal` text from `docs/roadmap/ROADMAP.md`.
 7. Keep `AGENTS.md` small; put recurring procedure detail here or in referenced docs instead of expanding always-on instructions.
 8. Prefer one clear write boundary per lane. If parallelizing, keep file ownership disjoint.
-9. Commit after meaningful milestones so git becomes the primary resume anchor.
-10. If the run pauses or hits budget, resume from git state first, then continue the remaining unchecked verified work from the roadmap.
+9. Check `git status --short` before starting a new task lane and before handoff.
+10. Commit after each meaningful verified milestone so git becomes the primary resume anchor; do not start a different task category with verified uncommitted work still in the tree.
+11. If unrelated changes accumulate, stop implementation and split commits by task/category before continuing.
+12. If the run pauses or hits budget, resume from git state first, then continue the remaining unchecked verified work from the roadmap.
 
 ## Verification
 

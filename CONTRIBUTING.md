@@ -60,6 +60,15 @@ feat(cli): add install command skeleton
 
 Use lowercase type and scope. Keep the subject short, imperative, and specific.
 
+## Agent commit cadence
+
+When an agent is doing implementation work in this repo, git is the resume ledger:
+
+- check `git status --short` before starting a new task lane
+- commit each meaningful verified milestone before moving to another category
+- split accumulated work by task/category before continuing if the tree gets mixed
+- do not leave completed verified work only in chat context
+
 ## Git hooks
 
 Committed hooks live in `.githooks/`.
