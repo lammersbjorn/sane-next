@@ -331,10 +331,31 @@ function isSubagentsConfigured(config) {
   return hasPackage && isSubagentLanesEnabled(config);
 }
 
+function classifySubagentRouting(prompt) {
+  const text = String(prompt || "");
+  if (!text.trim()) return null;
+
+  const laneTypes = [];
+  if (/\b(?:research|current|latest|best\s+practices|web|sources?|benchmark|compare|investigate|audit)\b/i.test(text)) laneTypes.push("research");
+  if (/\b(?:review|audit|verify|verification|validate|test|smoke|acceptance|ci|regression)\b/i.test(text)) laneTypes.push("review/verification");
+  if (/\b(?:whole\s+(?:repo|codebase)|all\s+(?:docs|prompts|skills|files)|parallel|lanes?|sub-?agents?|delegate|broad|disjoint|multiple|implement\s+everything)\b/i.test(text)) laneTypes.push("parallel/disjoint");
+
+  const broad = laneTypes.length > 0 && /\b(?:whole|all|broad|properly|deep|extended|parallel|multiple|audit|research|review|verify|verification|implement|refactor|fix|rewrite|update)\b/i.test(text);
+  if (!broad) return null;
+
+  const uniqueLaneTypes = [...new Set(laneTypes)];
+  if (uniqueLaneTypes.length === 0) return null;
+  return uniqueLaneTypes;
+}
+
 function buildSubagentRoutingHint(config, prompt) {
   if (!isSubagentsConfigured(config)) return "";
-  if (!/\b(?:sub-?agents?|agents?|lanes?|parallel|delegate|delegation|broad|research|review|verify|verification|implement|refactor|fix\s+this\s+properly)\b/i.test(prompt || "")) return "";
-  return "Sane subagent hint: pi-subagents is a default Sane runtime package and agent-lanes is enabled. For broad independent research, review, verification, or disjoint implementation work, delegate lanes with the available subagent tool/commands; keep small or tightly coupled work in the main thread.";
+  const laneTypes = classifySubagentRouting(prompt);
+  if (!laneTypes) return "";
+  return [
+    "Sane subagent routing: pi-subagents is a default Sane runtime package and agent-lanes is enabled.",
+    `This task appears to need ${laneTypes.join(", ")} lane(s). For broad work, delegate independent research, review, verification, or disjoint implementation lanes when they can run in parallel; keep tight edit integration in the main thread.`,
+  ].join(" ");
 }
 
 function buildRtkRoutingHint(config) {

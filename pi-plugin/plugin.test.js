@@ -87,7 +87,11 @@ assert.equal(subagentsPackage.defaultInstall, true);
 assert.equal(isSubagentsConfigured(realConfig), true);
 assert.match(buildQuietStatusSummary(realConfig, {}), /subagents=configured/);
 assert.match(buildQuietStatusSummary(realConfig, { subagentsAvailable: true }), /subagents=ready/);
-assert.match(buildSubagentRoutingHint(realConfig, "Do research and fix this properly"), /Sane subagent hint/);
+assert.match(buildSubagentRoutingHint(realConfig, "Do research and fix this properly"), /Sane subagent routing/);
+assert.match(buildSubagentRoutingHint(realConfig, "Audit the whole codebase and verify CI"), /research, review\/verification, parallel\/disjoint/);
+assert.match(buildSubagentRoutingHint(realConfig, "Rewrite all prompts in parallel"), /parallel\/disjoint/);
+assert.match(buildSubagentRoutingHint(realConfig, "Review and verify the release workflow"), /review\/verification/);
+assert.doesNotMatch(buildSubagentRoutingHint(realConfig, "Do research and fix this properly"), /choose not to delegate/);
 assert.equal(buildSubagentRoutingHint(realConfig, "answer one tiny question"), "");
 
 const loadedFromToml = loadSaneConfig("config-schema.toml", {

@@ -45,7 +45,7 @@ Use subagents deliberately for speed, context isolation, and independent review 
 
 1. Check whether the runtime exposes a subagent package/tool first. In Sane's default Pi install, prefer the curated `pi-subagents` package when available; `/sane-status`, `/subagents-status`, or `/subagents-doctor` can confirm availability. Otherwise use a lane table for manual/tmux delegation.
 2. Decide the main thread's immediate blocking task before delegating.
-3. For broad work with independent research, review, verification, or disjoint implementation slices, launch focused `pi-subagents` lanes.
+3. For broad research, broad review, broad verification, or disjoint implementation, launch focused `pi-subagents` lanes when they can run in parallel.
 4. Split work only when each lane can run independently while the main thread continues.
 5. Give every lane one clear owner and one write boundary.
 6. Use read-only explorer lanes for broad discovery and verifier lanes for fresh review.
