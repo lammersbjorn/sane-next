@@ -64,8 +64,8 @@ Add additional packages as **opt-in recommendations**, not default installs:
   - best ask-user choice because it exposes one general `ask_user` tool plus a bundled skill for high-impact ambiguity and material assumptions.
   - selected over narrower question packages because Sane needs a general clarification primitive if it adopts one.
 - `npm:pi-pledit@1.0.1`
-  - best plan/accept-edits candidate if Sane later wants external plan-mode behavior, because it provides both Plan Mode and Accept Edits Mode with a small permission-mode model.
-  - keep opt-in and do not integrate into Sane defaults until it is tested against Sane goal/ledger and craft-router behavior.
+  - best plan/accept-edits candidate for users who want external plan-mode behavior, because it provides both Plan Mode and Accept Edits Mode with a small permission-mode model.
+  - keep opt-in and do not integrate into Sane defaults unless it is tested against Sane workflow and craft-router behavior.
 - `npm:pi-container-sandbox@0.2.1`
   - best high-safety sandbox candidate for users who accept Docker/Apple-container setup cost.
   - keep opt-in and label as advanced because it changes file and shell execution semantics.
@@ -85,40 +85,9 @@ sane-next package install pi-ask-user
 
 Configuration commands should preserve unrelated user settings, be dry-run capable where practical, and write only documented Pi settings files or call `pi install` for selected package IDs. Other preferences, such as quiet startup or keybindings, require separate implementation and tests before they should appear as executable docs.
 
-## Implementation plan after craft-router work
+## Implementation status
 
-This work should start only after ADR 0011's craft-router pack is implemented and acceptance passes.
-
-1. Extend the config model.
-   - Add the opt-in package recommendations above to `pi-plugin/config-schema.toml` with `default_install = false`.
-   - Keep the existing default installs unchanged.
-   - Add tests that parse and validate the new recommendations.
-
-2. Add package management commands to the companion CLI.
-   - `sane-next package list` should show recommended package IDs, package specs, default-install status, installed/unknown status when `pi` is available, and purpose.
-   - `sane-next package install <id>` should install exactly one configured package by ID through `pi install`.
-   - `sane-next package install --all-optional` may be added only if it is clearly labeled and excludes default packages already handled by `install`.
-   - Preserve fixture safety: tests must not mutate global Pi config unless an explicit environment variable or temp `PI_CODING_AGENT_DIR` is used.
-
-3. Add explicit settings configuration.
-   - Implement `sane-next configure --theme github-dark-pro` by safely merging `~/.pi/agent/settings.json` or a supplied `--agent-dir` fixture.
-   - Consider `--quiet-startup` and `--keybindings sane` only if tests remain small and behavior is easy to explain.
-   - Do not overwrite unrelated settings.
-
-4. Add compact Sane runtime hints.
-   - In the Pi extension, inject a short web-research trigger only when web tools appear available or when the default web package is configured.
-   - Add a small status/footer entry via `ctx.ui.setStatus` for Sane goal/RTK/web/subagent state if it stays visually quiet.
-
-5. Update user-facing docs.
-   - Document default packages, optional recommendations, package commands, and explicit theme configuration.
-   - Keep AGENTS.md unchanged unless a durable always-on rule is truly needed.
-
-6. Verify.
-   - `cd cli && go test ./...`
-   - `node --test pi-plugin/plugin.test.js`
-   - `cd cli && ./acceptance.sh`
-   - Fixture command tests for package/configure behavior.
-   - Local smoke test may install optional packages only with user approval.
+This layered profile is implemented in `pi-plugin/config-schema.toml`, the companion CLI package/configure commands, the Sane Pi extension, README user docs, and lifecycle/plugin tests. Optional package smoke installs should still require explicit user approval.
 
 ## Rejected alternatives
 
@@ -136,7 +105,7 @@ Rejected after local use. Its Claude Code-like tool-call presentation is too tas
 
 ### Adopt plan mode by default
 
-Rejected. Sane already has goal/ledger discipline and is adding craft-router behavior. Plan mode needs compatibility testing before becoming even a recommended workflow.
+Rejected. Sane already has workflow discipline and craft-router behavior. Plan mode needs compatibility testing before becoming a default workflow.
 
 ### Adopt container sandboxing by default
 

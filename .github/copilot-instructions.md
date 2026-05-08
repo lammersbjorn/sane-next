@@ -4,7 +4,7 @@ Use `AGENTS.md` as the primary repo instruction surface.
 
 Additional repo-wide notes:
 
-- This repo is implemented but still pre-stable and source-built.
+- This repo is implemented but still pre-stable.
 - Before broad work, read `TRACK.toml` first; then follow only the roadmap, ADRs, standards, or source files referenced by the active slice.
 - For implementation runs, load `.agents/skills/sane-next-implementation/SKILL.md` and verify behavior with current source, tests, and CLI help.
 - Do not rebuild Pi's runtime, deep-fork Pi, or add a TUI-heavy standalone surface.

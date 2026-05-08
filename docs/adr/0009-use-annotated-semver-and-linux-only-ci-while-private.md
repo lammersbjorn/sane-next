@@ -1,4 +1,4 @@
-# ADR 0009: Use annotated SemVer and Linux-only CI while private
+# ADR 0009: Use annotated SemVer; CI scope later superseded
 
 ## Status
 
@@ -6,16 +6,16 @@ Accepted; CI operating-system scope superseded by [ADR 0014](0014-add-cross-plat
 
 ## Context
 
-The repo needs a release/versioning policy before implementation starts, but it is still private and pre-stable.
+At the time of this decision, the repo needed a release/versioning policy before implementation started and was still private and pre-stable.
 
-The goal is to keep release discipline from the start without paying for premature automation or expensive runner choices.
+The goal was to keep release discipline from the start without paying for premature automation or expensive runner choices.
 
 Research favored:
 
 - Conventional Commits
 - annotated tags
 - pre-stable `v0.y.z`
-- Linux-only CI while private
+- Linux-only CI while private, later superseded by ADR 0014
 - delayed release automation until it clearly pays for itself
 
 ## Decision
@@ -27,15 +27,14 @@ Use the following release policy:
    - While pre-stable, use `v0.y.z`.
    - Use **annotated** git tags only.
 
-2. **CI while private**
-   - Keep CI Linux-only while the repo is private.
-   - Do not add macOS or Windows runners yet.
+2. **CI operating-system scope**
    - Superseded by ADR 0014 after the project adopted Linux, macOS, and Windows compatibility checks.
+   - Historical decision: keep CI Linux-only while the repo was private and do not add macOS or Windows runners yet.
 
 3. **Release automation**
-   - Keep release automation minimal at first.
-   - Do not add full binary release automation until the companion CLI is real enough to ship.
-   - Revisit **GoReleaser** once external binary distribution becomes a real need.
+   - Keep release automation minimal until it pays for itself.
+   - Do not add full release automation just because binaries exist.
+   - Revisit **GoReleaser** or similar tooling only when repeatable artifact publishing becomes a real need.
 
 ## Rejected alternatives
 
@@ -56,10 +55,10 @@ Rejected. It is premature before there is a real shipped artifact set.
 Positive:
 
 - release history stays clean early
-- cost stays low while the repo is private
+- CI cost stayed low while the repo was private
 - the path to later automation stays open
 
 Negative:
 
-- non-Linux issues may be found later
+- superseded CI scope means readers must follow ADR 0014 for current platform policy
 - early releases remain slightly more manual

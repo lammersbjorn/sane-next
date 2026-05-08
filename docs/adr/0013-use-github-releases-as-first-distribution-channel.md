@@ -6,7 +6,7 @@ Accepted
 
 ## Context
 
-`sane-next` is pre-stable and currently source-built. The companion CLI is implemented in Go, the repo already uses annotated pre-stable `v0.y.z` tags, and the release-readiness acceptance path now verifies install, export, doctor, repair, update, and uninstall behavior from the current checkout.
+`sane-next` is pre-stable and was source-built when this decision was made. The companion CLI is implemented in Go, the repo already uses annotated pre-stable `v0.y.z` tags, and the release-readiness acceptance path verifies install, export, doctor, repair, update, and uninstall behavior.
 
 The next release channel should make source-built users safer and more repeatable without adding a premature package-maintenance burden.
 
@@ -18,7 +18,7 @@ Initial release expectations:
 
 1. Publish releases from annotated `v0.y.z` tags.
 2. Attach the source archive and built companion CLI artifact(s) that match README install instructions.
-3. Keep the README honest about the repo being pre-stable and source-built until release artifacts exist.
+3. Keep the README honest about the repo being pre-stable and about the currently supported install channels.
 4. Do not add Homebrew, npm, or broad release automation until there is evidence that GitHub Releases are insufficient.
 
 ## Rejected alternatives

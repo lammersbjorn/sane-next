@@ -4,7 +4,7 @@ This file defines the only allowed structure for `TRACK.toml`.
 
 `TRACK.toml` is the repo's **active execution window**, not a backlog, not a history file, and not a hypothesis dump.
 
-The whole-program verified checklist can live in `docs/roadmap/ROADMAP.md`. `TRACK.toml` should mirror only the current active phase from that roadmap.
+Broader product direction can live in `docs/roadmap/ROADMAP.md`. `TRACK.toml` should mirror only the current active phase from that roadmap.
 
 ## Hard rules
 
@@ -13,7 +13,7 @@ The whole-program verified checklist can live in `docs/roadmap/ROADMAP.md`. `TRA
 3. Remove completed work once the resulting repo state is committed.
 4. Do not store hypotheses, research summaries, meeting notes, or historical narrative here.
 5. Use ADRs for durable decisions and standards docs for durable structure/protocol rules.
-6. Use `docs/roadmap/ROADMAP.md` for the broader verified roadmap when the project needs a whole-program execution ledger.
+6. Use `docs/roadmap/ROADMAP.md` for broader product direction and evidence when the active slice needs roadmap context.
 
 ## Top-level schema
 
@@ -105,19 +105,19 @@ Rules:
 
 If the repo has a canonical roadmap file, use this split:
 
-- `docs/roadmap/ROADMAP.md` = full program checklist with verification gates
+- `docs/roadmap/ROADMAP.md` = broader product direction, release discipline, and evidence
 - `TRACK.toml` = current active phase only
 
-The roadmap may list the whole remake. `TRACK.toml` should list only the next bounded slice.
+The roadmap may list broader priorities. `TRACK.toml` should list only the next bounded slice.
 
 ## Example
 
 ```toml
 version = 2
-updated = "2026-05-07"
-phase = "implementation-ready"
-goal = "Build the smallest reliable Codex workflow tool that improves long-running coding outcomes without recreating Sane's bloat."
-next_focus = "Run phase 1 of the full remake."
+updated = "2026-05-08"
+phase = "release-readiness-complete"
+goal = "Keep the pre-stable release-readiness baseline verified while choosing any later release automation deliberately."
+next_focus = "Wait for the next explicit release or implementation slice."
 
 [tracking]
 schema = "active-window-v1"
@@ -131,7 +131,7 @@ rules = [
 ]
 
 [current]
-summary = "Planning is locked. The next run should execute phase 1 of the full remake."
+summary = "No active release-readiness implementation slice is open."
 exit_criteria = [
   "The active phase builds and validates cleanly."
 ]
@@ -140,11 +140,11 @@ refs = [
 ]
 
 [[work_items]]
-id = "phase-1-foundations"
-status = "ready"
-title = "Create the first foundation surfaces"
-why_now = "This is phase 1 of the broader remake."
-write_scope = [".agents/skills/", "pi-plugin/", "cli/"]
+id = "await-next-release-slice"
+status = "queued"
+title = "Await next bounded release or implementation slice"
+why_now = "Further work should be driven by an explicit release artifact, automation, or product objective."
+write_scope = ["TRACK.toml", "docs/roadmap/ROADMAP.md", "docs/adr/", "README.md"]
 inputs = ["docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md"]
-done_when = ["The phase 1 acceptance path passes."]
+done_when = ["A new active slice is chosen only when there is an explicit next objective."]
 ```

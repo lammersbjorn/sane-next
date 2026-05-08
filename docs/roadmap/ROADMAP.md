@@ -11,7 +11,7 @@ This is the living product roadmap for `sane-next`. It is not the active task le
 
 The initial Pi-first overlay is implemented and verified: companion CLI lifecycle flows, shared packs, Codex export, Pi plugin integration, goal/ledger commands, curated default packages, optional package recommendations, explicit theme configuration, and acceptance coverage exist in source.
 
-The repo is pre-stable with a beta GitHub Releases channel. The next work should focus on making release artifacts self-contained, package publishing decisions, and keeping docs/tracking surfaces small enough for agents to use.
+The repo is pre-stable with a beta GitHub Releases channel and self-contained release archives. The next work should focus on deliberate package publishing decisions and keeping docs/tracking surfaces small enough for agents to use.
 
 ## Now
 
@@ -20,10 +20,10 @@ The repo is pre-stable with a beta GitHub Releases channel. The next work should
 
 ## Next
 
-- [x] Decide the first distribution channel for source-built users.
+- [x] Decide the first distribution channel beyond source builds.
   Evidence: `docs/adr/0013-use-github-releases-as-first-distribution-channel.md` selects GitHub Releases as the first pre-stable distribution channel.
 - [x] Prepare a pre-stable release checklist.
-  Evidence: `bash .githooks/pre-commit`, `cd cli && go test ./...`, `node --test pi-plugin/plugin.test.js`, and `cd cli && ./acceptance.sh` pass; top-level CLI help now lists the source-built install/update/repair/package flags used by README and acceptance.
+  Evidence: `bash .githooks/pre-commit`, `cd cli && go test ./...`, `node --test pi-plugin/plugin.test.js`, and `cd cli && ./acceptance.sh` pass; top-level CLI help lists the install/update/repair/package flags used by README and acceptance.
 - [x] Refresh package recommendation pins from live Pi package/npm state.
   Evidence: `npm view <package> version dist-tags --json` confirmed every configured recommendation is already at the current `latest` dist-tag, and `cd cli && go test ./...` plus dry-run `sane-next package install` checks passed for every package ID.
 
@@ -33,8 +33,6 @@ The repo is pre-stable with a beta GitHub Releases channel. The next work should
   Evidence: a new ADR defines source of truth, sync direction, and failure mode.
 - [ ] Revisit Codex-native export after real user feedback.
   Evidence: exported skill format still matches current Codex expectations and user-owned directories remain protected.
-- [x] Make GitHub Release artifacts self-contained.
-  Evidence: release archives include the CLI plus overlay assets, and the CLI discovers assets beside the executable before falling back to source checkout paths.
 - [ ] Consider publishing or automating release channels.
   Evidence: release automation preserves Sane-owned/user-owned boundaries and does not require a deep Pi fork.
 
@@ -47,7 +45,7 @@ The repo is pre-stable with a beta GitHub Releases channel. The next work should
 
 ## Completed implementation baseline
 
-The old full-remake checklist is complete and should not remain in the main reading path. Git history and acceptance runs are the evidence layer for completed work. Durable rationale remains in ADRs, especially:
+The initial implementation checklist is complete and should not remain in the main reading path. Git history and acceptance runs are the evidence layer for completed work. Durable rationale remains in ADRs, especially:
 
 - `docs/adr/0004-use-pi-overlay-with-codex-skill-export.md`
 - `docs/adr/0006-use-bounded-track-window-and-track-standard.md`

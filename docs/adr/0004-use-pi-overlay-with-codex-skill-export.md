@@ -28,7 +28,7 @@ Build `sane-next` as a **Pi-first overlay/distribution**, not as a fresh runtime
 - **Primary runtime:** Pi
 - **Primary integration shape:** Pi plugin(s) plus skill/command/config distribution
 - **Secondary export target:** Codex-native skill paths
-- **Standalone Sane surface:** a small companion CLI for install, export, update, and doctor flows only
+- **Standalone Sane surface:** a small companion CLI for install, export, update, doctor, lifecycle repair/uninstall, package recommendation, and explicit configuration flows
 
 ### Pack model
 

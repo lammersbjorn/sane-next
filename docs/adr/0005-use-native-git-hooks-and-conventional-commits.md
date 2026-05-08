@@ -34,4 +34,4 @@ Negative:
 
 ## Notes
 
-This ADR does not yet define the full release automation policy. That remains a separate decision after the current release/versioning research is synthesized.
+Release/versioning policy is covered by ADR 0009, ADR 0013, and ADR 0014.

@@ -4,7 +4,7 @@ Use this directory for durable project documentation only. Do not add ad-hoc pla
 
 ## Where to look
 
-- `roadmap/ROADMAP.md` — full product verification ledger and remaining runtime/operator checks.
+- `roadmap/ROADMAP.md` — living product direction, release discipline, and evidence for open/completed roadmap items.
 - `adr/` — accepted Architecture Decision Records. Use for durable choices and rationale.
 - `standards/` — normative repo rules for tracking, implementation runs, and instruction surfaces.
 - `reference/` — factual background that is useful but not operational policy.

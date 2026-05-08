@@ -1,11 +1,11 @@
 # Contributing
 
-`sane-next` is implemented but still pre-stable and source-built. Keep changes small, verified, and grounded in the repo truth files.
+`sane-next` is implemented but still pre-stable. Keep changes small, verified, and grounded in the repo truth files.
 
 ## Current truth
 
 - Current state: `TRACK.toml`
-- Product roadmap and release readiness: `docs/roadmap/ROADMAP.md`
+- Product roadmap and release discipline: `docs/roadmap/ROADMAP.md`
 - Docs map and placement rules: `docs/README.md`, `docs/standards/DOCS-STRUCTURE-STANDARD.md`
 - Old Sane reference context: `docs/reference/OLD-SANE-POSTMORTEM.md`
 - Durable decisions: `docs/adr/`
@@ -104,8 +104,8 @@ Current hooks:
 - `commit-msg`
   - enforces the Conventional Commit format
 
-## Versioning
+## Versioning and CI
 
-- Use **annotated** tags only.
-- While pre-stable, use `v0.y.z`.
-- Keep CI Linux-only while the repo is private.
+- Use SemVer and **annotated** tags only.
+- While pre-stable, use `v0.y.z` tags.
+- Run compatibility CI for Linux, macOS, and Windows; keep Bash acceptance on Linux unless a native acceptance slice is justified.

@@ -6,7 +6,7 @@ Accepted
 
 ## Context
 
-`sane-next` currently exports compact workflow packs, but it does not include the frontend and documentation craft packs that existed in old Sane planning and prior worktrees.
+At the time of this decision, `sane-next` exported compact workflow packs but did not include the frontend and documentation craft packs that existed in old Sane planning and prior worktrees.
 
 The target runtime is **GPT-5.5 in Codex and Pi**. The pack must therefore follow Codex Agent Skills behavior and Pi export constraints, not Claude-specific runtime assumptions. Current research points to a consistent pattern:
 
@@ -18,7 +18,7 @@ The target runtime is **GPT-5.5 in Codex and Pi**. The pack must therefore follo
 
 ## Decision
 
-Add a **Codex-first craft pack** made of one small router skill and narrow subordinate skills:
+Add a **Codex-first craft pack** made of one small router skill and narrow subordinate skills. This pack is now implemented as:
 
 - `craft-router`
 - `frontend-craft`

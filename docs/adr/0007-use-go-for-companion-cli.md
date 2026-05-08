@@ -6,7 +6,7 @@ Accepted
 
 ## Context
 
-`sane-next` needs a small companion CLI for install, export, update, and doctor flows around a Pi-first overlay product.
+`sane-next` needs a small companion CLI for lifecycle, export, package recommendation, and explicit configuration flows around a Pi-first overlay product.
 
 The CLI is not the runtime. It should stay boring, fast to start, easy to distribute, and easy to keep small.
 
@@ -31,7 +31,7 @@ Implementation rules:
 
 1. Keep the CLI small and command-focused.
 2. Prefer the standard library unless a dependency clearly pays for itself.
-3. Start with the minimum command set: `install` first, then `export`, `update`, and `doctor` only when justified.
+3. Keep command growth tied to overlay lifecycle, package recommendation, export, and explicit user configuration needs.
 4. Do not build a TUI-heavy CLI surface.
 
 ## Rejected alternatives
@@ -53,8 +53,8 @@ Rejected as the primary interface. They are useful for small helpers, but they a
 Positive:
 
 - small binaries
-- straightforward cross-platform path later
-- simple implementation path for install/export/doctor flows
+- straightforward cross-platform distribution path
+- simple implementation path for overlay lifecycle and export flows
 
 Negative:
 
