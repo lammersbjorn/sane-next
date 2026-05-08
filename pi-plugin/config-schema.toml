@@ -157,7 +157,7 @@ purpose = "Optional Markdown, code, diff, browser, terminal, and PDF preview sup
 id = "pi-pretty"
 enabled = true
 default_install = false
-package = "npm:@heyhuynhgiabuu/pi-pretty"
+package = "npm:@heyhuynhgiabuu/pi-pretty@0.4.4"
 purpose = "Optional pretty visual rendering for Pi tool calls."
 
 [[recommended_pi_packages]]
@@ -178,7 +178,7 @@ purpose = "Optional plan and accept-edits mode package for users who want explic
 id = "pi-container-sandbox"
 enabled = true
 default_install = false
-package = "npm:pi-container-sandbox"
+package = "npm:pi-container-sandbox@0.2.1"
 purpose = "Optional higher-safety container sandbox for users who accept container setup cost."
 
 # Ownership controls Sane lifecycle safety. Do not change marker_file for an existing install unless repairing deliberately.

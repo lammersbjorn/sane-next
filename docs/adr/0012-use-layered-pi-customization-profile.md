@@ -56,7 +56,7 @@ Add additional packages as **opt-in recommendations**, not default installs:
   - selected over `@spences10/pi-themes` for breadth, curation detail, and explicit adaptation to Pi's 51-token theme model.
 - `npm:pi-markdown-preview@0.9.7`
   - best docs/preview choice because it focuses on Markdown, LaTeX, code, diff, browser, terminal, and PDF preview without changing core coding behavior.
-- `npm:@heyhuynhgiabuu/pi-pretty`
+- `npm:@heyhuynhgiabuu/pi-pretty@0.4.4`
   - selected as the optional tool-rendering choice because it avoids the Claude Code-like presentation that proved undesirable in local use while still improving tool-call readability.
   - keep opt-in because it can affect command/output ergonomics and should not be part of Sane defaults.
   - enforce compact Sane defaults through the extension: `PRETTY_MAX_PREVIEW_LINES=24`, `PRETTY_MAX_HL_CHARS=1` to avoid Shiki read backgrounds clashing with the active Pi theme, and `PRETTY_ICONS=nerd` to keep icons.
@@ -66,9 +66,9 @@ Add additional packages as **opt-in recommendations**, not default installs:
 - `npm:pi-pledit@1.0.1`
   - best plan/accept-edits candidate if Sane later wants external plan-mode behavior, because it provides both Plan Mode and Accept Edits Mode with a small permission-mode model.
   - keep opt-in and do not integrate into Sane defaults until it is tested against Sane goal/ledger and craft-router behavior.
-- `npm:pi-container-sandbox`
+- `npm:pi-container-sandbox@0.2.1`
   - best high-safety sandbox candidate for users who accept Docker/Apple-container setup cost.
-  - keep opt-in because it changes file and shell execution semantics.
+  - keep opt-in and label as advanced because it changes file and shell execution semantics.
 
 Do not default-install optional visual, plan, ask-user, preview, or sandbox packages.
 
@@ -156,5 +156,5 @@ Positive:
 Negative:
 
 - The companion CLI grows beyond lifecycle/export into preference management.
-- Optional package versions need periodic review.
+- Optional package versions need periodic review against live Pi package pages, npm artifacts, and fixture installs because search indexes and repository default branches can lag published package versions.
 - More documented choices can confuse users unless README wording stays compact.
