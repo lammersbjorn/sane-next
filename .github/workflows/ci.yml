@@ -2,8 +2,14 @@ name: ci
 
 on:
   pull_request:
+    paths-ignore:
+      - "docs/**"
+      - ".github/release-notes-*.txt"
   push:
     branches: [main]
+    paths-ignore:
+      - "docs/**"
+      - ".github/release-notes-*.txt"
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
