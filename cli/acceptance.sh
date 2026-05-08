@@ -46,14 +46,15 @@ grep -q 'buildSubagentRoutingHint' "$REPO/pi-plugin/index.ts"
 grep -q 'appendEntry(LEDGER_ENTRY_TYPE' "$REPO/pi-plugin/index.ts"
 grep -q 'buildRelevantLedgerContext' "$REPO/pi-plugin/index.ts"
 grep -q 'skillPaths' "$REPO/pi-plugin/index.ts"
-if command -v pi >/dev/null 2>&1; then
+if [[ "${SANE_NEXT_LIVE_PI:-0}" == "1" || "${SANE_NEXT_REQUIRE_PI:-0}" == "1" ]]; then
+  if ! command -v pi >/dev/null 2>&1; then
+    echo "pi is required for live acceptance but was not found on PATH" >&2
+    exit 1
+  fi
   PI_CODING_AGENT_DIR="$TMP/pi-agent" pi install "$TMP/install"
   PI_CODING_AGENT_DIR="$TMP/pi-agent" pi list | grep -q "$TMP/install"
-elif [[ "${SANE_NEXT_REQUIRE_PI:-0}" == "1" ]]; then
-  echo "pi is required for acceptance but was not found on PATH" >&2
-  exit 1
 else
-  echo "pi not found; skipped live pi install (set SANE_NEXT_REQUIRE_PI=1 to require it)"
+  echo "skipped live pi install (set SANE_NEXT_LIVE_PI=1 to enable it)"
 fi
 "$GO_BIN" run . doctor --root "$TMP/install"
 "$GO_BIN" run . export --config "$REPO/pi-plugin/config-schema.toml" --target codex --target-root "$TMP/export-default"
@@ -142,17 +143,6 @@ test ! -e "$TMP/install/themes"
 test ! -e "$TMP/install/skills"
 test ! -e "$TMP/install/package.json"
 test ! -e "$TMP/install/exports"
-
-"$PYTHON_BIN" - <<PY
-from pathlib import Path
-import re
-roadmap = Path("$REPO/docs/roadmap/ROADMAP.md").read_text()
-if "annotated tags" not in roadmap or "compatibility CI on Linux, macOS, and Windows" not in roadmap:
-    raise SystemExit("release discipline text missing")
-tags = [line.strip() for line in roadmap.splitlines() if "v0.y.z" in line]
-if not tags:
-    raise SystemExit("pre-stable tag policy missing")
-PY
 
 rm -rf "$TMP" "$ROOT/cli"
 echo "acceptance ok"

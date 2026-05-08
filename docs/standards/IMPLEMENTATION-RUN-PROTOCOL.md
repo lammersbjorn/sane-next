@@ -53,7 +53,7 @@ node --test pi-plugin/plugin.test.js
 cd cli && ./acceptance.sh
 ```
 
-Docs-only changes should still run the relevant validation path when hooks or acceptance check docs/tracking structure.
+Docs-only changes should still run the relevant validation path, such as hooks for tracking shape and markdown placement. CLI acceptance should stay focused on executable product behavior and generated artifacts, not roadmap prose.
 
 ## Commit and handoff
 

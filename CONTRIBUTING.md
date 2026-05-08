@@ -24,6 +24,7 @@ Use the narrowest check that proves your change, then run broader checks when be
 cd cli && go test ./...
 node --test pi-plugin/plugin.test.js
 cd cli && ./acceptance.sh
+(cd cli && SANE_NEXT_LIVE_PI=1 ./acceptance.sh) # optional live Pi install check
 ```
 
 ## Commit convention
