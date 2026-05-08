@@ -4,6 +4,9 @@ on:
   pull_request:
   push:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   test:
     name: test (${{ matrix.os }})
@@ -13,13 +16,14 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
         with:
           go-version: "1.22"
-      - uses: actions/setup-node@v4
+          cache-dependency-path: cli/go.sum
+      - uses: actions/setup-node@v6
         with:
-          node-version: "22"
+          node-version: "24"
       - name: Go unit tests
         working-directory: cli
         run: go test ./...
@@ -30,23 +34,25 @@ jobs:
     name: acceptance (ubuntu)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
         with:
           go-version: "1.22"
-      - uses: actions/setup-node@v4
+          cache-dependency-path: cli/go.sum
+      - uses: actions/setup-node@v6
         with:
-          node-version: "22"
+          node-version: "24"
       - run: ./cli/acceptance.sh
 
   cross-build:
     name: cross-build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
         with:
           go-version: "1.22"
+          cache-dependency-path: cli/go.sum
       - name: Build release archives
         shell: bash
         run: ./cli/package_release.sh
@@ -74,11 +80,11 @@ jobs:
           if missing:
               raise SystemExit(f"windows release archive missing: {sorted(missing)}")
           PY
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: sane-next-release-archives
           path: dist/sane-next_*.tar.gz
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: sane-next-release-zips
           path: dist/sane-next_*.zip
