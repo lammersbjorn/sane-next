@@ -11,7 +11,7 @@ This is the living product roadmap for `sane-next`. It is not the active task le
 
 The initial Pi-first overlay is implemented and verified: companion CLI lifecycle flows, shared packs, Codex export, Pi plugin integration, goal/ledger commands, curated default packages, optional package recommendations, explicit theme configuration, and acceptance coverage exist in source.
 
-The repo is pre-stable and source-built. The next work should focus on release readiness, package publishing decisions, and keeping docs/tracking surfaces small enough for agents to use.
+The repo is pre-stable with a beta GitHub Releases channel. The next work should focus on making release artifacts self-contained, package publishing decisions, and keeping docs/tracking surfaces small enough for agents to use.
 
 ## Now
 
@@ -33,6 +33,8 @@ The repo is pre-stable and source-built. The next work should focus on release r
   Evidence: a new ADR defines source of truth, sync direction, and failure mode.
 - [ ] Revisit Codex-native export after real user feedback.
   Evidence: exported skill format still matches current Codex expectations and user-owned directories remain protected.
+- [ ] Make GitHub Release artifacts self-contained.
+  Evidence: release archives let users install without a separate source checkout for overlay assets.
 - [ ] Consider publishing or automating release channels.
   Evidence: release automation preserves Sane-owned/user-owned boundaries and does not require a deep Pi fork.
 
@@ -40,7 +42,7 @@ The repo is pre-stable and source-built. The next work should focus on release r
 
 - Use annotated tags only.
 - While pre-stable, use `v0.y.z` tags.
-- Keep CI Linux-only while the repo is private.
+- Run compatibility CI on Linux, macOS, and Windows; keep shell acceptance Linux/Bash-only until a native acceptance slice is justified.
 - Do not mark a release item done without concrete command output, fixture inspection, generated artifact inspection, or a commit/PR reference.
 
 ## Completed implementation baseline

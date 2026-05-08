@@ -18,11 +18,11 @@ Instead of asking you to remember a perfect prompt every time, Sane installs a s
 
 ## Status
 
-- Current version: `0.3.0-beta.1` from source.
-- No published binary, Homebrew formula, or npm channel yet.
-- First planned pre-stable distribution channel: GitHub Releases.
+- Current version: `0.3.0-beta.1` beta.
+- First pre-stable distribution channel: GitHub Releases.
+- No Homebrew formula or npm channel yet.
 - Compatibility target: Linux, macOS, and Windows for the companion CLI and Pi extension tests; full shell acceptance remains Linux/Bash-only.
-- Build the CLI locally from `cli/`.
+- Use a GitHub Release archive, or build the CLI locally from `cli/`.
 
 ## Prerequisites
 
@@ -30,6 +30,31 @@ Instead of asking you to remember a perfect prompt every time, Sane installs a s
 - A working `pi` CLI/runtime for `pi install` and Pi overlay loading.
 - Node.js only when running Pi plugin tests.
 - Network/npm access if you let Sane install recommended Pi packages.
+
+## Quick start from a GitHub Release
+
+Download the archive for your OS and CPU from the latest GitHub Release, then put the binary on your `PATH` as `sane-next`.
+
+macOS/Linux example:
+
+```bash
+tar -xzf sane-next_0.3.0-beta.1_darwin_arm64.tar.gz
+chmod +x sane-next
+./sane-next version
+./sane-next install --source-root /path/to/sane-next/source
+pi install ~/.sane-next
+```
+
+Windows PowerShell example:
+
+```powershell
+Expand-Archive sane-next_0.3.0-beta.1_windows_amd64.zip -DestinationPath sane-next
+.\sane-next\sane-next.exe version
+.\sane-next\sane-next.exe install --source-root C:\path\to\sane-next\source
+pi install $env:USERPROFILE\.sane-next
+```
+
+The current beta CLI still needs a local source checkout for overlay assets via `--source-root`. Future release packaging should remove that requirement by embedding or bundling assets with the binary.
 
 ## Quick start from source
 
