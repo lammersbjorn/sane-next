@@ -7,7 +7,7 @@ It is a Pi-first workflow overlay: Pi stays the fast interactive runtime, while 
 Sane installs a small set of Pi skills, package recommendations, and CLI lifecycle commands that help agents start from repo truth, use focused craft skills, and leave recoverable handoffs instead of long, unreviewable chat drift.
 
 > [!NOTE]
-> `sane-next` is pre-stable. The current release line is `0.3.0-beta.2`, with GitHub Releases as the first distribution channel. There is no Homebrew or npm install channel yet.
+> `sane-next` is pre-stable. The current release line is `0.3.0-beta.3`, with GitHub Releases as the first distribution channel. There is no Homebrew or npm install channel yet.
 
 ## Contents
 
@@ -59,8 +59,8 @@ Download the archive for your OS/CPU from the latest GitHub Release, extract it,
 <summary>macOS/Linux</summary>
 
 ```bash
-tar -xzf sane-next_0.3.0-beta.2_darwin_arm64.tar.gz
-cd sane-next_0.3.0-beta.2_darwin_arm64
+tar -xzf sane-next_0.3.0-beta.3_darwin_arm64.tar.gz
+cd sane-next_0.3.0-beta.3_darwin_arm64
 chmod +x sane-next
 ./sane-next version
 ./sane-next install
@@ -73,8 +73,8 @@ pi install ~/.sane-next
 <summary>Windows PowerShell</summary>
 
 ```powershell
-Expand-Archive sane-next_0.3.0-beta.2_windows_amd64.zip -DestinationPath sane-next
-cd sane-next\sane-next_0.3.0-beta.2_windows_amd64
+Expand-Archive sane-next_0.3.0-beta.3_windows_amd64.zip -DestinationPath sane-next
+cd sane-next\sane-next_0.3.0-beta.3_windows_amd64
 .\sane-next.exe version
 .\sane-next.exe install
 pi install $env:USERPROFILE\.sane-next

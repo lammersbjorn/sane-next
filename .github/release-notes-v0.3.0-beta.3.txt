@@ -1,0 +1,10 @@
+Pre-stable beta release for Sane Next.
+
+What changed since v0.3.0-beta.2:
+
+- Strengthened Sane's Pi subagent routing hints for broad research, review, verification, and disjoint implementation work.
+- Added routing classification tests for broad codebase audits, prompt rewrites, release workflow verification, and small-task no-op behavior.
+- Tightened the agent-lanes skill so lanes are launched when independent work can run in parallel without adding extra explanation overhead.
+- Updated README install examples for the `0.3.0-beta.3` release archive names.
+
+Download the archive for your OS/CPU, extract it, and run the included `sane-next` command from the extracted directory.
