@@ -60,21 +60,24 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test -f dist/sane-next_0.3.0-beta.1_darwin_arm64.tar.gz
-          test -f dist/sane-next_0.3.0-beta.1_windows_amd64.zip
+          version="$(cd cli && go run . version)"
+          test -f "dist/sane-next_${version}_darwin_arm64.tar.gz"
+          test -f "dist/sane-next_${version}_windows_amd64.zip"
           mkdir -p dist/check
-          tar -xzf dist/sane-next_0.3.0-beta.1_darwin_arm64.tar.gz -C dist/check
-          test -f dist/check/sane-next_0.3.0-beta.1_darwin_arm64/sane-next
-          test -f dist/check/sane-next_0.3.0-beta.1_darwin_arm64/README.md
-          python3 - <<'PY'
+          tar -xzf "dist/sane-next_${version}_darwin_arm64.tar.gz" -C dist/check
+          test -f "dist/check/sane-next_${version}_darwin_arm64/sane-next"
+          test -f "dist/check/sane-next_${version}_darwin_arm64/README.md"
+          VERSION="$version" python3 - <<'PY'
+          import os
           from pathlib import Path
           import zipfile
-          archive = Path("dist/sane-next_0.3.0-beta.1_windows_amd64.zip")
+          version = os.environ["VERSION"]
+          archive = Path(f"dist/sane-next_{version}_windows_amd64.zip")
           with zipfile.ZipFile(archive) as z:
               names = set(z.namelist())
           expected = {
-              "sane-next_0.3.0-beta.1_windows_amd64/sane-next.exe",
-              "sane-next_0.3.0-beta.1_windows_amd64/README.md",
+              f"sane-next_{version}_windows_amd64/sane-next.exe",
+              f"sane-next_{version}_windows_amd64/README.md",
           }
           missing = expected - names
           if missing:
