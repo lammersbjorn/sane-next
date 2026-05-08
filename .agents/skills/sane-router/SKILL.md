@@ -16,7 +16,7 @@ Pick the smallest Sane surface that fits the task: direct main-thread work, RTK 
 - a task is broad enough that routing matters
 - active packs expose multiple workflow skills
 - the user asks for subagents, RTK, lifecycle commands, or pack export
-- a Pi or Codex session needs Sane's workflow defaults without loading every pack body
+- a supported agent runtime needs Sane's workflow defaults without loading every pack body
 
 ## Use Direct Or Stricter Route When
 
@@ -29,7 +29,7 @@ Pick the smallest Sane surface that fits the task: direct main-thread work, RTK 
 - active Sane config
 - enabled packs and export targets
 - user request and repo instructions
-- available runtime capabilities in Pi or Codex
+- available runtime capabilities and installed Sane packs
 
 ## Outputs
 
@@ -42,9 +42,9 @@ Pick the smallest Sane surface that fits the task: direct main-thread work, RTK 
 
 1. If the task is tiny, keep it in the main thread.
 2. If shell/search/test/log work is involved and RTK is enabled or required, load `rtk-routing`.
-3. If work can run in parallel with clean boundaries, load `agent-lanes`; when `pi-subagents` is available, actually delegate focused lanes instead of only planning them.
+3. If work can run in parallel with clean boundaries, load `agent-lanes`; delegate only when the active runtime has a real delegation tool available.
 4. If the task is an ongoing resume or implementation run, load `core-workflow`.
-5. If the task is install/export/update/doctor/repair/uninstall, use the Sane companion CLI.
+5. If the task is install/export/update/doctor/repair/uninstall, use the Sane companion CLI for the current runtime or target.
 6. Keep only the selected skill bodies in context.
 
 ## Verification
@@ -58,7 +58,8 @@ Pick the smallest Sane surface that fits the task: direct main-thread work, RTK 
 - Load only the pack bodies needed for the selected route.
 - Keep small tasks in the main thread.
 - Follow repo-local shell policy before running commands.
-- Use Sane as a Pi-first overlay; Pi owns the agent loop when running in Pi.
+- Keep this router runtime-neutral; put runtime-specific command details in the matching CLI, hook, or runtime docs.
+- Use commands for a runtime only when that runtime is the active target or the user asks to inspect it.
 
 ## Examples
 
@@ -70,4 +71,4 @@ Pick the smallest Sane surface that fits the task: direct main-thread work, RTK 
 ### Negative
 
 - Loading all packs for a small typo fix.
-- Starting a standalone Sane workflow when Pi or Codex can run the selected skill directly.
+- Starting a standalone Sane workflow when the active runtime can run the selected skill directly.

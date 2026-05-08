@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 )
 
-const version = "0.3.0-beta.3"
+const version = "0.3.0-beta.4"
 
 type commandResult struct {
 	Message string
@@ -28,6 +28,13 @@ func run(args []string, stdout io.Writer, stderr io.Writer) error {
 	}
 
 	switch args[0] {
+	case "codex":
+		result, err := runCodex(args[1:])
+		if err != nil {
+			return err
+		}
+		fmt.Fprintln(stdout, result.Message)
+		return nil
 	case "configure":
 		result, err := runConfigure(args[1:])
 		if err != nil {
@@ -107,6 +114,7 @@ func usage(w io.Writer) {
 	fmt.Fprintln(w, "sane-next manages the Sane Pi overlay and shared workflow packs.")
 	fmt.Fprintln(w)
 	fmt.Fprintln(w, "Usage:")
+	fmt.Fprintln(w, "  sane-next codex install|export|doctor|uninstall [--codex-home PATH] [--hooks off|warn|enforce] [--dry-run]")
 	fmt.Fprintln(w, "  sane-next configure --theme github-dark-pro [--agent-dir PATH] [--dry-run]")
 	fmt.Fprintln(w, "  sane-next doctor [--root PATH]")
 	fmt.Fprintln(w, "  sane-next export [--config PATH] [--source-root PATH] [--target codex] [--target-root PATH] [--dry-run]")

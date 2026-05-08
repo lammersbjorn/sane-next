@@ -11,7 +11,7 @@ This is the living product roadmap for `sane-next`. It is not the active task le
 
 The initial Pi-first overlay is implemented and verified: companion CLI lifecycle flows, shared packs, Codex export, Pi plugin integration, goal/ledger commands, curated default packages, optional package recommendations, explicit theme configuration, and acceptance coverage exist in source.
 
-The repo is pre-stable with a beta GitHub Releases channel and self-contained release archives. The next work should focus on deliberate package publishing decisions and keeping docs/tracking surfaces small enough for agents to use.
+The repo is pre-stable with a beta GitHub Releases channel and self-contained release archives. The active Codex Core slice in `TRACK.toml` is a bounded follow-up to shared Codex skill export; after that, next work should return to deliberate package publishing decisions and keeping docs/tracking surfaces small enough for agents to use.
 
 ## Now
 
@@ -33,8 +33,8 @@ The repo is pre-stable with a beta GitHub Releases channel and self-contained re
 
 - [ ] Add external mirrors only if there is evidence repo-local tracking is not enough.
   Evidence: a new ADR defines source of truth, sync direction, and failure mode.
-- [ ] Revisit Codex-native export after real user feedback.
-  Evidence: exported skill format still matches current Codex expectations and user-owned directories remain protected.
+- [ ] Revisit broader Codex-native surfaces after real user feedback.
+  Evidence: exported skill format still matches current Codex expectations, user-owned directories remain protected, and any new MCP/model/sandbox/prompt surfaces have a fresh ADR.
 - [ ] Consider publishing or automating release channels.
   Evidence: release automation preserves Sane-owned/user-owned boundaries and does not require a deep Pi fork.
 

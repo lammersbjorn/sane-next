@@ -40,6 +40,133 @@ func TestLifecyclePreservesUserPacksOnUninstall(t *testing.T) {
 	}
 }
 
+func TestCodexInstallDoctorAndUninstall(t *testing.T) {
+	root := filepath.Join(t.TempDir(), "sane")
+	codexHome := filepath.Join(t.TempDir(), ".codex")
+	if _, err := runCodex([]string{"install", "--root", root, "--codex-home", codexHome, "--source-root", "..", "--hooks", "enforce"}); err != nil {
+		t.Fatal(err)
+	}
+	for _, path := range []string{
+		filepath.Join(codexHome, "skills", "core-workflow", "SKILL.md"),
+		filepath.Join(codexHome, "AGENTS.md"),
+		filepath.Join(codexHome, "config.toml"),
+		filepath.Join(codexHome, "config.toml.sane-next-hooks-owned"),
+		filepath.Join(root, "codex", "hooks", "sane-pre-tool-use"),
+		filepath.Join(root, "codex", "hooks", "sane-user-prompt-submit"),
+	} {
+		if _, err := os.Stat(path); err != nil {
+			t.Fatalf("expected Codex asset %s: %v", path, err)
+		}
+	}
+	data, err := os.ReadFile(filepath.Join(codexHome, "config.toml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(data), "hooks = true") || strings.Contains(string(data), "codex_hooks") {
+		t.Fatalf("expected current hook feature flag only, got:\n%s", data)
+	}
+	hooksJSON, err := os.ReadFile(filepath.Join(codexHome, "hooks.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if strings.Contains(string(hooksJSON), "sane-next") || !strings.Contains(string(hooksJSON), "PreToolUse") {
+		t.Fatalf("expected schema-clean Sane hooks.json, got:\n%s", hooksJSON)
+	}
+	if _, err := os.Stat(filepath.Join(codexHome, "hooks.json.sane-next-owned")); err != nil {
+		t.Fatalf("expected hooks ownership marker: %v", err)
+	}
+	if _, err := runCodex([]string{"doctor", "--root", root, "--codex-home", codexHome}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCodex([]string{"uninstall", "--root", root, "--codex-home", codexHome}); err != nil {
+		t.Fatal(err)
+	}
+	data, err = os.ReadFile(filepath.Join(codexHome, "config.toml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if strings.Contains(string(data), saneBlockStart) || strings.Contains(string(data), "hooks = true") {
+		t.Fatalf("expected managed Codex config removed, got:\n%s", data)
+	}
+	for _, path := range []string{filepath.Join(root, "codex", "hooks", "sane-pre-tool-use"), filepath.Join(root, "codex", "hooks", "sane-user-prompt-submit")} {
+		if _, err := os.Stat(path); !os.IsNotExist(err) {
+			t.Fatalf("expected Sane hook script removed %s, got: %v", path, err)
+		}
+	}
+	if _, err := os.Stat(filepath.Join(codexHome, "config.toml.sane-next-hooks-owned")); !os.IsNotExist(err) {
+		t.Fatalf("expected config ownership marker removed, got: %v", err)
+	}
+}
+
+func TestCodexUninstallPreservesUserHookFiles(t *testing.T) {
+	root := filepath.Join(t.TempDir(), "sane")
+	codexHome := filepath.Join(t.TempDir(), ".codex")
+	if _, err := runCodex([]string{"install", "--root", root, "--codex-home", codexHome, "--source-root", "..", "--hooks", "warn"}); err != nil {
+		t.Fatal(err)
+	}
+	userHook := filepath.Join(root, "codex", "hooks", "user-hook")
+	if err := os.WriteFile(userHook, []byte("user owned\n"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCodex([]string{"uninstall", "--root", root, "--codex-home", codexHome}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(userHook); err != nil {
+		t.Fatalf("expected user hook preserved: %v", err)
+	}
+}
+
+func TestCodexInstallReplacesExistingHooksFeatureFlag(t *testing.T) {
+	root := filepath.Join(t.TempDir(), "sane")
+	codexHome := filepath.Join(t.TempDir(), ".codex")
+	if err := os.MkdirAll(codexHome, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(codexHome, "config.toml"), []byte("[features]\nhooks = false\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCodex([]string{"install", "--root", root, "--codex-home", codexHome, "--source-root", "..", "--hooks", "warn"}); err != nil {
+		t.Fatal(err)
+	}
+	data, err := os.ReadFile(filepath.Join(codexHome, "config.toml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if strings.Contains(string(data), "hooks = false") || strings.Count(string(data), "hooks = true") != 1 {
+		t.Fatalf("expected one enabled hooks feature flag, got:\n%s", data)
+	}
+}
+
+func TestCodexInstallWithoutHooksDoesNotWriteHookAssets(t *testing.T) {
+	root := filepath.Join(t.TempDir(), "sane")
+	codexHome := filepath.Join(t.TempDir(), ".codex")
+	if _, err := runCodex([]string{"install", "--root", root, "--codex-home", codexHome, "--source-root", ".."}); err != nil {
+		t.Fatal(err)
+	}
+	for _, path := range []string{filepath.Join(codexHome, "hooks.json"), filepath.Join(codexHome, "config.toml.sane-next-hooks-owned"), filepath.Join(root, "codex", "hooks")} {
+		if _, err := os.Stat(path); !os.IsNotExist(err) {
+			t.Fatalf("expected no hook asset %s, got %v", path, err)
+		}
+	}
+	if _, err := runCodex([]string{"doctor", "--root", root, "--codex-home", codexHome}); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestCodexDoctorReportsBrokenManagedHooks(t *testing.T) {
+	root := filepath.Join(t.TempDir(), "sane")
+	codexHome := filepath.Join(t.TempDir(), ".codex")
+	if _, err := runCodex([]string{"install", "--root", root, "--codex-home", codexHome, "--source-root", "..", "--hooks", "warn"}); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Remove(filepath.Join(codexHome, "hooks.json")); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := runCodex([]string{"doctor", "--root", root, "--codex-home", codexHome}); err == nil {
+		t.Fatal("expected Codex doctor to fail with missing managed hooks.json")
+	}
+}
+
 func TestDoctorRequiresOwnershipMarker(t *testing.T) {
 	root := t.TempDir()
 	if _, err := runDoctor([]string{"--root", root}); err == nil {

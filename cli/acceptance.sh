@@ -117,6 +117,43 @@ if not Path("$TMP/home/.codex/skills/core-workflow/SKILL.md").exists():
     raise SystemExit("default Codex-native export did not write under HOME/.codex/skills")
 PY
 
+mkdir -p "$TMP/codex-home/.codex"
+printf '[features]\nhooks = false\n' > "$TMP/codex-home/.codex/config.toml"
+"$GO_BIN" run . codex install --root "$TMP/codex-root" --codex-home "$TMP/codex-home/.codex" --source-root "$REPO" --hooks enforce
+test -f "$TMP/codex-home/.codex/skills/core-workflow/SKILL.md"
+test -f "$TMP/codex-home/.codex/AGENTS.md"
+test -f "$TMP/codex-home/.codex/config.toml"
+test -f "$TMP/codex-home/.codex/hooks.json"
+test -f "$TMP/codex-home/.codex/hooks.json.sane-next-owned"
+test -f "$TMP/codex-home/.codex/config.toml.sane-next-hooks-owned"
+test -x "$TMP/codex-root/codex/hooks/sane-pre-tool-use"
+test -x "$TMP/codex-root/codex/hooks/sane-user-prompt-submit"
+printf 'user owned\n' > "$TMP/codex-root/codex/hooks/user-hook"
+grep -q 'sane-next:start' "$TMP/codex-home/.codex/AGENTS.md"
+grep -q 'hooks = true' "$TMP/codex-home/.codex/config.toml"
+if grep -q 'hooks = false' "$TMP/codex-home/.codex/config.toml"; then
+  echo "codex install left duplicate disabled hook flag" >&2
+  exit 1
+fi
+if grep -q 'codex_hooks' "$TMP/codex-home/.codex/config.toml"; then
+  echo "codex install wrote deprecated codex_hooks flag" >&2
+  exit 1
+fi
+grep -q 'PreToolUse' "$TMP/codex-home/.codex/hooks.json"
+"$GO_BIN" run . codex doctor --root "$TMP/codex-root" --codex-home "$TMP/codex-home/.codex"
+"$GO_BIN" run . codex uninstall --root "$TMP/codex-root" --codex-home "$TMP/codex-home/.codex"
+if test -e "$TMP/codex-home/.codex/hooks.json" || test -e "$TMP/codex-home/.codex/hooks.json.sane-next-owned" || test -e "$TMP/codex-home/.codex/config.toml.sane-next-hooks-owned"; then
+  echo "codex uninstall left hook ownership material" >&2
+  exit 1
+fi
+if grep -q 'hooks = true' "$TMP/codex-home/.codex/config.toml"; then
+  echo "codex uninstall left hook feature flag" >&2
+  exit 1
+fi
+test -f "$TMP/codex-root/codex/hooks/user-hook"
+test ! -e "$TMP/codex-root/codex/hooks/sane-pre-tool-use"
+test ! -e "$TMP/codex-root/codex/hooks/sane-user-prompt-submit"
+
 "$NODE_BIN" --test "$REPO/pi-plugin/plugin.test.js"
 rm -rf "$TMP/install/exports"
 rm -f "$TMP/install/extensions/sane-next/index.ts"

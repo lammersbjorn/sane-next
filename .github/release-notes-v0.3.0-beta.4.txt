@@ -1,0 +1,12 @@
+Pre-stable beta release for Sane Next.
+
+What changed since v0.3.0-beta.3:
+
+- Added a thin Sane Core for Codex: `sane-next codex install|export|doctor|uninstall`.
+- Reused shared Sane skill export for Codex instead of adding duplicate Codex-only skill sources.
+- Added managed `~/.codex/AGENTS.md` guidance and optional warn/enforce shell-policy hooks with reversible ownership markers.
+- Tightened Codex doctor/uninstall coverage so Sane-owned hook config and markers are validated and removed cleanly.
+- Reworked `agent-lanes` and `sane-router` to stay runtime-neutral while still supporting real delegation mechanisms in Pi, Codex, or other supported runtimes.
+- Updated README and roadmap/tracker docs for the bounded Codex Core slice.
+
+Download the archive for your OS/CPU, extract it, and run the included `sane-next` command from the extracted directory.

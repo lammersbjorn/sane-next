@@ -7,7 +7,7 @@ It is a Pi-first workflow overlay: Pi stays the fast interactive runtime, while 
 Sane installs a small set of Pi skills, package recommendations, and CLI lifecycle commands that help agents start from repo truth, use focused craft skills, and leave recoverable handoffs instead of long, unreviewable chat drift.
 
 > [!NOTE]
-> `sane-next` is pre-stable. The current release line is `0.3.0-beta.3`, with GitHub Releases as the first distribution channel. There is no Homebrew or npm install channel yet.
+> `sane-next` is pre-stable. The current release line is `0.3.0-beta.4`, with GitHub Releases as the first distribution channel. There is no Homebrew or npm install channel yet.
 
 ## Contents
 
@@ -38,6 +38,7 @@ Sane is built around a few product beliefs:
 - Curated default Pi packages for subagents, checkpoints, and web research.
 - Optional package recommendations for themes, previews, prompt routing, clarification, edit review, and sandboxing.
 - Codex-native skill export for enabled packs.
+- A thin Sane Core for Codex layer: managed `AGENTS.md` guidance plus optional warn/enforce shell-policy hooks.
 - Safe lifecycle commands that track Sane-owned files and preserve user-owned config.
 
 ## Requirements
@@ -59,8 +60,8 @@ Download the archive for your OS/CPU from the latest GitHub Release, extract it,
 <summary>macOS/Linux</summary>
 
 ```bash
-tar -xzf sane-next_0.3.0-beta.3_darwin_arm64.tar.gz
-cd sane-next_0.3.0-beta.3_darwin_arm64
+tar -xzf sane-next_0.3.0-beta.4_darwin_arm64.tar.gz
+cd sane-next_0.3.0-beta.4_darwin_arm64
 chmod +x sane-next
 ./sane-next version
 ./sane-next install
@@ -73,8 +74,8 @@ pi install ~/.sane-next
 <summary>Windows PowerShell</summary>
 
 ```powershell
-Expand-Archive sane-next_0.3.0-beta.3_windows_amd64.zip -DestinationPath sane-next
-cd sane-next\sane-next_0.3.0-beta.3_windows_amd64
+Expand-Archive sane-next_0.3.0-beta.4_windows_amd64.zip -DestinationPath sane-next
+cd sane-next\sane-next_0.3.0-beta.4_windows_amd64
 .\sane-next.exe version
 .\sane-next.exe install
 pi install $env:USERPROFILE\.sane-next
@@ -114,6 +115,11 @@ Preview an install without writing to your home directory:
 | List pack config | `sane-next pack list --config pi-plugin/config-schema.toml` |
 | Validate pack config | `sane-next pack validate --config pi-plugin/config-schema.toml` |
 | Export enabled packs to Codex | `sane-next export --target codex --config pi-plugin/config-schema.toml` |
+| Install Sane Core for Codex | `sane-next codex install` |
+| Install Codex warn-mode hooks | `sane-next codex install --hooks warn` |
+| Install Codex enforce-mode shell hooks | `sane-next codex install --hooks enforce` |
+| Check Codex layer health | `sane-next codex doctor` |
+| Remove Codex managed blocks and Sane-owned hook config | `sane-next codex uninstall` |
 | List Pi package recommendations | `sane-next package list --config pi-plugin/config-schema.toml` |
 | Install one package recommendation | `sane-next package install --config pi-plugin/config-schema.toml pi-subagents` |
 | Apply the bundled Pi theme | `sane-next configure --theme github-dark-pro` |
@@ -142,6 +148,8 @@ Optional packages are listed in config but installed only when requested:
 
 Enabled packs load in Pi and can export to Codex: `core-workflow`, `rtk-routing`, `agent-lanes`, `sane-router`, `craft-router`, `frontend-craft`, `frontend-review`, `frontend-accessibility`, `docs-writing`, and `ux-copy`.
 
+`Sane Core for Codex` keeps one source of truth: it exports those same packs, adds a tiny managed block to `~/.codex/AGENTS.md`, and can opt into warn- or enforce-mode hooks from `~/.sane-next/codex/hooks`. It does not change Codex model, sandbox, approval, MCP, or prompt settings by default.
+
 Disabled example packs are kept as fixtures: `caveman-speak` and `example-user-pack`.
 
 ## Troubleshooting
@@ -152,6 +160,7 @@ Disabled example packs are kept as fixtures: `caveman-speak` and `example-user-p
 | Package installation fails | Check network/npm access, then install the package ID manually with `sane-next package install`. |
 | `doctor` reports missing Sane-owned assets | Run `sane-next repair --root PATH`, then rerun `doctor`. |
 | Codex export refuses to overwrite a directory | Move the user-owned directory or export to a different `--target-root`. |
+| Codex hooks behave unexpectedly | Run `sane-next codex uninstall`, then reinstall without `--hooks warn` or `--hooks enforce`. |
 | Theme config is risky to apply directly | Preview with `sane-next configure --theme github-dark-pro --agent-dir PATH --dry-run`. |
 
 ## Project docs

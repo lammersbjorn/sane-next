@@ -17,7 +17,7 @@ Use subagents deliberately for speed, context isolation, and independent review 
 - implementation has disjoint write boundaries
 - verification needs a fresh perspective before a commit
 - logs, tests, or generated output would flood the main context
-- Pi or Codex exposes subagent execution for the current session, such as Sane's recommended `pi-subagents` Pi package
+- the active agent runtime exposes a real delegation mechanism
 
 ## Use Main Session When
 
@@ -32,30 +32,30 @@ Use subagents deliberately for speed, context isolation, and independent review 
 - repo instructions and active tracking files
 - candidate lane write boundaries
 - verification commands for each lane
-- available subagent models, skills, and permissions
+- available delegation tools, models, permissions, and isolation options
 
 ## Outputs
 
 - a compact lane table with owner, scope, write boundary, and verification
-- launched subagent tasks through the available runtime package when they can run independently
+- launched lanes through the active runtime only when real delegation is available
 - returned summaries with changed files, evidence, and unresolved risk
 - coordinator integration and final verification
 
 ## How To Run
 
-1. Check whether the runtime exposes a subagent package/tool first. In Sane's default Pi install, prefer the curated `pi-subagents` package when available; `/sane-status`, `/subagents-status`, or `/subagents-doctor` can confirm availability. Otherwise use a lane table for manual/tmux delegation.
-2. Decide the main thread's immediate blocking task before delegating.
-3. For broad research, broad review, broad verification, or disjoint implementation, launch focused `pi-subagents` lanes when they can run in parallel.
-4. Split work only when each lane can run independently while the main thread continues.
+1. Identify the active runtime and its actual delegation tool, if one is installed and enabled.
+2. If no runtime delegation tool is available, write a lane table and execute the work in the main session or hand it to the user as a manual/tmux plan.
+3. Decide the main thread's immediate blocking task before delegating.
+4. For broad research, broad review, broad verification, or disjoint implementation, launch focused lanes only when they can run independently.
 5. Give every lane one clear owner and one write boundary.
 6. Use read-only explorer lanes for broad discovery and verifier lanes for fresh review.
-7. Use implementation lanes with non-overlapping write sets.
-8. Ask subagents for summaries and evidence, rather than full logs or broad file dumps.
+7. Use implementation lanes only when write sets do not overlap.
+8. Ask delegated lanes for summaries and evidence, not full logs or broad file dumps.
 9. Integrate results in the main thread and run final verification before claiming completion.
 
 ## Verification
 
-- each lane reports its own verification or explicit limits
+- each lane reports its own verification, evidence, or explicit limits
 - the coordinator reviews changed files and resolves conflicts
 - final verification runs from the integrated repo state
 - roadmap or tracking boxes are checked after integrated verification passes
@@ -63,6 +63,7 @@ Use subagents deliberately for speed, context isolation, and independent review 
 ## Gotchas / Safety
 
 - coordinator owns final decisions, conflict resolution, and completion claims
+- runtime-specific delegation commands belong in runtime docs or companion tooling, not in this shared skill body
 - parallel work helps when dependencies are real and write sets are clean
 - fresh-review lanes start from repo truth and inspect independently
 - use persistent memory only when the repo explicitly owns it
