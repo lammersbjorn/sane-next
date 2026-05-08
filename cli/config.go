@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	pathpkg "path"
 	"path/filepath"
 	"strings"
 
@@ -165,7 +166,7 @@ func validateSafeID(label, value string) error {
 }
 
 func validateRelativeSubpath(label, value string) error {
-	if filepath.IsAbs(value) {
+	if filepath.IsAbs(value) || pathpkg.IsAbs(value) || strings.HasPrefix(value, `\\`) {
 		return fmt.Errorf("%s %q must be relative", label, value)
 	}
 	clean := filepath.Clean(value)
