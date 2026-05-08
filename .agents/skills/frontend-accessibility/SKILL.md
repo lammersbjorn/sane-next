@@ -1,6 +1,6 @@
 ---
 name: frontend-accessibility
-description: Use this skill when auditing or fixing frontend accessibility for forms, dialogs, navigation, custom controls, keyboard/focus behavior, labels, semantics, ARIA, or contrast. Do not use for generic visual polish.
+description: Use this skill when auditing or fixing frontend accessibility for forms, dialogs, navigation, custom controls, keyboard/focus behavior, labels, semantics, ARIA, or contrast. Use frontend-craft for generic visual polish.
 license: MIT
 compatibility: Pi, Codex
 ---
@@ -17,11 +17,11 @@ Make affected UI perceivable, operable, understandable, and robust without addin
 - labels, descriptions, errors, headings, landmarks, semantics, ARIA, or contrast are in scope
 - an accessibility audit, regression, or bug is requested
 
-## Don't Use When
+## Route Elsewhere When
 
-- the task is only visual styling with no accessibility surface
-- the task is product copy only; use `ux-copy`
-- the task asks for broad compliance certification beyond local code review
+- use `frontend-craft` for visual styling with no accessibility surface
+- use `ux-copy` for product copy only
+- use a dedicated compliance review process for broad certification beyond local code review
 
 ## Inputs
 
@@ -38,7 +38,7 @@ Make affected UI perceivable, operable, understandable, and robust without addin
 ## How To Run
 
 1. Start with native HTML semantics before ARIA.
-2. Do not add ARIA roles until native elements and expected keyboard behavior are clear.
+2. Add ARIA roles only after native elements and expected keyboard behavior are clear.
 3. Preserve visible focus and logical keyboard order.
 4. Ensure controls have accessible names and state where needed.
 5. Connect form labels, helper text, validation errors, and summaries.
@@ -55,9 +55,9 @@ Make affected UI perceivable, operable, understandable, and robust without addin
 ## Gotchas / Safety
 
 - ARIA does not fix incorrect interaction behavior
-- do not remove focus indicators for aesthetics
-- do not rely on color alone for state or errors
-- avoid claiming WCAG compliance from automated checks alone
+- keep focus indicators visible and easy to see
+- pair color with text, icon shape, or another cue for state and errors
+- treat automated checks as evidence, not as full WCAG compliance proof
 
 ## Examples
 

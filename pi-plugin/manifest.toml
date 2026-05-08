@@ -1,7 +1,7 @@
 # Sane-owned overlay manifest. Pi package discovery uses the generated package.json.
 id = "sane-next"
 name = "Sane Next"
-version = "0.3.0-beta.1"
+version = "0.3.0-beta.2"
 description = "Pi-first overlay for Sane shared workflow packs and companion CLI integration."
 entrypoint = "index.ts"
 

@@ -18,7 +18,7 @@ Keep long-running coding work grounded in current repo truth, bounded phases, an
 - the repo has its own tracking, roadmap, ADR, or instruction files
 - verification and recovery matter more than a quick answer
 
-## Don't Use When
+## Use Main Session When
 
 - the user asks a small standalone question
 - the task is a one-command lookup
@@ -41,12 +41,12 @@ Keep long-running coding work grounded in current repo truth, bounded phases, an
 ## How To Run
 
 1. Read the repo's always-on instructions and active tracking files before broad work.
-2. Check `git status` and preserve unrelated user changes.
+2. Check `git status` and protect unrelated user changes.
 3. Convert the user request into concrete deliverables and stop conditions.
 4. Inspect the current implementation before choosing an approach.
 5. Edit within the smallest write boundary that can satisfy the request.
-6. Run the narrowest meaningful verification first, then broaden only when risk requires it.
-7. Commit or hand off only after the matching behavior is verified.
+6. Run the narrowest meaningful verification first, then broaden when risk requires it.
+7. Commit or hand off after the matching behavior is verified.
 
 ## Verification
 
@@ -57,10 +57,10 @@ Keep long-running coding work grounded in current repo truth, bounded phases, an
 
 ## Gotchas / Safety
 
-- do not replace repo truth with old chat memory
-- do not expand always-on instructions to solve a one-off problem
-- do not revert unrelated work in a dirty tree
-- do not mark tracking or roadmap items complete before matching behavior exists
+- use repo truth first, then chat history as secondary context
+- keep always-on instructions small and move recurring procedure into skills or standards
+- preserve unrelated work in a dirty tree
+- mark tracking or roadmap items complete only when matching behavior exists and verification passes
 
 ## Examples
 

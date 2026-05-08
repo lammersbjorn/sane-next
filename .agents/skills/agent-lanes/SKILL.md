@@ -19,11 +19,11 @@ Use subagents deliberately for speed, context isolation, and independent review 
 - logs, tests, or generated output would flood the main context
 - Pi or Codex exposes subagent execution for the current session, such as Sane's recommended `pi-subagents` Pi package
 
-## Don't Use When
+## Use Main Session When
 
 - the task is a small direct edit
-- the next step depends on one blocking fact the main session can inspect faster
-- write boundaries overlap and cannot be separated safely
+- one blocking fact determines the next step and the main session can inspect it faster
+- write boundaries overlap or need one writer
 - the user has paused or disallowed delegation
 
 ## Inputs
@@ -37,20 +37,20 @@ Use subagents deliberately for speed, context isolation, and independent review 
 ## Outputs
 
 - a compact lane table with owner, scope, write boundary, and verification
-- launched subagent tasks through the available runtime package only when they can run independently
+- launched subagent tasks through the available runtime package when they can run independently
 - returned summaries with changed files, evidence, and unresolved risk
 - coordinator integration and final verification
 
 ## How To Run
 
-1. Check whether the runtime exposes a subagent package/tool first. In Sane's default Pi install, prefer the curated `pi-subagents` package when available; `/sane-status`, `/subagents-status`, or `/subagents-doctor` can confirm availability. Otherwise fall back to a lane table for manual/tmux delegation.
+1. Check whether the runtime exposes a subagent package/tool first. In Sane's default Pi install, prefer the curated `pi-subagents` package when available; `/sane-status`, `/subagents-status`, or `/subagents-doctor` can confirm availability. Otherwise use a lane table for manual/tmux delegation.
 2. Decide the main thread's immediate blocking task before delegating.
-3. For broad work with independent research, review, verification, or disjoint implementation slices, launch focused `pi-subagents` lanes instead of merely noting that lanes would help.
-4. Split only work that is independent enough to run without waiting on the main task.
+3. For broad work with independent research, review, verification, or disjoint implementation slices, launch focused `pi-subagents` lanes.
+4. Split work only when each lane can run independently while the main thread continues.
 5. Give every lane one clear owner and one write boundary.
-6. Prefer read-only explorer lanes for broad discovery and verifier lanes for fresh review.
-7. Use implementation lanes only when their write sets do not overlap.
-8. Ask subagents for summaries and evidence, not full logs or broad file dumps.
+6. Use read-only explorer lanes for broad discovery and verifier lanes for fresh review.
+7. Use implementation lanes with non-overlapping write sets.
+8. Ask subagents for summaries and evidence, rather than full logs or broad file dumps.
 9. Integrate results in the main thread and run final verification before claiming completion.
 
 ## Verification
@@ -58,14 +58,14 @@ Use subagents deliberately for speed, context isolation, and independent review 
 - each lane reports its own verification or explicit limits
 - the coordinator reviews changed files and resolves conflicts
 - final verification runs from the integrated repo state
-- roadmap or tracking boxes are checked only after integrated verification passes
+- roadmap or tracking boxes are checked after integrated verification passes
 
 ## Gotchas / Safety
 
-- subagents do not remove coordinator responsibility
-- parallel work is useful only when dependencies are real and write sets are clean
-- fresh-review lanes should not inherit the coordinator's assumptions
-- avoid persistent memory by default unless the repo explicitly owns it
+- coordinator owns final decisions, conflict resolution, and completion claims
+- parallel work helps when dependencies are real and write sets are clean
+- fresh-review lanes start from repo truth and inspect independently
+- use persistent memory only when the repo explicitly owns it
 
 ## Examples
 

@@ -1,0 +1,8 @@
+Pre-stable beta release for Sane Next.
+
+Highlights:
+- Reframes repo and skill prompts around positive routing, workflow steps, and success criteria.
+- Adds instruction-surface guidance based on current OpenAI, Anthropic, and ETH negative-prompting research.
+- Keeps Sane Pi-first while preserving compact always-on instructions and focused skill surfaces.
+
+Download the archive for your OS/CPU, extract it, and run the included `sane-next` command from the extracted directory.

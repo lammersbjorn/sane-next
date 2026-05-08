@@ -16,7 +16,7 @@ Provide a small fixture pack for testing user-added pack discovery without enabl
 - verifying user pack export behavior
 - testing config-driven enablement
 
-## Don't Use When
+## Use Real Workflow Packs When
 
 - doing real project work
 
@@ -40,7 +40,7 @@ Provide a small fixture pack for testing user-added pack discovery without enabl
 
 ## Gotchas / Safety
 
-- this is a fixture, not a default workflow pack
+- Treat this as a fixture pack for discovery and export tests.
 
 ## Examples
 

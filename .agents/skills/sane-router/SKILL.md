@@ -18,11 +18,11 @@ Pick the smallest Sane surface that fits the task: direct main-thread work, RTK 
 - the user asks for subagents, RTK, lifecycle commands, or pack export
 - a Pi or Codex session needs Sane's workflow defaults without loading every pack body
 
-## Don't Use When
+## Use Direct Or Stricter Route When
 
-- a specific skill already clearly matches
-- the task is a one-line answer or one local command
-- repo instructions define a stricter route
+- when a specific skill clearly matches, load that skill directly
+- when the task is a one-line answer or one local command, keep it in main thread
+- when repo instructions define a stricter route, follow the repo route
 
 ## Inputs
 
@@ -55,10 +55,10 @@ Pick the smallest Sane surface that fits the task: direct main-thread work, RTK 
 
 ## Gotchas / Safety
 
-- do not load every pack just because it exists
-- do not make subagents mandatory for small tasks
-- do not bypass repo-local shell policy
-- do not use Sane as a separate runtime when Pi owns the agent loop
+- Load only the pack bodies needed for the selected route.
+- Keep small tasks in the main thread.
+- Follow repo-local shell policy before running commands.
+- Use Sane as a Pi-first overlay; Pi owns the agent loop when running in Pi.
 
 ## Examples
 

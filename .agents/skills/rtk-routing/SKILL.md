@@ -19,10 +19,10 @@ Keep command execution compact, policy-aware, and repo-compatible by routing she
 - a command has a direct RTK equivalent
 - a hook rejects raw shell commands and suggests an RTK route
 
-## Don't Use When
+## Use Direct Shell When
 
-- the repo does not use RTK and a direct command is clearer
-- an interactive program needs raw terminal behavior RTK cannot provide
+- the repo has no RTK policy and a direct command is clearer
+- an interactive program needs raw terminal behavior outside RTK coverage
 - the user explicitly asks for a non-RTK command and repo policy allows it
 
 ## Inputs
@@ -41,15 +41,15 @@ Keep command execution compact, policy-aware, and repo-compatible by routing she
 ## How To Run
 
 1. Read the active RTK mode when available:
-   - `off`: do not route solely for RTK policy.
-   - `advise`: prefer RTK when it is clearly helpful, but raw shell is allowed.
-   - `warn`: prefer RTK for direct equivalents and expect nudges, but raw shell is still allowed.
+   - `off`: use direct shell based on normal task fit.
+   - `advise`: prefer RTK when it is clearly helpful, direct shell remains allowed.
+   - `warn`: prefer RTK for direct equivalents and expect nudges, treat nudges as routing hints.
    - `enforce`: use RTK routes for commands covered by policy; raw covered commands may be blocked.
 2. Prefer RTK-native commands for common work: `rtk grep`, `rtk read`, `rtk ls`, `rtk tree`, `rtk find`, `rtk diff`, `rtk git`, `rtk test`, `rtk lint`, and package-specific RTK wrappers.
-3. Use `rtk run` only when exact shell semantics matter or no native RTK command exists.
+3. Use `rtk run` when exact shell semantics matter or no native RTK command exists.
 4. Keep searches targeted before broadening.
 5. Preserve exact paths, flags, and error text when reporting failures.
-6. If RTK is missing, report the missing dependency and do not silently bypass a repo policy that requires enforcement.
+6. When RTK is missing under an enforcing repo policy, report the missing dependency and stop for guidance.
 
 ## Verification
 
@@ -59,9 +59,9 @@ Keep command execution compact, policy-aware, and repo-compatible by routing she
 
 ## Gotchas / Safety
 
-- do not use RTK as a reason to run destructive commands casually
-- do not wrap an RTK-native command in another shell layer unless the wrapper is required
-- do not treat compact output as complete evidence when full logs are needed for a bug
+- Use destructive commands only with the same approval and care required outside RTK.
+- Run RTK-native commands directly unless a wrapper is required.
+- Treat compact output as a summary; request full logs when a bug needs complete evidence.
 
 ## Examples
 
@@ -70,7 +70,7 @@ Keep command execution compact, policy-aware, and repo-compatible by routing she
 - Use `rtk grep "handler" cli` to inspect a code path.
 - Use `rtk git diff -- cli` before committing CLI changes.
 
-### Negative
+### Route Correction
 
-- Run a raw `grep -R` when `[rtk].mode = "enforce"` or repo instructions require RTK.
-- Ignore an RTK hook suggestion and retry the same rejected command.
+- In `[rtk].mode = "enforce"`, route recursive search through `rtk grep`.
+- When an RTK hook suggests a route, retry with the suggested RTK command.

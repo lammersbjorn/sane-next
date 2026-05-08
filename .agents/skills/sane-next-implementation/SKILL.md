@@ -1,6 +1,6 @@
 ---
 name: sane-next-implementation
-description: Use this skill when implementing sane-next itself, especially for the future /goal build run or near-one-shot implementation sessions. Use it for phase-based execution, pack/export work, Pi plugin work, companion CLI work, and bounded continuation. Don't use it for old-Sane maintenance, broad pre-implementation research, or unrelated repos.
+description: Use this skill when implementing sane-next itself, especially for the future /goal build run or near-one-shot implementation sessions. Use it for phase-based execution, pack/export work, Pi plugin work, companion CLI work, and bounded continuation. Route old-Sane maintenance, broad pre-implementation research, and unrelated repos to a better-matched skill.
 license: MIT
 compatibility: Pi, Codex
 ---
@@ -18,12 +18,12 @@ Implement `sane-next` as a full remake with bounded phases, not as an unbounded 
 - building phase 1 foundations, pack export, extensibility, or CLI lifecycle flows
 - resuming implementation after a pause, failure, or budget hit
 
-## Don't Use When
+## Use Another Route When
 
-- maintaining the old `sane` repo
-- doing pre-implementation landscape research
-- writing generic docs for another repo
-- doing frontend-only work unrelated to `sane-next`
+- for old `sane` repo maintenance, use that repo's instructions
+- for pre-implementation landscape research, use research/docs workflow first
+- for generic docs in another repo, use that repo's docs-writing route
+- for frontend-only work unrelated to `sane-next`, use the matching frontend skill
 
 ## Inputs
 
@@ -36,10 +36,10 @@ Implement `sane-next` as a full remake with bounded phases, not as an unbounded 
 
 ## Outputs
 
-- changes only inside the current phase write boundary
+- changes inside the current phase write boundary
 - explicit verification results for the phase
 - a milestone commit when the phase or sub-phase lands
-- updated `TRACK.toml` if the active phase changes
+- updated `TRACK.toml` when the active phase changes
 
 ## How To Run
 
@@ -47,30 +47,30 @@ Implement `sane-next` as a full remake with bounded phases, not as an unbounded 
 2. Read `docs/roadmap/ROADMAP.md` to understand the full remake scope and the verified checklist.
 3. Read the old-Sane postmortem and the relevant ADRs/standards before choosing the approach.
 4. Treat the product scope as the full remake: packs, extensibility, Pi integration, Codex export, and CLI lifecycle all matter.
-5. Treat the active phase as bounded execution, not as the full product scope.
+5. Treat the active phase as bounded execution, while keeping the full product scope visible.
 6. If running with `/goal`, use the concrete `/goal` text from `docs/roadmap/ROADMAP.md`.
 7. Keep `AGENTS.md` small; put recurring procedure detail here or in referenced docs instead of expanding always-on instructions.
 8. Prefer one clear write boundary per lane. If parallelizing, keep file ownership disjoint.
 9. Check `git status --short` before starting a new task lane and before handoff.
-10. Commit after each meaningful verified milestone so git becomes the primary resume anchor; do not start a different task category with verified uncommitted work still in the tree.
+10. Commit after each meaningful verified milestone so git becomes the primary resume anchor; before switching task categories, split or commit pending changes by task/category.
 11. If unrelated changes accumulate, stop implementation and split commits by task/category before continuing.
 12. If the run pauses or hits budget, resume from git state first, then continue the remaining unchecked verified work from the roadmap.
 
 ## Verification
 
 - use the exact verification required by the active phase in `TRACK.toml` and `docs/standards/IMPLEMENTATION-RUN-PROTOCOL.md`
-- do not claim a phase is done without the named build/test/acceptance checks for that phase
+- claim a phase done only after the named build/test/acceptance checks for that phase
 - review `/diff` and git history before closing a phase
 
 ## Gotchas / Safety
 
-- do not copy old Sane code into `sane-next`
-- do not let the run narrow the full remake into "just the first slice"
-- do not let packs/extensibility disappear from the plan
-- do not check roadmap boxes without matching verification
-- do not enable broad MCP/tool surfaces unless they are clearly justified
-- do not treat the old `sane` repo as a writable workspace
-- do not grow `TRACK.toml` into a backlog or research dump
+- Build new `sane-next` code from current design; use old Sane only as reference material.
+- Keep the full remake broader than the first slice.
+- Keep packs and extensibility visible in the plan.
+- Check roadmap boxes only with matching verification evidence.
+- Enable MCP/tool surfaces only with clear justification and bounded scope.
+- Treat the old `sane` repo as read-only reference unless the user explicitly assigns old-repo maintenance.
+- Keep `TRACK.toml` focused on the active execution window.
 
 ## Examples
 

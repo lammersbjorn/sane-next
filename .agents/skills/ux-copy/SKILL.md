@@ -1,6 +1,6 @@
 ---
 name: ux-copy
-description: Use this skill when writing or reviewing user-facing product microcopy such as labels, buttons, empty states, errors, onboarding, tooltips, confirmations, settings text, or in-app help. Do not use for long-form docs.
+description: Use this skill when writing or reviewing user-facing product microcopy such as labels, buttons, empty states, errors, onboarding, tooltips, confirmations, settings text, or in-app help. Use docs-writing for long-form docs.
 license: MIT
 compatibility: Pi, Codex
 ---
@@ -17,7 +17,7 @@ Make product text clear, actionable, consistent, and kind at the exact moment th
 - a flow needs clearer next steps, state explanation, or recovery guidance
 - user-facing strings need review for tone, consistency, or localization risk
 
-## Don't Use When
+## Route Elsewhere When
 
 - the task is long-form README, guide, changelog, or API reference work; use `docs-writing`
 - the task is visual layout or component implementation only
@@ -53,9 +53,9 @@ Make product text clear, actionable, consistent, and kind at the exact moment th
 
 ## Gotchas / Safety
 
-- do not promise capabilities the product does not have
-- do not hide destructive consequences behind cute copy
-- do not use color, icon, or position as the only explanation of state
+- promise only capabilities the product has
+- make destructive consequences plain
+- explain state with text in addition to color, icon, or position
 - flag legal, billing, privacy, or safety-sensitive copy for human review
 
 ## Examples

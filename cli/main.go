@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 )
 
-const version = "0.3.0-beta.1"
+const version = "0.3.0-beta.2"
 
 type commandResult struct {
 	Message string

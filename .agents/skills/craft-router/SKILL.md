@@ -1,6 +1,6 @@
 ---
 name: craft-router
-description: Use this skill when user-facing frontend, rendered UI review, accessibility, documentation, or UX-copy work needs routing to one focused Sane craft skill. Do not use for backend-only, packaging-only, typo-only, or file-path-only matches.
+description: Use this skill when user-facing frontend, rendered UI review, accessibility, documentation, or UX-copy work needs routing to one focused Sane craft skill. Route backend-only, packaging-only, typo-only, and file-path-only matches to the main session.
 license: MIT
 compatibility: Pi, Codex
 ---
@@ -19,11 +19,11 @@ Classify the user-facing craft surface and load the smallest matching subordinat
 - README, guides, reference docs, changelog, release notes, migration notes, support docs, or docs review is requested
 - UX copy covers labels, empty states, errors, onboarding, tooltips, or product microcopy
 
-## Don't Use When
+## Use Main Session When
 
 - the task is backend-only, CI-only, packaging-only, release-mechanics-only, or security-only
 - the change is a mechanical version bump, import cleanup, formatter pass, or typo-only edit
-- a README or UI path is mentioned but the deliverable is not docs or user-facing UI
+- a README or UI path is mentioned but the deliverable is code, config, or file movement rather than docs or user-facing UI
 
 ## Inputs
 
@@ -40,7 +40,7 @@ Classify the user-facing craft surface and load the smallest matching subordinat
 
 ## How To Run
 
-1. Return exact Sane skill ids, not generic labels like `ui`, `docs`, `api`, or `copywriting`.
+1. Return exact Sane skill ids: `frontend-craft`, `frontend-review`, `frontend-accessibility`, `docs-writing`, `ux-copy`, or `none`.
 2. Choose `frontend-craft` for implementing or polishing UI.
 3. Choose `frontend-review` for reviewing rendered UI quality, design fidelity, responsive behavior, or visual regressions.
 4. Choose `frontend-accessibility` for accessibility audits or fixes.
@@ -53,14 +53,14 @@ Classify the user-facing craft surface and load the smallest matching subordinat
 
 - every selected value is exactly one of: `frontend-craft`, `frontend-review`, `frontend-accessibility`, `docs-writing`, `ux-copy`, `none`
 - selected skill matches the actual deliverable, not just filenames
-- no craft doctrine is applied directly from this router
-- no more than two subordinate skills are selected for one task
+- this router only dispatches; subordinate skills own craft doctrine
+- one task selects one skill by default and two skills at most
 
 ## Gotchas / Safety
 
 - keep this skill dispatch-only
-- do not add MCP, package, browser, design-system, docs-style, or copywriting doctrine here
-- prefer no craft skill over a false-positive dispatch
+- put MCP, package, browser, design-system, docs-style, and copywriting doctrine in the subordinate skill that owns it
+- choose `none` for false-positive craft matches
 
 ## Examples
 
@@ -74,5 +74,5 @@ Classify the user-facing craft surface and load the smallest matching subordinat
 
 ### Negative
 
-- Do not output `ui`, `a11y`, `docs`, `copy`, `api`, or other aliases.
+- Output only exact skill ids, such as `frontend-accessibility`, instead of aliases like `ui`, `a11y`, `docs`, `copy`, or `api`.
 - "Bump README version from 1.2 to 1.3" → `none` unless docs content changes are requested.

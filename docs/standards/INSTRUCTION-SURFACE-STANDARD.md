@@ -2,12 +2,16 @@
 
 This is the strict authoring standard for prompts, skills, AGENTS files, and agent definitions in `sane-next`.
 
-It exists because research consistently showed the same pattern:
+It exists because current prompt-engineering research and vendor guidance consistently show the same pattern:
 
 - bloated always-on context hurts performance and cost
 - progressive disclosure works better
 - executable checks beat repeated prose
 - instruction surfaces drift when the same rule appears in multiple files
+- positive behavioral instructions work better than long lists of negative constraints
+- negative prompting is unreliable: models often struggle to follow prompts that mainly say what behavior to suppress
+
+Research basis: OpenAI prompt guidance for GPT-5-family models recommends clear goals, success criteria, examples, tool-use policy, and saying what to do instead of only what to suppress. Anthropic guidance similarly favors positive examples and direct instructions. ETH Zurich AI Center / EMNLP 2024 research on negative prompting found that LLMs often fail to reliably suppress prohibited content or behavior when steered mainly by negative constraints.
 
 ## Core rules
 
@@ -18,7 +22,7 @@ It exists because research consistently showed the same pattern:
 
 2. **One rule, one owner.**
    - Put each rule in the smallest surface that can own it
-   - Do not duplicate the same policy across `AGENTS.md`, Copilot instructions, skills, overlays, and agent files
+   - Put shared policy in one owning surface and link to it from `AGENTS.md`, Copilot instructions, skills, overlays, and agent files
 
 3. **Progressive disclosure is mandatory.**
    - Always-on: only durable repo truth
@@ -49,7 +53,7 @@ Allowed content:
 - hard repo boundaries
 - minimal done criteria
 
-Forbidden content:
+Route elsewhere:
 
 - long process doctrine
 - model fandom
@@ -67,7 +71,7 @@ Purpose:
 Rules:
 
 - point to `AGENTS.md` as the primary repo instruction surface
-- add only Copilot-specific notes that do not belong in `AGENTS.md`
+- add Copilot-specific notes only when `AGENTS.md` is not the right owner
 - keep it shorter than `AGENTS.md`
 
 ## Skills
@@ -114,7 +118,7 @@ Required sections, in order:
 
 1. `Goal`
 2. `Use When`
-3. `Don't Use When` or `Use Main Session When`
+3. `Use Main Session When`, `Route Elsewhere When`, or another positive routing section
 4. `Inputs`
 5. `Outputs`
 6. `How To Run`
@@ -172,13 +176,42 @@ tools: ["Read", "Grep", "Bash"]
 
 ## Prompt writing rules
 
-1. be clear and direct
-2. use exact success criteria
-3. use examples when behavior is easy to misread
-4. prefer exact boundaries over broad style doctrine
-5. reserve hard prohibitions for destructive or security-sensitive behavior
-6. avoid verbosity constraints that could degrade quality
-7. keep prompts structured and easy to scan
+1. State the desired action path: "When X, do Y, because success means Z."
+2. Use exact success criteria.
+3. Use examples when behavior is easy to misread.
+4. Prefer routing rules and workflow recipes over broad style doctrine.
+5. Reserve hard prohibitions for destructive, security-sensitive, or architectural boundary behavior.
+6. Convert ordinary negative rules into positive alternatives.
+7. Use verbosity guidance that preserves quality.
+8. Keep prompts structured and easy to scan.
+
+### Positive-instruction rewrite rule
+
+For each negative instruction, choose one bucket:
+
+| Bucket | Prompt shape |
+| --- | --- |
+| Safety or irreversible boundary | Keep one short hard-stop rule. |
+| Routing choice | Rewrite as `If this task matches X, use Y.` |
+| Workflow preference | Rewrite as an ordered action step. |
+| Quality bar | Rewrite as success criteria or verification. |
+| Stale warning | Delete it. |
+
+Examples:
+
+```md
+When writing docs:
+1. Check docs/README.md for the owning location.
+2. Edit the existing owning doc when one exists.
+3. If no approved location fits, ask before creating a new docs path.
+```
+
+```md
+When implementation appears to require Pi runtime changes:
+1. Treat Pi as upstream runtime.
+2. Build overlays, packs, adapters, or companion tools in this repo.
+3. Stop and ask before choosing a runtime fork path.
+```
 
 ## Anti-patterns
 

@@ -1,6 +1,6 @@
 ---
 name: frontend-review
-description: Use this skill when reviewing rendered UI for design fidelity, visual polish, responsive behavior, screenshots, regressions, or frontend implementation quality. Do not use for implementation-only work unless review is requested.
+description: Use this skill when reviewing rendered UI for design fidelity, visual polish, responsive behavior, screenshots, regressions, or frontend implementation quality. Use frontend-craft when the primary task is implementation.
 license: MIT
 compatibility: Pi, Codex
 ---
@@ -17,11 +17,11 @@ Find concrete rendered-UI issues and recommend small fixes ranked by user impact
 - checking design fidelity, layout, spacing, hierarchy, responsive behavior, or visual regressions
 - giving pre-merge frontend quality feedback
 
-## Don't Use When
+## Route Elsewhere When
 
-- the task is to implement a UI from scratch; use `frontend-craft`
-- the review is primarily accessibility compliance; use `frontend-accessibility`
-- there is no rendered or renderable UI surface
+- use `frontend-craft` to implement a UI from scratch
+- use `frontend-accessibility` for accessibility compliance as the primary review lens
+- wait for a screenshot, route, component, diff, or other renderable surface before reviewing UI quality
 
 ## Inputs
 
@@ -53,9 +53,9 @@ Find concrete rendered-UI issues and recommend small fixes ranked by user impact
 
 ## Gotchas / Safety
 
-- do not invent design requirements not present in the product or request
-- do not over-prioritize tiny polish over broken flows
-- do not ask for wholesale rewrites when a targeted fix works
+- ground design requirements in the product, request, or supplied reference
+- rank broken flows above tiny polish
+- recommend targeted fixes when they can solve the issue
 - treat screenshots as evidence, not as complete app state
 
 ## Examples

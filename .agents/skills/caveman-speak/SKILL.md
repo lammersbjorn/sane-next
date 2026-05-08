@@ -16,11 +16,11 @@ Apply an explicit caveman-style response voice only when the user asks for it.
 - the user explicitly requests caveman-style answers
 - a test or fixture needs a clearly visible optional style pack
 
-## Don't Use When
+## Use Normal Voice When
 
 - the user has not asked for this style
 - precision, normal spelling, or professional tone matters more than style
-- producing code, commands, file paths, logs, quoted text, or structured data
+- the response contains code, commands, file paths, logs, quoted text, or structured data that must remain exact
 
 ## Inputs
 
@@ -39,7 +39,7 @@ Apply an explicit caveman-style response voice only when the user asks for it.
 1. Confirm the user explicitly requested caveman-style output.
 2. Keep technical identifiers, code, file paths, commands, logs, and quotes exact.
 3. Use short, simple phrasing for surrounding explanation.
-4. Stop using the style when the user asks for normal wording.
+4. Return to normal wording when the user asks for it.
 
 ## Verification
 
@@ -49,9 +49,9 @@ Apply an explicit caveman-style response voice only when the user asks for it.
 
 ## Gotchas / Safety
 
-- do not apply this style globally just because the pack exists
-- do not alter code or command spelling for comedic effect
-- do not make safety, legal, or release guidance ambiguous
+- Apply this style only to the active response scope requested by the user.
+- Preserve code and command spelling exactly.
+- Keep safety, legal, and release guidance precise.
 
 ## Examples
 
@@ -63,4 +63,4 @@ Assistant: "Me check file. Build pass. No break."
 
 ### Negative
 
-Changing `go test ./...` to `go test all thing`.
+Keep `go test ./...` exact instead of changing it to `go test all thing`.

@@ -1,6 +1,6 @@
 ---
 name: frontend-craft
-description: Use this skill when implementing or polishing user-facing frontend UI, components, layout, styling, responsive behavior, visual hierarchy, or interaction details. Do not use for visual review-only or backend-only work.
+description: Use this skill when implementing or polishing user-facing frontend UI, components, layout, styling, responsive behavior, visual hierarchy, or interaction details. Use frontend-review for review-only work and backend skills for backend-only work.
 license: MIT
 compatibility: Pi, Codex
 ---
@@ -17,11 +17,11 @@ Ship frontend changes that are usable, coherent with the existing product, and l
 - improving visual hierarchy, spacing, responsive behavior, motion, or perceived quality
 - translating a screenshot, design note, or product requirement into code
 
-## Don't Use When
+## Route Elsewhere When
 
-- the task is only reviewing an existing UI; use `frontend-review`
-- the task is primarily accessibility remediation; use `frontend-accessibility`
-- there is no user-facing UI surface
+- use `frontend-review` for review-only UI feedback
+- use `frontend-accessibility` when accessibility remediation is primary
+- use an implementation skill for work with no user-facing UI surface
 
 ## Inputs
 
@@ -53,9 +53,9 @@ Ship frontend changes that are usable, coherent with the existing product, and l
 
 ## Gotchas / Safety
 
-- do not add new UI dependencies unless the repo already expects them
-- avoid decorative complexity that does not serve the user's task
-- do not hide data, controls, focus outlines, or error states to make a screen look cleaner
+- add new UI dependencies only when the repo already expects them or the user approves them
+- use decorative detail to support the user's task
+- keep data, controls, focus outlines, and error states visible and understandable
 - keep generated screenshots or artifacts out of source unless the repo already tracks them
 
 ## Examples
